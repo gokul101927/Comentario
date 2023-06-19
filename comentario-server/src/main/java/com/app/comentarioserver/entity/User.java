@@ -41,14 +41,13 @@ public class User implements UserDetails {
 
     private boolean isVerified;
 
+    @JsonDeserialize(using = GrantedAuthorityDeserializer.class)
+    private Collection<? extends GrantedAuthority> roles;
+
     public User() {
         super();
         this.isVerified = false;
     }
-
-    @JsonDeserialize(using = GrantedAuthorityDeserializer.class)
-    private Collection<? extends GrantedAuthority> roles;
-
 
     public User(String fullName, String userName, String mailId, String password) {
         this.fullName = fullName;

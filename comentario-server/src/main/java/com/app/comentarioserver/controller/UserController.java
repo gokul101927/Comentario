@@ -11,8 +11,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,9 +27,8 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping(value = "/register", consumes = "application/json")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        user.setRoles(List.of(new SimpleGrantedAuthority("User")));
-        user.setVerified(false);
+    public ResponseEntity<User> registerUser(@RequestBody UserRequest userRequest) {
+        User user = new User(userRequest.getFullName(), userRequest.getUserName(), userRequest.getMailId(), userRequest.getPassword());
         return new ResponseEntity<>(userService.addUser(user), HttpStatus.OK);
     }
 

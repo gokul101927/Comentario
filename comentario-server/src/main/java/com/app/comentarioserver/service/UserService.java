@@ -1,6 +1,5 @@
 package com.app.comentarioserver.service;
 
-import com.app.comentarioserver.configuration.SecurityConfig;
 import com.app.comentarioserver.controller.AuthRequest;
 import com.app.comentarioserver.entity.User;
 import com.app.comentarioserver.jwt.JwtTokenProvider;
@@ -9,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +36,8 @@ public class UserService implements UserDetailsService {
     public User addUser(User user) {
         String encodedPassword = encoder().encode(user.getPassword());
         user.setPassword(encodedPassword);
+        user.setRoles(List.of(new SimpleGrantedAuthority("User")));
+        user.setVerified(false);
         return userRepository.save(user);
     }
 
@@ -55,7 +58,7 @@ public class UserService implements UserDetailsService {
 
     public boolean checkUserVerification(String identifier) {
         User user;
-        if (identifier.matches("^(.+)@(\\S+)$")) {
+        if (Pattern.compile("^(.+)@(\\S+)$").matcher(identifier).matches()) {
             user = userRepository.findByMailId(identifier).orElseThrow();
         } else {
             user = userRepository.findByUserName(identifier).orElseThrow();
@@ -70,7 +73,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
-        if (identifier.matches("^(.+)@(\\S+)$")) {
+        if (Pattern.compile("^(.+)@(\\S+)$").matcher(identifier).matches()) {
             return userRepository.findByMailId(identifier).orElseThrow();
         } else {
             return userRepository.findByUserName(identifier).orElseThrow();

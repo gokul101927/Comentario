@@ -2,21 +2,21 @@ import { useState } from "react";
 import { Link } from 'react-router-dom'
 
 const Signin = () => {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
 
   const [valid, isValid] = useState(false);
 
-  const [emailError, setEmailError] = useState("");
+  const [identifierError, setIdentifierError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!email || email.length === 0) {
-      setEmailError("Email is required");
+    if (!identifier || identifier.length === 0) {
+      setIdentifierError("Email/Username is required");
       isValid(false);
     } else {
-      setEmailError("");
+      setIdentifierError("");
       isValid(true);
     }
 
@@ -30,14 +30,14 @@ const Signin = () => {
 
     if (valid) {
       // Login the user
-      if (email !== "gokul@gmail.com") {
-        setEmailError("Email does not match")
+      if (identifier !== "gokul@gmail.com") {
+        setIdentifierError("Account does not exist")
       }
     }
   };
 
   return (
-    <div className="bg-primaryWhite shadow p-8 space-y-5 rounded-xl w-80 sm:w-96">
+    <div className="bg-primaryWhite shadow p-8 space-y-5 rounded-xl w-80 md:w-96">
       <form onSubmit={(e) => handleSubmit(e)}>
         <div className="flex justify-center p-4 pb-8 items-center">
           <img
@@ -51,24 +51,24 @@ const Signin = () => {
           <div className="flex flex-col">
             <div className="flex justify-between">
               <label
-                htmlFor="email"
-                className={`block mb-2 text-sm font-small text-gray-900 ${emailError ? "text-red-500" : "text-black"
+                htmlFor="identifier"
+                className={`block mb-2 text-sm font-small text-gray-900 ${identifierError ? "text-red-500" : "text-black"
                   }`}
               >
-                Email
+                Email/Username
               </label>
-              <small className="block mb-2 text-sm font-small text-gray-900 text-red-500">{emailError}</small>
+              <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end">{identifierError}</small>
             </div>
 
             <input
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Your email address"
-              className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${emailError ? "border-red-500" : "border-gray-300"
+              type="identifier"
+              name="identifier"
+              id="identifier"
+              placeholder="Your email address or username"
+              className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${identifierError ? "border-red-500" : "border-gray-300"
                 }`}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
             ></input>
           </div>
           <div className="flex flex-col">
@@ -80,7 +80,7 @@ const Signin = () => {
               >
                 Password
               </label>
-              <small className="block mb-2 text-sm font-small text-gray-900 text-red-500">{passwordError}</small>
+              <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end	">{passwordError}</small>
             </div>
             <input
               type="password"
@@ -102,7 +102,7 @@ const Signin = () => {
             </button>
           </div>
           <div>
-            <Link to="#" className="block text-sm font-small text-primaryBlue text-black hover:underline">
+            <Link to="#" className="block text-sm font-small text-primaryBlue w-fit text-black hover:underline">
               Forgot your password?
             </Link>
           </div>

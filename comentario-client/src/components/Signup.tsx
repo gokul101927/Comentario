@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Link } from 'react-router-dom'
 
 const Signup = () => {
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -18,16 +18,16 @@ const Signup = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!firstname) {
-      setFirstnameError("First name is required");
+    if (!fullname) {
+      setFirstnameError("Full name is required");
       isValid(false);
     } else {
       setFirstnameError("");
       isValid(true);
     }
 
-    if (!lastname) {
-      setLastnameError("Last name is required");
+    if (!username) {
+      setLastnameError("Username is required");
       isValid(false);
     } else {
       setLastnameError("");
@@ -59,7 +59,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="bg-primaryWhite shadow p-8 space-y-5 rounded-xl w-80 sm:w-96">
+    <div className="bg-primaryWhite shadow p-8 space-y-5 rounded-xl w-80 md:w-96">
       <form onSubmit={(e) => handleSubmit(e)}>
         <div className="flex justify-center p-4 pb-8 items-center">
           <img
@@ -73,45 +73,45 @@ const Signup = () => {
           <div className="flex flex-col">
             <div className="flex justify-between">
               <label
-                htmlFor="firstname"
+                htmlFor="fullname"
                 className={`block mb-2 text-sm font-small text-gray-900 ${firstnameError ? "text-red-500" : "text-black"
                   }`}
               >
-                First name
+                Full name
               </label>
-              <small className="block mb-2 text-sm font-small text-gray-900 text-red-500">{firstnameError}</small>
+              <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end">{firstnameError}</small>
             </div>
             <input
-              type="firstname"
-              name="firstname"
-              id="firstname"
-              placeholder="Your first name"
+              type="fullname"
+              name="fullname"
+              id="fullname"
+              placeholder="Your full name"
               className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${firstnameError ? "border-red-500" : "border-gray-300"
                 }`}
-              value={firstname}
-              onChange={(e) => setFirstname(e.target.value)}
+              value={fullname}
+              onChange={(e) => setFullname(e.target.value)}
             ></input>
           </div>
           <div className="flex flex-col">
             <div className="flex justify-between">
               <label
-                htmlFor="lastname"
+                htmlFor="username"
                 className={`block mb-2 text-sm font-small text-gray-900 ${lastnameError ? "text-red-500" : "text-black"
                   }`}
               >
-                Last name
+                Username
               </label>
-              <small className="block mb-2 text-sm font-small text-gray-900 text-red-500">{lastnameError}</small>
+              <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end">{lastnameError}</small>
             </div>
             <input
-              type="lastname"
-              name="lastname"
-              id="lastname"
-              placeholder="Your last name"
+              type="username"
+              name="username"
+              id="username"
+              placeholder="Your username"
               className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${lastnameError ? "border-red-500" : "border-gray-300"
                 }`}
-              value={lastname}
-              onChange={(e) => setLastname(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             ></input>
           </div>
           <div className="flex flex-col">
@@ -123,7 +123,7 @@ const Signup = () => {
               >
                 Email
               </label>
-              <small className="block mb-2 text-sm font-small text-gray-900 text-red-500">{emailError}</small>
+              <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end">{emailError}</small>
             </div>
 
             <input
@@ -146,7 +146,7 @@ const Signup = () => {
               >
                 Password
               </label>
-              <small className="block mb-2 text-sm font-small text-gray-900 text-red-500">{passwordError}</small>
+              <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end">{passwordError}</small>
             </div>
             <input
               type="password"

@@ -50,7 +50,7 @@ public class SecurityConfig {
         return authentication -> {
             String identifier =  String.valueOf(authentication.getPrincipal());
             String password = String.valueOf(authentication.getCredentials());
-
+            log.info(identifier);
             UserDetails userDetails = userDetailsService.loadUserByUsername(identifier);
 
             if (!passwordEncoder.matches(password, userDetails.getPassword())) {
