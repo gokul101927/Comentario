@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from 'react-router-dom'
 
 const Signup = () => {
   const [firstname, setFirstname] = useState("");
@@ -68,7 +69,7 @@ const Signup = () => {
           />
         </div>
         <div className="flex flex-col space-y-3">
-          <h2 className="text-black font-bold">Get started</h2>
+          <h2 className="text-black font-bold">Get started now.</h2>
           <div className="flex flex-col">
             <div className="flex justify-between">
               <label
@@ -166,10 +167,11 @@ const Signup = () => {
               Sign up
             </button>
           </div>
-          <div>
+          <div className="flex gap-1">
             <p className="block mb-2 text-sm font-small text-gray-900 text-black">
-              Already signed-up? login now.
+              Already signed-up? 
             </p>
+            <Link to="/sign-in" className="block mb-2 text-sm font-small text-gray-900 text-black hover:text-primaryBlue">login now.</Link>
           </div>
         </div>
       </form>

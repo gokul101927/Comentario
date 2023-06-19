@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { Link } from 'react-router-dom'
 
-const Login = () => {
+const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -46,7 +47,7 @@ const Login = () => {
           />
         </div>
         <div className="flex flex-col space-y-3">
-          <h2 className="text-black font-bold">Login below</h2>
+          <h2 className="text-black font-bold">Sign-in to your account.</h2>
           <div className="flex flex-col">
             <div className="flex justify-between">
               <label
@@ -97,18 +98,19 @@ const Login = () => {
               type="submit"
               className="text-white bg-primaryBlue rounded-md p-2 w-full hover:brightness-125"
             >
-              Login
+              Sign in
             </button>
           </div>
           <div>
-            <p className="block text-sm font-small text-gray-900 text-black hover:text-primaryBlue">
+            <Link to="#" className="block text-sm font-small text-primaryBlue text-black hover:underline">
               Forgot your password?
-            </p>
+            </Link>
           </div>
-          <div>
+          <div className="flex gap-1">
             <p className="block mb-2 text-sm font-small text-gray-900 text-black">
-              New to Comentario? Get started.
+              New to Comentario? 
             </p>
+            <Link to="/sign-up" className="block mb-2 text-sm font-small text-gray-900 text-black hover:text-primaryBlue">Get started.</Link>
           </div>
         </div>
       </form>
@@ -116,4 +118,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signin;

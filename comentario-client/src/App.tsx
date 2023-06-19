@@ -1,8 +1,7 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
 import Dashboard from './pages/Dashboard'
 import Layout from './Layout'
-import NotFound from './pages/NotFound'
 import Auth from './pages/Auth'
 
 function App() {
@@ -12,9 +11,11 @@ function App() {
       <BrowserRouter >
         <Routes>
           <Route path="/" element={<Layout />}>
+            <Route path="/" element={<Navigate to="/dashboard" replace />}/>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/login" element={<Auth />} />
-            <Route path="*" element={<NotFound/>}></Route>
+            <Route path="/sign-in" element={<Auth />} />
+            <Route path="/sign-up" element={<Auth />} />
+            <Route path="*" element={<Navigate to="/dashboard"/>}></Route>
           </Route>
         </Routes>
       </BrowserRouter>

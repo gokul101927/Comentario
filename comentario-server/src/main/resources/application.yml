@@ -1,3 +1,7 @@
+app:
+  secretKey: ${SECRET_KEY}
+  jwtValidity: ${VALIDITY}
+
 spring:
   data:
     mongodb:

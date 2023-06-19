@@ -1,13 +1,13 @@
 package com.app.comentarioserver.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.app.comentarioserver.configuration.GrantedAuthorityDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,59 +25,55 @@ public class User implements UserDetails {
     private ObjectId id;
 
     @NotEmpty
-    private String firstname;
+    private String fullName;
 
     @NotEmpty
-    private String lastname;
-
-    @NotEmpty
-    private String username;
+    private String userName;
 
     @NotEmpty
     @Email
-    private String emailId;
+    private String mailId;
 
     @NotEmpty
     private String password;
 
-    private boolean isVerified;
+    private ObjectId verificationTokenId;
 
-    @JsonDeserialize(using = GrantedAuthorityDeserializer.class)
-    private Collection<? extends GrantedAuthority> roles;
+    private boolean isVerified;
 
     public User() {
         super();
         this.isVerified = false;
     }
 
-    public User(String emailId, String password) {
-        this.emailId = emailId;
-        this.password = password;
-    }
+    @JsonDeserialize(using = GrantedAuthorityDeserializer.class)
+    private Collection<? extends GrantedAuthority> roles;
 
-    public User(String firstname, String lastname, String username, String emailId, String password) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.username = username;
-        this.emailId = emailId;
+
+    public User(String fullName, String userName, String mailId, String password) {
+        this.fullName = fullName;
+        this.userName = userName;
+        this.mailId = mailId;
         this.password = password;
+        this.roles = List.of(new SimpleGrantedAuthority("USER"));
         this.isVerified = false;
-        this.roles = List.of(new SimpleGrantedAuthority("User"));
     }
 
-    public User(String firstname, String lastname, String username, String emailId, String password, Collection<? extends GrantedAuthority> roles, boolean isVerified) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.username = username;
-        this.emailId = emailId;
+    public User(String mailId, String password, Collection<? extends GrantedAuthority> roles) {
+        this.mailId = mailId;
         this.password = password;
-        this.isVerified = isVerified;
         this.roles = roles;
+    }
+
+    public User(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
+        this.roles = List.of(new SimpleGrantedAuthority("USER"));
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        assert this.roles != null;
+        assert  this.roles != null;
         return this.roles.stream().toList();
     }
 
@@ -88,20 +84,23 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.username;
+        return this.userName;
     }
 
     @Override
+    @Transient
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @Transient
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @Transient
     public boolean isCredentialsNonExpired() {
         return true;
     }

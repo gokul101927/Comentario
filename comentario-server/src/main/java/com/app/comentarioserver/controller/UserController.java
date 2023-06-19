@@ -1,11 +1,18 @@
 package com.app.comentarioserver.controller;
 
 import com.app.comentarioserver.entity.User;
+import com.app.comentarioserver.exception.InvalidCredentialsException;
 import com.app.comentarioserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +26,12 @@ public class UserController {
 
     private final UserService userService;
 
+    private final AuthenticationManager authenticationManager;
+
     @PostMapping(value = "/register", consumes = "application/json")
     public ResponseEntity<User> registerUser(@RequestBody User user) {
+        user.setRoles(List.of(new SimpleGrantedAuthority("User")));
+        user.setVerified(false);
         return new ResponseEntity<>(userService.addUser(user), HttpStatus.OK);
     }
 
@@ -32,5 +43,19 @@ public class UserController {
     @DeleteMapping("/delete-all")
     public void deleteAllUsers() {
         userService.deleteAllUsers();
+    }
+
+    @PostMapping(value = "/login", consumes = "application/json")
+    public ResponseEntity<String> signIn(@RequestBody AuthRequest authRequest) {
+        Authentication authentication;
+        try {
+            log.info("Authenticated started");
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getIdentifier(), authRequest.getPassword()));
+            log.info("Authenticated");
+        } catch (BadCredentialsException e) {
+            throw new InvalidCredentialsException(e.getMessage());
+        }
+
+        return new ResponseEntity<>(userService.loginUser(authRequest, authentication), HttpStatus.OK);
     }
 }
