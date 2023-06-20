@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from 'react-router-dom'
 
+import api from "../api/apiConfig";
+
 const Signup = () => {
   const [fullname, setFullname] = useState("");
   const [username, setUsername] = useState("");
@@ -8,9 +10,10 @@ const Signup = () => {
   const [password, setPassword] = useState("");
 
   const [valid, isValid] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
-  const [firstnameError, setFirstnameError] = useState("");
-  const [lastnameError, setLastnameError] = useState("");
+  const [fullnameError, setFullnameError] = useState("");
+  const [userNameError, setUserNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
@@ -19,18 +22,18 @@ const Signup = () => {
     event.preventDefault();
 
     if (!fullname) {
-      setFirstnameError("Full name is required");
+      setFullnameError("Full name is required");
       isValid(false);
     } else {
-      setFirstnameError("");
+      setFullnameError("");
       isValid(true);
     }
 
     if (!username) {
-      setLastnameError("Username is required");
+      setUserNameError("Username is required");
       isValid(false);
     } else {
-      setLastnameError("");
+      setUserNameError("");
       isValid(true);
     }
 
@@ -51,10 +54,33 @@ const Signup = () => {
     }
 
     if (valid) {
+      console.log("submitted");
       // Login the user
-      if (email !== "gokul@gmail.com") {
-        setEmailError("Email does not match")
-      }
+      const requestBody = {
+        fullName: fullname,
+        userName: username,
+        mailId: email,
+        password: password
+      };
+
+      api.post('/users/register', requestBody)
+        .then(response => {
+          console.log(response.data);
+          setEmailSent(true);
+        })
+        .catch(error => {
+          console.error(error);
+          const errorMessage = error.response.data.message;
+          if (errorMessage.includes("email")) {
+            setEmailError(errorMessage);
+          } else if (errorMessage.includes("Password")) {
+            setPasswordError(errorMessage);
+          } else if (errorMessage.includes("username")) {
+            setUserNameError(errorMessage);
+          } else if (errorMessage.includes("fullname")) {
+            setFullnameError(errorMessage);
+          }
+        });
     }
   };
 
@@ -69,25 +95,25 @@ const Signup = () => {
               className="logo-image h-8"
             />
           </div>
-          <div className="flex flex-col space-y-3">
+          {!emailSent ? <div className="flex flex-col space-y-3">
             <h2 className="text-black font-bold">Get started now.</h2>
             <div className="flex flex-col">
               <div className="flex justify-between">
                 <label
                   htmlFor="fullname"
-                  className={`block mb-2 text-sm font-small text-gray-900 ${firstnameError ? "text-red-500" : "text-black"
+                  className={`block mb-2 text-sm font-small text-gray-900 ${fullnameError ? "text-red-500" : "text-black"
                     }`}
                 >
                   Full name
                 </label>
-                <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end">{firstnameError}</small>
+                <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end">{fullnameError}</small>
               </div>
               <input
                 type="fullname"
                 name="fullname"
                 id="fullname"
                 placeholder="Your full name"
-                className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${firstnameError ? "border-red-500" : "border-gray-300"
+                className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${fullnameError ? "border-red-500" : "border-gray-300"
                   }`}
                 value={fullname}
                 onChange={(e) => setFullname(e.target.value)}
@@ -97,19 +123,19 @@ const Signup = () => {
               <div className="flex justify-between">
                 <label
                   htmlFor="username"
-                  className={`block mb-2 text-sm font-small text-gray-900 ${lastnameError ? "text-red-500" : "text-black"
+                  className={`block mb-2 text-sm font-small text-gray-900 ${userNameError ? "text-red-500" : "text-black"
                     }`}
                 >
                   Username
                 </label>
-                <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end">{lastnameError}</small>
+                <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end">{userNameError}</small>
               </div>
               <input
                 type="username"
                 name="username"
                 id="username"
                 placeholder="Your username"
-                className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${lastnameError ? "border-red-500" : "border-gray-300"
+                className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${userNameError ? "border-red-500" : "border-gray-300"
                   }`}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -174,7 +200,18 @@ const Signup = () => {
               </p>
               <Link to="/sign-in" className="block mb-2 text-sm font-small text-primaryBlue hover:underline">Sign-in now.</Link>
             </div>
-          </div>
+          </div> :
+            <div className="flex flex-col gap-2 h-36">
+              <h2 className="text-black font-bold text-center">Verify your account.</h2>
+              <p className="text-black text-center">We have sent you an email with a link, kindly click it to verify your account.</p>
+              <Link target="_blank" rel="noopener noreferrer" to="https://mail.google.com/" className="text-center text-white bg-primaryBlue rounded-md p-2 w-full hover:brightness-125 flex justify-center items-center">Open Gmail
+                <img
+                  src="../src/assets/new-tab-icon.png"
+                  alt="logo"
+                  className="h-4"
+                />
+              </Link>
+            </div>}
         </form>
       </div>
     </div>

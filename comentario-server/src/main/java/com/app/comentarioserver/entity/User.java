@@ -4,6 +4,7 @@ import com.app.comentarioserver.configuration.GrantedAuthorityDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -26,16 +27,20 @@ public class User implements UserDetails {
     private ObjectId id;
 
     @NotEmpty
+    @NotNull
     private String fullName;
 
     @NotEmpty
+    @NotNull
     private String userName;
 
     @NotEmpty
+    @NotNull
     @Email
     private String mailId;
 
     @NotEmpty
+    @NotNull
     private String password;
 
     @Transient

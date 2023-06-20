@@ -44,8 +44,12 @@ public class UserService implements UserDetailsService {
     }
 
     public User addUser(UserRequest userRequest) {
-        if (checkIfUserExists(userRequest.getMailId())) {
+        if (checkIfMailIdExists(userRequest.getMailId())) {
             throw new UserAlreadyExistsException("User already exists with email: " + userRequest.getMailId());
+        }
+
+        if (checkIfUsernameExists(userRequest.getUserName())) {
+            throw new UserAlreadyExistsException("User already exists with username: " + userRequest.getUserName());
         }
 
         User user = new User(userRequest.getFullName(), userRequest.getUserName(), userRequest.getMailId(), encoder().encode(userRequest.getPassword()));
@@ -85,8 +89,12 @@ public class UserService implements UserDetailsService {
         mailSender.send(message);
     }
 
-    private boolean checkIfUserExists(String mailId) {
+    private boolean checkIfMailIdExists(String mailId) {
         return userRepository.findByMailId(mailId).isPresent();
+    }
+
+    private boolean checkIfUsernameExists(String username) {
+        return userRepository.findByUserName(username).isPresent();
     }
 
     public String fetchPasswordResetOtp(String mailId) {
