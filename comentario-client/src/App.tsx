@@ -31,22 +31,22 @@ function App() {
     logout();
   };
 
-  // useEffect(() => {
-  //   if (isLoggedIn) {
-  //     const token = localStorage.getItem('jwt');
-  //     const config = {
-  //       headers:{
-  //         Authorization: token
-  //       }
-  //     };
-  //     api.get('/users/user', config)
-  //       .then((response) => {
-  //         setLoggedInUser(response.data)})
-  //       .catch(err => {
-  //         console.error(err)
-  //       })
-  //   }
-  // }, [isLoggedIn])
+  useEffect(() => {
+    if (isLoggedIn) {
+      const token = localStorage.getItem('jwt');
+      const config = {
+        headers:{
+          Authorization: token
+        }
+      };
+      api.get('/users/user', config)
+        .then((response) => {
+          setLoggedInUser(response.data)})
+        .catch(err => {
+          console.error(err)
+        })
+    }
+  }, [isLoggedIn])
 
   return (
     <main>

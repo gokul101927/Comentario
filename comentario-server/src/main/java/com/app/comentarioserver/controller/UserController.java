@@ -99,6 +99,7 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<User> getUserFromToken(@RequestHeader(name = "Authorization") String token) {
+        log.info("Validation started");
         String mailId = userService.getMailIdFromToken(token);
         return new ResponseEntity<>(userService.loadByMailId(mailId), HttpStatus.OK);
     }
