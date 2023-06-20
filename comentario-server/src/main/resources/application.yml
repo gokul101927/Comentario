@@ -7,3 +7,14 @@ spring:
     mongodb:
       database: ${MONGODB_DATABASE}
       uri: mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_CLUSTER}/${MONGODB_DATABASE}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: gokullogan10@gmail.com
+    password: ${APP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

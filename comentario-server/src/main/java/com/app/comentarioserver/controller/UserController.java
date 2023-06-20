@@ -2,6 +2,7 @@ package com.app.comentarioserver.controller;
 
 import com.app.comentarioserver.entity.User;
 import com.app.comentarioserver.exception.InvalidCredentialsException;
+import com.app.comentarioserver.exception.UserNotEnabledException;
 import com.app.comentarioserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -28,8 +31,17 @@ public class UserController {
 
     @PostMapping(value = "/register", consumes = "application/json")
     public ResponseEntity<User> registerUser(@RequestBody UserRequest userRequest) {
-        User user = new User(userRequest.getFullName(), userRequest.getUserName(), userRequest.getMailId(), userRequest.getPassword());
-        return new ResponseEntity<>(userService.addUser(user), HttpStatus.OK);
+        return new ResponseEntity<>(userService.addUser(userRequest), HttpStatus.OK);
+    }
+
+    @GetMapping("/verify-register-token")
+    public RedirectView verifyRegisterToken(@RequestParam("token") String token, @RequestParam("email") String email) throws URISyntaxException {
+        log.info("verification started");
+        if (userService.validateVerificationToken(token, email)) {
+            return new RedirectView("http://localhost:5173/sign-in");
+        } else {
+            return new RedirectView("http://localhost:5173/sign-up");
+        }
     }
 
     @GetMapping("/all-users")
@@ -55,4 +67,16 @@ public class UserController {
 
         return new ResponseEntity<>(userService.loginUser(authRequest, authentication), HttpStatus.OK);
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestParam("mailId") String mailId) {
+
+        if (userService.loadByMailId(mailId).isEnabled()) {
+            return new ResponseEntity<>(userService.fetchPasswordResetOtp(mailId), HttpStatus.OK);
+        } else {
+            throw new UserNotEnabledException("Kindly verify your email.");
+        }
+
+    }
+
 }

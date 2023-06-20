@@ -19,6 +19,7 @@ import java.util.List;
 @Document(collection = "users")
 @Getter
 @Setter
+@NoArgsConstructor
 public class User implements UserDetails {
 
     @Id
@@ -37,17 +38,13 @@ public class User implements UserDetails {
     @NotEmpty
     private String password;
 
-    private ObjectId verificationTokenId;
+    @Transient
+    private Token verificationToken;
 
     private boolean isVerified;
 
     @JsonDeserialize(using = GrantedAuthorityDeserializer.class)
     private Collection<? extends GrantedAuthority> roles;
-
-    public User() {
-        super();
-        this.isVerified = false;
-    }
 
     public User(String fullName, String userName, String mailId, String password) {
         this.fullName = fullName;
@@ -56,18 +53,14 @@ public class User implements UserDetails {
         this.password = password;
         this.roles = List.of(new SimpleGrantedAuthority("USER"));
         this.isVerified = false;
+        this.verificationToken = new Token();
     }
 
     public User(String mailId, String password, Collection<? extends GrantedAuthority> roles) {
         this.mailId = mailId;
         this.password = password;
         this.roles = roles;
-    }
 
-    public User(String userName, String password) {
-        this.userName = userName;
-        this.password = password;
-        this.roles = List.of(new SimpleGrantedAuthority("USER"));
     }
 
     @Override
