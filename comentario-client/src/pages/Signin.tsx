@@ -1,16 +1,21 @@
-import { useState } from "react";
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from 'react-router-dom'
+
+import api from "../api/apiConfig";
 import ForgotPasswordModal from "../components/ForgotPasswordModal";
 
 interface ModalProps {
   modalOpen: boolean;
   openModal: () => void;
   closeModal: () => void;
+  handleLogin: (token: string) => void;
 }
 
-const Signin: React.FC<ModalProps> = ({openModal, modalOpen, closeModal}) => {
+const Signin: React.FC<ModalProps> = ({openModal, modalOpen, closeModal, handleLogin}) => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const [valid, isValid] = useState(false);
 
@@ -24,7 +29,6 @@ const Signin: React.FC<ModalProps> = ({openModal, modalOpen, closeModal}) => {
       isValid(false);
     } else {
       setIdentifierError("");
-      isValid(true);
     }
 
     if (!password) {
@@ -32,16 +36,44 @@ const Signin: React.FC<ModalProps> = ({openModal, modalOpen, closeModal}) => {
       isValid(false);
     } else {
       setPasswordError("");
-      isValid(true);
     }
 
-    if (valid) {
-      // Login the user
-      if (identifier !== "gokul@gmail.com") {
-        setIdentifierError("Account does not exist")
-      }
+    if (identifier && password) {
+      isValid(true);
     }
   };
+
+  
+
+  useEffect(() => {
+    if (valid) {
+      console.log("submitted");
+      // Login the user
+      const requestBody = {
+        identifier: identifier,
+        password: password
+      };
+
+      api.post('/users/login', requestBody)
+        .then(response => {
+          console.log(response.data);
+          handleLogin(response.data);
+          navigate('/');
+        })
+        .catch(error => {
+          isValid(false);
+          console.error(error);
+          const errorMessage = error.response.data.message;
+          if (errorMessage.includes("email")) {
+            setIdentifierError(errorMessage);
+          } else if (errorMessage.includes("password")) {
+            setPasswordError(errorMessage);
+          } else if (errorMessage.includes("username")) {
+            setIdentifierError(errorMessage);
+          } 
+        });
+    }
+  }, [valid, identifier, password, handleLogin, navigate]);
 
   return (
     <div className="flex justify-center items-center min-h-screen">

@@ -43,7 +43,7 @@ public class User implements UserDetails {
     @NotNull
     private String password;
 
-    @Transient
+    @NotNull
     private Token verificationToken;
 
     private boolean isVerified;

@@ -3,6 +3,7 @@ package com.app.comentarioserver.controller;
 import com.app.comentarioserver.entity.User;
 import com.app.comentarioserver.exception.InvalidCredentialsException;
 import com.app.comentarioserver.exception.UserNotEnabledException;
+import com.app.comentarioserver.jwt.JwtTokenProvider;
 import com.app.comentarioserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,8 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import static com.app.comentarioserver.jwt.JwtTokenFilter.HEADER_PREFIX;
+
 @RestController
 @Slf4j
 @CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
@@ -28,6 +31,8 @@ public class UserController {
     private final UserService userService;
 
     private final AuthenticationManager authenticationManager;
+
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping(value = "/register", consumes = "application/json")
     public ResponseEntity<User> registerUser(@RequestBody UserRequest userRequest) {
@@ -77,6 +82,25 @@ public class UserController {
             throw new UserNotEnabledException("Kindly verify your email.");
         }
 
+    }
+
+    @GetMapping("/validate")
+    public ResponseEntity<Boolean> validateToken(@RequestHeader(name = "Authorization") String token) {
+        String jwtToken = token.substring(HEADER_PREFIX.length()).trim();
+
+        if (jwtTokenProvider.validateToken(jwtToken)) {
+            log.info("Validated");
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        } else {
+            log.info("Not validated");
+            return new ResponseEntity<>(false, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<User> getUserFromToken(@RequestHeader(name = "Authorization") String token) {
+        String mailId = userService.getMailIdFromToken(token);
+        return new ResponseEntity<>(userService.loadByMailId(mailId), HttpStatus.OK);
     }
 
 }

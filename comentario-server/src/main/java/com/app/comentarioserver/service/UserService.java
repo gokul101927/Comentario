@@ -5,6 +5,7 @@ import com.app.comentarioserver.controller.UserRequest;
 import com.app.comentarioserver.entity.Token;
 import com.app.comentarioserver.entity.User;
 import com.app.comentarioserver.exception.InvalidCredentialsException;
+import com.app.comentarioserver.exception.InvalidTokenException;
 import com.app.comentarioserver.exception.UserAlreadyExistsException;
 import com.app.comentarioserver.jwt.JwtTokenProvider;
 import com.app.comentarioserver.repository.UserRepository;
@@ -26,6 +27,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.regex.Pattern;
+
+import static com.app.comentarioserver.jwt.JwtTokenFilter.HEADER_PREFIX;
 
 @Service
 @RequiredArgsConstructor
@@ -150,10 +153,30 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
-        if (Pattern.compile("^(.+)@(\\S+)$").matcher(identifier).matches()) {
-            return userRepository.findByMailId(identifier).orElseThrow();
+
+            if (Pattern.compile("^(.+)@(\\S+)$").matcher(identifier).matches()) {
+                return userRepository.findByMailId(identifier).orElseThrow(() -> {
+                    throw new UsernameNotFoundException("Unable to fine user with this email");
+                });
+
+            } else {
+                return userRepository.findByUserName(identifier).orElseThrow(() -> {
+                    throw new UsernameNotFoundException("Unable to fine user with this username");
+                });
+
+            }
+
+
+
+    }
+
+    public String getMailIdFromToken(String token) {
+        String jwtToken = token.substring(HEADER_PREFIX.length()).trim();
+
+        if (jwtTokenProvider.validateToken(jwtToken)) {
+            return jwtTokenProvider.getMailIdFromToken(jwtToken);
         } else {
-            return userRepository.findByUserName(identifier).orElseThrow();
+            throw new InvalidTokenException("Token is invalid");
         }
     }
 

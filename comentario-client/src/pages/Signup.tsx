@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom'
 
 import api from "../api/apiConfig";
@@ -26,7 +26,6 @@ const Signup = () => {
       isValid(false);
     } else {
       setFullnameError("");
-      isValid(true);
     }
 
     if (!username) {
@@ -34,7 +33,6 @@ const Signup = () => {
       isValid(false);
     } else {
       setUserNameError("");
-      isValid(true);
     }
 
     if (!email) {
@@ -42,7 +40,6 @@ const Signup = () => {
       isValid(false);
     } else {
       setEmailError("");
-      isValid(true);
     }
 
     if (!password) {
@@ -50,9 +47,18 @@ const Signup = () => {
       isValid(false);
     } else {
       setPasswordError("");
-      isValid(true);
     }
 
+    if (username && password && fullname && email) {
+      isValid(true);
+    }
+  };
+
+  const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
+    if (event.code === 'Space') event.preventDefault()
+  }
+
+  useEffect(() => {
     if (valid) {
       console.log("submitted");
       // Login the user
@@ -69,6 +75,7 @@ const Signup = () => {
           setEmailSent(true);
         })
         .catch(error => {
+          isValid(false);
           console.error(error);
           const errorMessage = error.response.data.message;
           if (errorMessage.includes("email")) {
@@ -82,7 +89,7 @@ const Signup = () => {
           }
         });
     }
-  };
+  }, [valid, email, fullname, username, password])
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -138,6 +145,7 @@ const Signup = () => {
                 className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${userNameError ? "border-red-500" : "border-gray-300"
                   }`}
                 value={username}
+                onKeyDown={onKeyDown}
                 onChange={(e) => setUsername(e.target.value)}
               ></input>
             </div>
@@ -183,6 +191,8 @@ const Signup = () => {
                 className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${passwordError ? "border-red-500" : "border-gray-300"
                   }`}
                 value={password}
+                min={8}
+                max={15}
                 onChange={(e) => setPassword(e.target.value)}
               ></input>
             </div>

@@ -1,6 +1,14 @@
 import { Link } from 'react-router-dom'
 
-const Header = () => {
+interface ModalProps {
+    modalOpen: boolean;
+    isLoggedIn: boolean;
+    openModal: () => void;
+    closeModal: () => void;
+    handleLogout: () => void;
+  }
+
+const Header: React.FC<ModalProps> = ({handleLogout, isLoggedIn, openModal, closeModal, modalOpen}) => {
     return (
         <div className="relative mb-20 fadeIn">
             <div className='bg-primaryWhite shadow-lg fixed top-0 left-0 right-0'>
@@ -13,7 +21,10 @@ const Header = () => {
                             {/* Search bar */}
                             
                             <div>
-                                <Link to="/sign-in" className="block text-sm font-small text-white rounded-md p-2 px-4 bg-primaryBlue hover:brightness-125">Sign in</Link>
+                                {!isLoggedIn ? <Link to="/sign-in" className="block text-sm font-small text-white rounded-md p-2 px-4 bg-primaryBlue hover:brightness-125">Sign in</Link>
+                                : <div>
+                                    loggedin
+                                    </div>}
                             </div>
                             {/* Login profile */}
                         </div>
