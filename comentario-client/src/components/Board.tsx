@@ -4,7 +4,7 @@ const Board = () => {
             <img
                 src="../src/assets/test.png"
                 alt="image"
-                className="rounded-md object-center object-cover h-44"
+                className="rounded-md object-center object-cover h-44 w-full"
             />
             <div className="flex justify-between">
                 <h3 className="text-black font-bold">Test title</h3>

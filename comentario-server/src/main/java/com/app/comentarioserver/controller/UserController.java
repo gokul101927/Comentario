@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -85,23 +86,15 @@ public class UserController {
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<Boolean> validateToken(@RequestHeader(name = "Authorization") String token) {
-        String jwtToken = token.substring(HEADER_PREFIX.length()).trim();
-
-        if (jwtTokenProvider.validateToken(jwtToken)) {
-            log.info("Validated");
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        } else {
-            log.info("Not validated");
-            return new ResponseEntity<>(false, HttpStatus.OK);
-        }
+    public ResponseEntity<Boolean> validateToken() {
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
     @GetMapping("/user")
-    public ResponseEntity<User> getUserFromToken(@RequestHeader(name = "Authorization") String token) {
+    public ResponseEntity<UserDetails> getUserFromToken(@RequestHeader(name = "Authorization") String token) {
         log.info("Validation started");
-        String mailId = userService.getMailIdFromToken(token);
-        return new ResponseEntity<>(userService.loadByMailId(mailId), HttpStatus.OK);
+        String username = userService.getUsernameFromToken(token);
+        return new ResponseEntity<>(userService.loadUserByUsername(username), HttpStatus.OK);
     }
 
 }

@@ -80,8 +80,11 @@ public class JwtTokenProvider {
     }
 
     public boolean validateToken(String token) {
+
+        JwtParser parser = Jwts.parserBuilder().setSigningKey(this.secretKey).build();
         try {
-            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(this.secretKey).build().parseClaimsJws(token);
+
+            parser.parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException e) {
             throw new InvalidTokenException("Token is expired", e);
@@ -90,7 +93,7 @@ public class JwtTokenProvider {
         }
     }
 
-    public String getMailIdFromToken(String token) {
+    public String getUsernameFromToken(String token) {
         return getClaims(token).getSubject();
     }
 

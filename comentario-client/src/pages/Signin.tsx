@@ -59,6 +59,7 @@ const Signin: React.FC<ModalProps> = ({openModal, modalOpen, closeModal, handleL
           console.log(response.data);
           handleLogin(response.data);
           navigate('/');
+          console.log("Logged in successfully");
         })
         .catch(error => {
           isValid(false);
@@ -105,8 +106,8 @@ const Signin: React.FC<ModalProps> = ({openModal, modalOpen, closeModal, handleL
                 name="identifier"
                 id="identifier"
                 placeholder="Your email address or username"
-                className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${identifierError ? "border-red-500" : "border-gray-300"
-                  }`}
+                className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${identifierError && "border-2 border-red-500"
+                            }`}
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
               ></input>
@@ -127,8 +128,8 @@ const Signin: React.FC<ModalProps> = ({openModal, modalOpen, closeModal, handleL
                 name="password"
                 id="emapasswordil"
                 placeholder="Your password"
-                className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${passwordError ? "border-red-500" : "border-gray-300"
-                  }`}
+                className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-lg focus:bg-primaryWhite ${passwordError && "border-2 border-red-500"
+                            }`}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               ></input>
@@ -136,7 +137,7 @@ const Signin: React.FC<ModalProps> = ({openModal, modalOpen, closeModal, handleL
             <div>
               <button
                 type="submit"
-                className="text-white bg-primaryBlue rounded-md p-2 w-full hover:brightness-125"
+                className=" font-bold text-white bg-primaryBlue rounded-md p-2 w-full hover:brightness-125"
               >
                 Sign in
               </button>

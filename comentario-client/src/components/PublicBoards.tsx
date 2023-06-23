@@ -1,6 +1,5 @@
 import Board from "./Board"
 
-
 const PublicBoards = () => {
     return (
         <div className="container mx-auto pt-8 p-2 flex flex-col">

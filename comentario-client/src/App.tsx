@@ -1,26 +1,26 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import './App.css'
-import Dashboard from './pages/Dashboard'
-import Layout from './Layout'
-import Signin from './pages/Signin'
-import Signup from './pages/Signup'
 import useAuthentication from "./components/useAuthentication";
 import api from './api/apiConfig'
 
 import { useEffect, useState } from 'react'
+import LocationProvider from './components/LocationProvider';
+import RoutesWithAnimation from './components/RoutesWithAnimation';
 
 function App() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn, login, logout } = useAuthentication();
   const [loggedInUser, setLoggedInUser] = useState({});
-
+  
   const openModal = () => {
     setModalOpen(true);
+    document.body.classList.add("modal-open")
   }
 
   const closeModal = () => {
     setModalOpen(false);
+    document.body.classList.remove("modal-open")
   }
 
   const handleLogin = (token: string): void => {
@@ -35,13 +35,14 @@ function App() {
     if (isLoggedIn) {
       const token = localStorage.getItem('jwt');
       const config = {
-        headers:{
+        headers: {
           Authorization: token
         }
       };
       api.get('/users/user', config)
         .then((response) => {
-          setLoggedInUser(response.data)})
+          setLoggedInUser(response.data)
+        })
         .catch(err => {
           console.error(err)
         })
@@ -49,19 +50,13 @@ function App() {
   }, [isLoggedIn])
 
   return (
-    <main>
+    <main >
       <BrowserRouter >
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route path="/" element={<Navigate to="/dashboard" replace />}/>
-            <Route path="/dashboard" element={<Dashboard isLoggedIn={isLoggedIn} handleLogout={handleLogout} modalOpen={modalOpen} openModal={openModal} closeModal={closeModal}/>} />
-            <Route path="/sign-in" element={<Signin modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} handleLogin={handleLogin}/>} />
-            <Route path="/sign-up" element={<Signup />} />
-            <Route path="*" element={<Navigate to="/dashboard"/>}></Route>
-          </Route>
-        </Routes>
+      <LocationProvider>
+          <RoutesWithAnimation modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} isLoggedIn={isLoggedIn} handleLogout={handleLogout} handleLogin={handleLogin} loggedInUser={loggedInUser}/>
+        </LocationProvider>
       </BrowserRouter>
-    </main>
+    </main >
   )
 }
 

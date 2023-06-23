@@ -113,14 +113,14 @@ const ForgotPasswordModal: React.FC<ModalProps> = ({ closeModal }) => {
                 name="email"
                 id="email"
                 placeholder="Your email address"
-                className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${emailError ? "border-red-500" : "border-gray-300"
-                  }`}
+                className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${emailError && "border-2 border-red-500"
+                            }`}
                 value={email}
                 disabled={mailSent}
                 onChange={(e) => setEmail(e.target.value)}
               ></input>
             </div>
-            {!mailSent && <button className="text-white bg-primaryBlue rounded-md p-2 w-full hover:brightness-125" type="button" onClick={handleEmail}>Get Otp</button>}
+            {!mailSent && <button className="text-white font-bold bg-primaryBlue rounded-md p-2 w-full hover:brightness-125" type="button" onClick={handleEmail}>Get Otp</button>}
             {mailSent &&
               <div>
                 {!otpVerified ?
@@ -141,12 +141,12 @@ const ForgotPasswordModal: React.FC<ModalProps> = ({ closeModal }) => {
                       name="otp"
                       id="otp"
                       placeholder="Please enter the OTP"
-                      className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${otpError ? "border-red-500" : "border-gray-300"
-                        }`}
+                      className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${otpError && "border-2 border-red-500"
+                            }`}
                       value={otp}
                       onChange={(e) => setOtp(e.target.value)}
                     ></input>
-                    <button className="text-white bg-primaryBlue rounded-md p-2 mt-2 w-full hover:brightness-125 " type="button" onClick={handleOtp}>Submit</button>
+                    <button className="font=bold text-white bg-primaryBlue rounded-md p-2 mt-2 w-full hover:brightness-125 " type="button" onClick={handleOtp}>Submit</button>
 
                   </div>
 
@@ -167,12 +167,12 @@ const ForgotPasswordModal: React.FC<ModalProps> = ({ closeModal }) => {
                       name="password"
                       id="password"
                       placeholder="Please enter your password"
-                      className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${passwordError ? "border-red-500" : "border-gray-300"
-                        }`}
+                      className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${passwordError && "border-2 border-red-500"
+                            }`}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     ></input>
-                    <button className="text-white bg-primaryBlue rounded-md p-2 mt-2 w-full hover:brightness-125 " type="submit">Submit</button>
+                    <button className="text-white font-bold bg-primaryBlue rounded-md p-2 mt-2 w-full hover:brightness-125 " type="submit">Submit</button>
 
                   </div>
                 }

@@ -165,16 +165,13 @@ public class UserService implements UserDetailsService {
                 });
 
             }
-
-
-
     }
 
-    public String getMailIdFromToken(String token) {
+    public String getUsernameFromToken(String token) {
         String jwtToken = token.substring(HEADER_PREFIX.length()).trim();
 
         if (jwtTokenProvider.validateToken(jwtToken)) {
-            return jwtTokenProvider.getMailIdFromToken(jwtToken);
+            return jwtTokenProvider.getUsernameFromToken(jwtToken);
         } else {
             throw new InvalidTokenException("Token is invalid");
         }

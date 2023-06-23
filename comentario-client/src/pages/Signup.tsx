@@ -120,8 +120,8 @@ const Signup = () => {
                 name="fullname"
                 id="fullname"
                 placeholder="Your full name"
-                className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${fullnameError ? "border-red-500" : "border-gray-300"
-                  }`}
+                className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${fullnameError && "border-2 border-red-500"
+                            }`}
                 value={fullname}
                 onChange={(e) => setFullname(e.target.value)}
               ></input>
@@ -142,8 +142,8 @@ const Signup = () => {
                 name="username"
                 id="username"
                 placeholder="Your username"
-                className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${userNameError ? "border-red-500" : "border-gray-300"
-                  }`}
+                className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${userNameError && "border-2 border-red-500"
+                            }`}
                 value={username}
                 onKeyDown={onKeyDown}
                 onChange={(e) => setUsername(e.target.value)}
@@ -166,8 +166,8 @@ const Signup = () => {
                 name="email"
                 id="email"
                 placeholder="Your email address"
-                className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${emailError ? "border-red-500" : "border-gray-300"
-                  }`}
+                className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${emailError && "border-2 border-red-500"
+                            }`}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               ></input>
@@ -188,8 +188,8 @@ const Signup = () => {
                 name="password"
                 id="emapasswordil"
                 placeholder="Your password"
-                className={`bg-primaryWhite p-2 rounded-md border-2 text-black focus:outline-none focus:border-primaryBlue ${passwordError ? "border-red-500" : "border-gray-300"
-                  }`}
+                className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${passwordError && "border-2 border-red-500"
+                            }`}
                 value={password}
                 min={8}
                 max={15}
@@ -199,7 +199,7 @@ const Signup = () => {
             <div>
               <button
                 type="submit"
-                className="text-white bg-primaryBlue rounded-md p-2 w-full hover:brightness-125"
+                className="font-bold text-white bg-primaryBlue rounded-md p-2 w-full hover:brightness-125"
               >
                 Sign up
               </button>

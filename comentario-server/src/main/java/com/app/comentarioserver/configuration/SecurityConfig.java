@@ -28,6 +28,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Collections;
 import java.util.List;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 @Slf4j
@@ -37,14 +39,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JwtTokenProvider jwtTokenProvider) throws Exception {
         return httpSecurity
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .cors(httpSecurityCorsConfigurer -> {
-                    corsConfigurationSource();
-                })
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(httpSecurityCorsConfigurer -> corsConfigurationSource())
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/users/login", "/users/register", "/users/forgot-password", "/users/reset-password", "/users/verify-register-token", "/users/all-users", "/users/delete-all").permitAll())
+                        .requestMatchers("/users/login", "/users/register", "/users/forgot-password", "/users/reset-password", "/users/verify-register-token", "/users/all-users", "/users/delete-all").permitAll()
+                        .anyRequest().authenticated())
                 .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
 

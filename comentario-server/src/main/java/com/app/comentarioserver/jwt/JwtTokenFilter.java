@@ -20,7 +20,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtTokenFilter extends GenericFilterBean {
 
-    public static final String HEADER_PREFIX = "Bearer_";
+    public static final String HEADER_PREFIX = "Bearer ";
 
     private final JwtTokenProvider jwtTokenProvider;
     @Override
