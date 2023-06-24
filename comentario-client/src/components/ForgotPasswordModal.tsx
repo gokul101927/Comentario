@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Modal from "./Modal";
+import {Link} from "react-router-dom"
 
 interface ModalProps {
   closeModal: () => void;
@@ -89,13 +90,15 @@ const ForgotPasswordModal: React.FC<ModalProps> = ({ closeModal }) => {
         <form onSubmit={handleSubmit}>
           <div className="space-y-2">
             <div className="flex justify-center p-4 items-center">
+            <Link to="/">
               <img
                 src="../src/assets/logo.png"
                 alt="logo"
                 className="logo-image h-8"
               />
+            </Link>
             </div>
-            <h2 className="text-black font-bold font-small">Forgot your password? we got you covered.</h2>
+            <h2 className="text-black font-bold font-small">Forgot your password? we got you.</h2>
             <div className="flex flex-col">
               <div className="flex justify-between">
                 <label

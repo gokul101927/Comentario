@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from 'react-router-dom'
+import { motion } from "framer-motion";
 
 import api from "../api/apiConfig";
 import ForgotPasswordModal from "../components/ForgotPasswordModal";
@@ -11,7 +12,7 @@ interface ModalProps {
   handleLogin: (token: string) => void;
 }
 
-const Signin: React.FC<ModalProps> = ({openModal, modalOpen, closeModal, handleLogin}) => {
+const Signin: React.FC<ModalProps> = ({ openModal, modalOpen, closeModal, handleLogin }) => {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
 
@@ -43,7 +44,7 @@ const Signin: React.FC<ModalProps> = ({openModal, modalOpen, closeModal, handleL
     }
   };
 
-  
+
 
   useEffect(() => {
     if (valid) {
@@ -71,21 +72,29 @@ const Signin: React.FC<ModalProps> = ({openModal, modalOpen, closeModal, handleL
             setPasswordError(errorMessage);
           } else if (errorMessage.includes("username")) {
             setIdentifierError(errorMessage);
-          } 
+          }
         });
     }
   }, [valid, identifier, password, handleLogin, navigate]);
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <motion.div 
+      initial={{ opacity: 0, x: -50 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 1 }} 
+      className="flex justify-center items-center min-h-screen">
+      {!modalOpen ?
       <div className="bg-primaryWhite shadow p-8 space-y-5 rounded-xl w-80 md:w-96">
         <form onSubmit={(e) => handleSubmit(e)}>
           <div className="flex justify-center p-4 items-center">
-            <img
-              src="../src/assets/logo.png"
-              alt="logo"
-              className="logo-image h-8"
-            />
+            <Link to="/">
+              <img
+                src="../src/assets/logo.png"
+                alt="logo"
+                className="logo-image h-8"
+              />
+            </Link>
+
           </div>
           <div className="flex flex-col space-y-3">
             <h2 className="text-black font-bold">Sign-in to your account.</h2>
@@ -107,7 +116,7 @@ const Signin: React.FC<ModalProps> = ({openModal, modalOpen, closeModal, handleL
                 id="identifier"
                 placeholder="Your email address or username"
                 className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${identifierError && "border-2 border-red-500"
-                            }`}
+                  }`}
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
               ></input>
@@ -129,7 +138,7 @@ const Signin: React.FC<ModalProps> = ({openModal, modalOpen, closeModal, handleL
                 id="emapasswordil"
                 placeholder="Your password"
                 className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-lg focus:bg-primaryWhite ${passwordError && "border-2 border-red-500"
-                            }`}
+                  }`}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               ></input>
@@ -156,9 +165,8 @@ const Signin: React.FC<ModalProps> = ({openModal, modalOpen, closeModal, handleL
           </div>
         </form>
       </div>
-      {modalOpen && <ForgotPasswordModal closeModal={closeModal}/>}
-    </div>
-    
+      : <ForgotPasswordModal closeModal={closeModal} />}
+    </motion.div>
   );
 };
 

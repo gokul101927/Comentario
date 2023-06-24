@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom'
+import { motion } from "framer-motion";
 
 import api from "../api/apiConfig";
 
@@ -92,15 +93,22 @@ const Signup = () => {
   }, [valid, email, fullname, username, password])
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <motion.div 
+    initial={{ opacity: 0, x: -50 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ duration: 1 }} 
+    className="flex justify-center items-center min-h-screen">
+    
       <div className="bg-primaryWhite shadow p-8 space-y-5 rounded-xl w-80 md:w-96">
         <form onSubmit={(e) => handleSubmit(e)}>
           <div className="flex justify-center p-4 items-center">
-            <img
-              src="../src/assets/logo.png"
-              alt="logo"
-              className="logo-image h-8"
-            />
+          <Link to="/">
+              <img
+                src="../src/assets/logo.png"
+                alt="logo"
+                className="logo-image h-8"
+              />
+            </Link>
           </div>
           {!emailSent ? <div className="flex flex-col space-y-3">
             <h2 className="text-black font-bold">Get started now.</h2>
@@ -224,7 +232,7 @@ const Signup = () => {
             </div>}
         </form>
       </div>
-    </div>
+      </motion.div> 
   );
 };
 
