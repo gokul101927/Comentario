@@ -87,6 +87,7 @@ const ForgotPasswordModal: React.FC<ModalProps> = ({ closeModal }) => {
 
   return (
     <Modal closeModal={closeModal}>
+
         <form onSubmit={handleSubmit}>
           <div className="space-y-2">
             <div className="flex justify-center p-4 items-center">
@@ -184,7 +185,6 @@ const ForgotPasswordModal: React.FC<ModalProps> = ({ closeModal }) => {
 
           </div>
         </form>
-      
     </Modal>
   )
 }
