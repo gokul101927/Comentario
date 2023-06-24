@@ -16,8 +16,8 @@ const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }
     }
 
     return (
-        <header className="relative mb-20 fadeIn">
-            <div className='bg-primaryWhite shadow-lg fixed top-0 left-0 right-0'>
+        <header className="fadeIn">
+            <div className='bg-primaryWhite shadow-lg sticky top-0'>
                 <nav className='p-4'>
                     <div className="flex items-center justify-between">
                         <div>

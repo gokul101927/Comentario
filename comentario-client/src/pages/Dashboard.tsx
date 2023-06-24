@@ -13,7 +13,7 @@ interface ModalProps {
 
 const Dashboard: React.FC<ModalProps> = ({handleLogout, isLoggedIn, openModal, closeModal, modalOpen, loggedInUser}) => {
   return (
-    <div className='relative'>
+    <div>
         <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser}/>
         <YourBoards modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} isLoggedIn={isLoggedIn}/>
         <PublicBoards/>
