@@ -3,6 +3,7 @@ import Dashboard from '../pages/Dashboard'
 import Layout from '../Layout'
 import Signin from '../pages/Signin'
 import Signup from '../pages/Signup'
+import MyProfile from '../pages/MyProfile'
 
 interface ModalProps {
     modalOpen: boolean;
@@ -25,6 +26,7 @@ const RoutesWithAnimation: React.FC<ModalProps> = ({handleLogout, isLoggedIn, op
                 <Route path="/dashboard" element={<Dashboard isLoggedIn={isLoggedIn} handleLogout={handleLogout} modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} loggedInUser={loggedInUser}/>} />
                 <Route path="/sign-in" element={<Signin modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} handleLogin={handleLogin} />} />
                 <Route path="/sign-up" element={<Signup />} />
+                <Route path="/my-profile" element={<MyProfile isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser}/>} />
                 <Route path="*" element={<Navigate to="/dashboard" />}></Route>
             </Route>
         </Routes>

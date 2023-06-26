@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ImageUpload from "./ImageUpload";
+import CoverImageUpload from "./CoverImageUpload";
 import Modal from "./Modal";
 
 interface ModalProps {
@@ -25,7 +25,7 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal }) => {
     return (
         <Modal closeModal={closeModal}>
             <form className="space-y-3">
-                <ImageUpload />
+                <CoverImageUpload />
                 <div className="flex flex-col">
                     <input
                         type="title"

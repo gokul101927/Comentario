@@ -1,33 +1,33 @@
 .modal-open {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .fadeIn {
-    animation: 0.5s fadeIn forwards;
+  animation: 0.5s fadeIn forwards;
+}
+
+.fadeOut {
+  animation: 0.5s fadeOut forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-20px, 0);
   }
-  
-  .fadeOut {
-    animation: 0.5s fadeOut forwards;
+  to {
+    opacity: 1;
+    transform: translate(0px, 0px);
   }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translate(-20px, 0);   
-    }
-    to {
-      opacity: 1;
-      transform: translate(0px, 0px);
-    }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translate(0px, 0px);
   }
-  
-  @keyframes fadeOut {
-    from {
-      opacity: 1;
-      transform: translate(0px, 0px);
-    }
-    to {
-      transform: translate(-20px, 0);
-      opacity: 0;
-    }
+  to {
+    transform: translate(-20px, 0);
+    opacity: 0;
   }
+}

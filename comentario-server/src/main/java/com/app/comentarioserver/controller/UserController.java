@@ -92,7 +92,12 @@ public class UserController {
 
     @GetMapping("/user")
     public ResponseEntity<UserDetails> getUserFromToken(@RequestHeader(name = "Authorization") String token) {
-        log.info("Validation started");
+        String username = userService.getUsernameFromToken(token);
+        return new ResponseEntity<>(userService.loadUserByUsername(username), HttpStatus.OK);
+    }
+
+    @PostMapping("/user/update")
+    public ResponseEntity<UserDetails> updateUser(@RequestHeader(name = "Authorization") String token) {
         String username = userService.getUsernameFromToken(token);
         return new ResponseEntity<>(userService.loadUserByUsername(username), HttpStatus.OK);
     }

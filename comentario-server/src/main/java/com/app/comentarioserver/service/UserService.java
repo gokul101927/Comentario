@@ -191,10 +191,13 @@ public class UserService implements UserDetailsService {
             return false;
         }
 
-        user.setVerified(true);
-        updateUser(user);
-
+        updateUserVerification(user);
         return true;
+    }
+
+    public void updateUserVerification(User user) {
+        user.setVerified(true);
+        userRepository.save(user);
     }
 
     public void updateUser(User user) {

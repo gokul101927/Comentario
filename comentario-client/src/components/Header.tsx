@@ -1,10 +1,37 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 
 interface ModalProps {
     isLoggedIn: boolean;
     handleLogout: () => void;
-    loggedInUser: object;
+    loggedInUser: User;
+}
+
+interface User {
+    id: {
+        timestamp: number;
+        date: string;
+    };
+    fullName: string;
+    mailId: string;
+    password: string;
+    verificationToken: {
+        userToken: string;
+        expiryDate: string;
+    };
+    roles: Array<{
+        authority: string;
+    }>;
+    profileImageUrl: string;
+    enabled: boolean;
+    verified: boolean;
+    accountNonExpired: boolean;
+    accountNonLocked: boolean;
+    credentialsNonExpired: boolean;
+    username: string;
+    authorities: Array<{
+        authority: string;
+    }>;
 }
 
 const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }) => {
@@ -15,13 +42,23 @@ const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }
         setDropdownOpen(!isDropdownOpen);
     }
 
+    useEffect(() => {
+        setDropdownOpen(!isDropdownOpen);
+    }, []);
+
     return (
         <header className="sticky top-0">
             <div className='bg-primaryWhite shadow-lg'>
                 <nav className='p-4'>
                     <div className="flex items-center justify-between">
                         <div>
-                            <img src="../src/assets/logo.png" alt="logo" className="logo-image h-8" />
+                            <Link to="/">
+                                <img
+                                    src="../src/assets/logo.png"
+                                    alt="logo"
+                                    className="logo-image h-8"
+                                />
+                            </Link>
                         </div>
                         <div className="flex justify-between">
                             {/* Search bar */}
@@ -31,13 +68,17 @@ const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }
                                     :
                                     <div className='space-y-2'>
                                         <div onClick={toggleDropdownOpen} className='flex gap-2 items-center cursor-pointer rounded-lg pr-2 hover:bg-gray-200 hover:shadow-xl'>
-                                            <div className='p-2 px-4 rounded-lg bg-primaryBlue text-white'>G</div>
-                                            <div className='text-black font-small font-bold'>log</div>
+                                            <img
+                                                src={loggedInUser.profileImageUrl}
+                                                alt="logo"
+                                                className="rounded-full h-8 w-8 object-center object-cover"
+                                            />
+                                            <div className='text-black font-small font-bold'>{loggedInUser.fullName}</div>
                                         </div>
-                                        { isDropdownOpen && <div className='absolute border right-2 z-50 bg-white rounded-lg shadow-xl w-44'>
+                                        {isDropdownOpen && <div className='absolute border right-2 z-50 bg-white rounded-lg shadow-xl w-44'>
                                             <ul className="py-2 text-sm text-gray-700 divide-y divide-solid divide-gray-200">
                                                 <li>
-                                                    <Link to="#" className="block px-4 py-2 hover:bg-gray-400 hover:text-white ">My profile</Link>
+                                                    <Link to="/my-profile" className="block px-4 py-2 hover:bg-gray-400 hover:text-white ">My profile</Link>
                                                 </li>
                                                 <li>
                                                     <div onClick={handleLogout} className="block px-4 py-2 hover:bg-red-400 text-red-700">Logout</div>

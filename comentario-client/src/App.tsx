@@ -9,6 +9,8 @@ import RoutesWithAnimation from './components/RoutesWithAnimation';
 
 function App() {
 
+  // https://ik.imagekit.io/dpkmzcpsk/ -> URL endpoint
+
   const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn, login, logout } = useAuthentication();
   const [loggedInUser, setLoggedInUser] = useState({});
@@ -42,6 +44,7 @@ function App() {
       api.get('/users/user', config)
         .then((response) => {
           setLoggedInUser(response.data)
+          console.log(response.data);
         })
         .catch(err => {
           console.error(err)
