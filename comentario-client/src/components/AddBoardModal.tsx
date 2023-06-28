@@ -33,7 +33,6 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, mailId }) => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log("clicked")
         if (!title) {
             setTitleError("title is required")
             return;
@@ -54,7 +53,6 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, mailId }) => {
         } else {
             setUrlError("");
         }
-
 
         setLoading(true);
         closeModal();
@@ -98,7 +96,8 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, mailId }) => {
                         name="title"
                         id="title"
                         placeholder="Title of the software"
-                        className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${titleError ? "border-red-500" : "border-gray-300"
+
+                        className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:shadow-xl focus:bg-primaryWhite ${titleError && "border-2 border-red-500 placeholder:text-red-500"
                             }`}
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
@@ -110,7 +109,7 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, mailId }) => {
                         name="description"
                         id="description"
                         placeholder="Description of the software"
-                        className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${descriptionError ? "border-red-500" : "border-gray-300"
+                        className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:shadow-xl focus:bg-primaryWhite ${descriptionError && "border-2 border-red-500 placeholder:text-red-500"
                             }`}
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
@@ -122,7 +121,7 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, mailId }) => {
                         name="url"
                         id="url"
                         placeholder="URL of the software"
-                        className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${urlError ? "border-red-500" : "border-gray-300"
+                        className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:shadow-xl focus:bg-primaryWhite ${urlError && "border-2 border-red-500 placeholder:text-red-500"
                             }`}
                         value={url}
                         onChange={(e) => setUrl(e.target.value)}
@@ -149,7 +148,7 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, mailId }) => {
                     <button className="text-sm font-small text-white rounded-md p-2 font-bold bg-primaryBlue hover:brightness-125" type="submit">+ Create</button>
                 </div>
             </form>
-            {loading && <LoadingSpinnerModal closeModal={closeModal}/>}
+            {loading && <LoadingSpinnerModal closeModal={closeModal} />}
         </Modal>
     )
 

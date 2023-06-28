@@ -12,7 +12,7 @@ const Modal: React.FC<ModalProps> = ({ closeModal, children }) => {
         if (isClosing) {
             const timer = setTimeout(() => {
                 closeModal();
-            }, 300)
+            }, 400)
 
             return () => {
                 clearTimeout(timer);
