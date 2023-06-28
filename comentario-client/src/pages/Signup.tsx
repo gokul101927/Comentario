@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from 'react-router-dom'
 
-import SignupForm from "../components/SignUpForm";
+import SignupForm from "../components/SignupForm";
 
 const Signup = () => {
 
@@ -22,7 +22,7 @@ const Signup = () => {
           </Link>
           
         </div>
-        <h2 className="text-black font-bold">Get started now.</h2>
+
         <SignupForm/>
       </div>
     </motion.div>

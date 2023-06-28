@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react"
 
-const CoverImageUpload = () => {
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+interface ModalProps {
+    selectedFile: File | null;
+    handleFile: (file: File | null) => void;
+}
+
+const CoverImageUpload: React.FC<ModalProps> = ({selectedFile, handleFile}) => {
     const [preview, setPreview] = useState("")
 
     useEffect(() => {
@@ -18,21 +22,21 @@ const CoverImageUpload = () => {
 
     const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) {
-            setSelectedFile(null)
+            handleFile(null)
             return
         }
-
-        setSelectedFile(e.target.files[0])
+        handleFile(e.target.files[0])
     }
 
     return (
         <div className="flex flex-col items-center justify-center">
-            
-            {selectedFile ? <img className="rounded-md border border-black object-center object-cover h-44 w-full" src={preview} /> : 
-            <div className="rounded-md object-center object-cover p-6 bg-gray-100 w-full flex flex-col items-center justify-center">            
-                <label className="text-black cursor-pointer text-sm border rounded-md border-solid border-black p-2" htmlFor="image-upload">Upload your cover image here.</label>
-                <input className="hidden" id="image-upload" type='file' onChange={onSelectFile} />
-            </div>}
+
+            <div className="rounded-md object-center object-cover p-6 bg-gray-100 w-full flex flex-col items-center justify-center">
+                <label className="text-black cursor-pointer text-sm border rounded-md border-solid border-black p-2" htmlFor="image-upload">
+                    {selectedFile ? <img className="rounded-md border border-black object-center object-cover h-44 w-full" src={preview} /> : <p>Upload your cover image here.</p>}
+                </label>
+                <input className="hidden" id="image-upload" type='file' onChange={onSelectFile} accept="image/png, image/gif, image/jpeg, image/jpg, image/svg" />
+            </div>
         </div>
     )
 }

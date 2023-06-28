@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 @CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "Authorization")
 @RequiredArgsConstructor
-@RequestMapping(path = "/board", produces = "application/json")
+@RequestMapping(path = "/boards", produces = "application/json")
 public class BoardController {
 
     private final BoardService boardService;
@@ -33,5 +33,10 @@ public class BoardController {
     @GetMapping("/boards/{id}")
     public ResponseEntity<Board> allBoards(@RequestParam("id") ObjectId id) {
         return new ResponseEntity<>(boardService.getBoard(id), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete-all")
+    public void deleteAllBaords() {
+        boardService.deleteAll();
     }
 }

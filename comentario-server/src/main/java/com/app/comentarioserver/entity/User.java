@@ -9,13 +9,13 @@ import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 @Document(collection = "users")
@@ -44,7 +44,7 @@ public class User implements UserDetails {
     @NotNull
     private String password;
 
-    @Transient
+    @NotNull
     private Token verificationToken;
 
     @NotNull
@@ -52,8 +52,11 @@ public class User implements UserDetails {
 
     private boolean isVerified;
 
-    @DBRef
-    private Board board;
+    private List<Board> boards;
+
+    public void setBoards(Board board) {
+        boards.add(board);
+    }
 
     @JsonDeserialize(using = GrantedAuthorityDeserializer.class)
     private Collection<? extends GrantedAuthority> roles;
@@ -66,8 +69,9 @@ public class User implements UserDetails {
         this.roles = List.of(new SimpleGrantedAuthority("USER"));
         this.isVerified = false;
         this.profileImageUrl = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
-        this.verificationToken = new Token();
+        this.boards = new LinkedList<>();
     }
+
 
     public User(String mailId, String password, Collection<? extends GrantedAuthority> roles) {
         this.mailId = mailId;

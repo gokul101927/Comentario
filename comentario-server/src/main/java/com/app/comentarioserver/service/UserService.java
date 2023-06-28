@@ -2,6 +2,7 @@ package com.app.comentarioserver.service;
 
 import com.app.comentarioserver.controller.AuthRequest;
 import com.app.comentarioserver.controller.UserRequest;
+import com.app.comentarioserver.entity.Board;
 import com.app.comentarioserver.entity.Token;
 import com.app.comentarioserver.entity.User;
 import com.app.comentarioserver.exception.InvalidCredentialsException;
@@ -51,13 +52,16 @@ public class UserService implements UserDetailsService {
             throw new UserAlreadyExistsException("User already exists with email: " + userRequest.getMailId());
         }
 
-        if (checkIfUsernameExists(userRequest.getUserName())) {
-            throw new UserAlreadyExistsException("User already exists with username: " + userRequest.getUserName());
+        if (checkIfUsernameExists(userRequest.getUsername())) {
+            throw new UserAlreadyExistsException("User already exists with username: " + userRequest.getUsername());
         }
 
-        User user = new User(userRequest.getFullName(), userRequest.getUserName(), userRequest.getMailId(), encoder().encode(userRequest.getPassword()));
+        User user = new User(userRequest.getFullName(), userRequest.getUsername(), userRequest.getMailId(), encoder().encode(userRequest.getPassword()));
         user.setRoles(List.of(new SimpleGrantedAuthority("User")));
         user.setVerified(false);
+        Token token = new Token();
+        user.setVerificationToken(token);
+
         String verificationTokenValue = user.getVerificationToken().getUserToken();
         String to = user.getMailId();
         String subject = "Welcome, " + user.getFullName();
@@ -212,4 +216,12 @@ public class UserService implements UserDetailsService {
 
         return optionalUser.get();
     }
+
+    public void addBoardToTheUser(Board board, String username) {
+        User user = loadByMailId(username);
+        user.setBoards(board);
+        userRepository.save(user);
+    }
+
+
 }

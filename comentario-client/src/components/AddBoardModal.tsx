@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CoverImageUpload from "./CoverImageUpload";
 import Modal from "./Modal";
+
+import api from "../api/apiConfig";
 
 interface ModalProps {
     closeModal: () => void;
 }
 
 const AddBoardModal: React.FC<ModalProps> = ({ closeModal }) => {
-    const [title, setTitla] = useState("");
+    const [title, setTitle] = useState("");
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [description, setDescription] = useState("");
     const [url, setUrl] = useState("");
     const [isSelf, setIsSelf] = useState(false);
@@ -22,10 +25,69 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal }) => {
         setIsSelf(!isSelf);
     }
 
+    const handleFile = (file: File | null): void => {
+        setSelectedFile(file);
+    }
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (!title) {
+            setTitleError("title is required")
+            isValid(false);
+        } else {
+            setTitleError("");
+        }
+
+        if (!description) {
+            setDescriptionError("Password is required");
+            isValid(false);
+        } else {
+            setDescriptionError("");
+        }
+
+        if (!url) {
+            setUrlError("URL is required");
+            isValid(false);
+        } else {
+            setUrlError("");
+        }
+
+        if (title && description && url) {
+            isValid(true);
+        }        
+    };
+
+
+    useEffect(() => {
+        if (valid) {
+            console.log("submitted");
+            const token = localStorage.getItem('jwt');
+            const config = {
+                headers: {
+                  Authorization: token
+                }
+              };
+            // Login the user
+
+            const requestBody = {
+                coverImageUrl: selectedFile,
+                title: title,
+                description: description,
+                url: url,
+                isSelf: isSelf,
+                mailId: ""
+            };
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+        }
+    }, []);
+
     return (
         <Modal closeModal={closeModal}>
-            <form className="space-y-3">
-                <CoverImageUpload />
+            <form className="space-y-3" onSubmit={handleSubmit}>
+                <CoverImageUpload selectedFile={selectedFile} handleFile={handleFile}/>
                 <div className="flex flex-col">
                     <input
                         type="title"
@@ -35,7 +97,7 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal }) => {
                         className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${titleError ? "border-red-500" : "border-gray-300"
                             }`}
                         value={title}
-                        onChange={(e) => setTitla(e.target.value)}
+                        onChange={(e) => setTitle(e.target.value)}
                     ></input>
                 </div>
                 <div className="flex flex-col">

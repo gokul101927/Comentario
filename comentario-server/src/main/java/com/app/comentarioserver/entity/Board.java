@@ -1,6 +1,7 @@
 package com.app.comentarioserver.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.app.comentarioserver.controller.AuthRequest;
+import com.app.comentarioserver.controller.UserRequest;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,20 @@ public class Board {
     @NotNull
     private String description;
 
-    @DBRef
-    private User user;
+    @NotNull
+    private String url;
+
+    private boolean isSelf;
+
+    @NotNull
+    private String mailId;
+
+    public Board(String coverImageUrl, String title, String description, String url, boolean isSelf, String mailId) {
+        this.coverImageUrl = coverImageUrl;
+        this.title = title;
+        this.description = description;
+        this.url = url;
+        this.isSelf = isSelf;
+        this.mailId = mailId;
+    }
 }

@@ -8,7 +8,7 @@ public class UserRequest {
 
     private String fullName;
 
-    private String userName;
+    private String username;
 
     private String mailId;
 

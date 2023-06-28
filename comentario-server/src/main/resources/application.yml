@@ -2,6 +2,11 @@ app:
   secretKey: ${SECRET_KEY}
   jwtValidity: ${VALIDITY}
 
+imagekit:
+  urlEndpoint: ${IMAGEKIT_URL_ENDPOINT}
+  privateKey: ${IMAGEKIT_PRIVATE_KEY}
+  publicKey: ${IMAGEKIT_PUBLIC_KEY}
+
 spring:
   data:
     mongodb:

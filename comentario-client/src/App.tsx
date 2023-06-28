@@ -10,6 +10,8 @@ import RoutesWithAnimation from './components/RoutesWithAnimation';
 function App() {
 
   // https://ik.imagekit.io/dpkmzcpsk/ -> URL endpoint
+  // public_iAjFQG/rW/KjYppzKPyAVXK+wOo= -> public key
+  // private_Dq/hybLSktZ3LXg2jO4gy/kh5Ts= -> private key
 
   const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn, login, logout } = useAuthentication();

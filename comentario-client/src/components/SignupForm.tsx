@@ -72,10 +72,7 @@ const SignupForm = () => {
             api.post('/users/register', requestBody)
                 .then(response => {
                     console.log(response.data);
-                   
                         setEmailSent(true);
-                    
-
                 })
                 .catch(error => {
                     isValid(false);
@@ -96,8 +93,9 @@ const SignupForm = () => {
 
     return (
         <form onSubmit={(e) => handleSubmit(e)}>
+            
             {!emailSent ? <div className="flex flex-col space-y-3">
-                
+            <h2 className="text-black font-bold">Get started now.</h2>
                 <div className="flex flex-col">
                     <div className="flex justify-between">
                         <label
@@ -205,7 +203,7 @@ const SignupForm = () => {
                     <Link to="/sign-in" className="block mb-2 text-sm font-small text-primaryBlue hover:underline">Sign-in now.</Link>
                 </div>
             </div> :
-                <div className="flex flex-col gap-2 h-36">
+                <div className="flex flex-col gap-2 h-36 fadeIn">
                     <h2 className="text-black font-bold text-center">Verify your account.</h2>
                     <p className="text-black text-center">We have sent you an email with a link, kindly click it to verify your account.</p>
                     <Link target="_blank" rel="noopener noreferrer" to="https://mail.google.com/" className="text-center text-white bg-primaryBlue rounded-md p-2 w-full hover:brightness-125 flex justify-center items-center">Open Gmail
