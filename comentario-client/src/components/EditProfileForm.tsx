@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from 'react-router-dom'
 
 import api from "../api/apiConfig";
@@ -8,8 +8,6 @@ const EditProfileForm = () => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
-    const [valid, isValid] = useState(false);
 
     const [fullnameError, setFullnameError] = useState("");
     const [userNameError, setUserNameError] = useState("");
@@ -23,44 +21,33 @@ const EditProfileForm = () => {
 
         if (!fullname) {
             setFullnameError("Full name is required");
-            isValid(false);
+            return;
         } else {
             setFullnameError("");
         }
 
         if (!username) {
             setUserNameError("Username is required");
-            isValid(false);
+            return;
         } else {
             setUserNameError("");
         }
 
         if (!email) {
             setEmailError("Email is required");
-            isValid(false);
+            return;
         } else {
             setEmailError("");
         }
 
         if (!password) {
             setPasswordError("Password is required");
-            isValid(false);
+            return;
         } else {
             setPasswordError("");
         }
 
-        if (username && password && fullname && email) {
-            isValid(true);
-        }
-    };
-
-    const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
-        if (event.code === 'Space') event.preventDefault()
-    }
-
-    useEffect(() => {
-        if (valid) {
-            console.log("submitted");
+        console.log("submitted");
             // Login the user
             const requestBody = {
                 fullName: fullname,
@@ -76,7 +63,6 @@ const EditProfileForm = () => {
 
                 })
                 .catch(error => {
-                    isValid(false);
                     console.error(error);
                     const errorMessage = error.response.data.message;
                     if (errorMessage.includes("email")) {
@@ -89,8 +75,11 @@ const EditProfileForm = () => {
                         setFullnameError(errorMessage);
                     }
                 });
-        }
-    }, [valid, email, fullname, username, password, navigate])
+    };
+
+    const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
+        if (event.code === 'Space') event.preventDefault()
+    }
 
     return (
         <form onSubmit={(e) => handleSubmit(e)}>

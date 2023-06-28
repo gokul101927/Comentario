@@ -1,12 +1,10 @@
 package com.app.comentarioserver.service;
 
 import com.app.comentarioserver.entity.Board;
-import com.app.comentarioserver.entity.User;
 import com.app.comentarioserver.repository.BoardRepository;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.exceptions.*;
 import io.imagekit.sdk.models.FileCreateRequest;
-import io.imagekit.sdk.models.results.Result;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
@@ -21,6 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardService {
 
+    private final String IMAGE_FOLDER = "Comentario/users/";
+
     private final BoardRepository boardRepository;
 
     private final ImageKit imageKit;
@@ -31,7 +31,8 @@ public class BoardService {
         return boardRepository.findAll();
     }
 
-    public Board addBoard(Board board) {
+    public Board addBoard(Board board, MultipartFile file) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
+        board.setCoverImageUrl(uploadCoverImage(file));
         Board newBoard = boardRepository.save(board);
         userService.addBoardToTheUser(newBoard, board.getMailId());
         return newBoard;
@@ -45,11 +46,10 @@ public class BoardService {
         boardRepository.deleteAll();
     }
 
-    public String uploadImage(MultipartFile image) throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+    public String uploadCoverImage(MultipartFile image) throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
         byte[] imageBytes = image.getBytes();
         FileCreateRequest fileCreateRequest = new FileCreateRequest(imageBytes, "filename");
-        Result result = imageKit.upload(fileCreateRequest);
-        
-        return result.getUrl();
+        fileCreateRequest.setFolder("Comentario/");
+        return imageKit.upload(fileCreateRequest).getUrl();
     }
 }

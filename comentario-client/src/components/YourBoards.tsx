@@ -5,9 +5,10 @@ interface ModalProps {
   isLoggedIn: boolean;
   openModal: () => void;
   closeModal: () => void;
+  mailId: string;
 }
 
-const YourBoards: React.FC<ModalProps> = ({ modalOpen, openModal, closeModal }) => {
+const YourBoards: React.FC<ModalProps> = ({ modalOpen, openModal, closeModal, mailId }) => {
   return (
     <div>
       <div className='container mx-auto p-2 pt-8 flex flex-col'>
@@ -19,7 +20,8 @@ const YourBoards: React.FC<ModalProps> = ({ modalOpen, openModal, closeModal }) 
           <h2 className='text-gray-500 py-12 text-center'>No boards yet.</h2>
         </div>
       </div>
-      {modalOpen && <AddBoardModal closeModal={closeModal} />}
+
+      {modalOpen && <AddBoardModal closeModal={closeModal} mailId={mailId}/>}
     </div>
   )
 }

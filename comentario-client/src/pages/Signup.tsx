@@ -3,7 +3,12 @@ import { Link } from 'react-router-dom'
 
 import SignupForm from "../components/SignupForm";
 
-const Signup = () => {
+interface ModalProps {
+  closeModal: () => void;
+  mailId: string;
+}
+
+const Signup: React.FC<ModalProps> = ({ closeModal }) => {
 
   return (
     <motion.div
@@ -23,7 +28,7 @@ const Signup = () => {
           
         </div>
 
-        <SignupForm/>
+        <SignupForm closeModal={closeModal}/>
       </div>
     </motion.div>
   );

@@ -25,6 +25,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -56,7 +57,7 @@ public class UserService implements UserDetailsService {
             throw new UserAlreadyExistsException("User already exists with username: " + userRequest.getUsername());
         }
 
-        User user = new User(userRequest.getFullName(), userRequest.getUsername(), userRequest.getMailId(), encoder().encode(userRequest.getPassword()));
+        User user = new User(userRequest.getFullName(), userRequest.getUsername(), userRequest.getMailId(), encoder().encode(userRequest.getPassword()), userRequest.getProfileImageUrl());
         user.setRoles(List.of(new SimpleGrantedAuthority("User")));
         user.setVerified(false);
         Token token = new Token();
@@ -101,7 +102,7 @@ public class UserService implements UserDetailsService {
     }
 
     private boolean checkIfUsernameExists(String username) {
-        return userRepository.findByUserName(username).isPresent();
+        return userRepository.findByUsername(username).isPresent();
     }
 
     public String fetchPasswordResetOtp(String mailId) {
@@ -145,7 +146,7 @@ public class UserService implements UserDetailsService {
         if (Pattern.compile("^(.+)@(\\S+)$").matcher(identifier).matches()) {
             user = userRepository.findByMailId(identifier).orElseThrow();
         } else {
-            user = userRepository.findByUserName(identifier).orElseThrow();
+            user = userRepository.findByUsername(identifier).orElseThrow();
         }
 
         return user.isEnabled();
@@ -164,7 +165,7 @@ public class UserService implements UserDetailsService {
                 });
 
             } else {
-                return userRepository.findByUserName(identifier).orElseThrow(() -> {
+                return userRepository.findByUsername(identifier).orElseThrow(() -> {
                     throw new UsernameNotFoundException("Unable to fine user with this username");
                 });
 
@@ -204,14 +205,34 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public void updateUser(User user) {
-        userRepository.save(user);
+    public User updateUser(String username, UserRequest userRequest) {
+        User user = getUserByUsername(username);
+        user.setFullName(userRequest.getFullName());
+        user.setUsername(userRequest.getUsername());
+        user.setMailId(userRequest.getMailId());
+        user.setPassword(userRequest.getPassword());
+        user.setProfileImageUrl(userRequest.getProfileImageUrl());
+        return userRepository.save(user);
     }
+
+//    public User updateProfileImage(String username, MultipartFile file) {
+//        User user = getUserByUsername(username);
+//        user.setProfileImageUrl();
+//    }
 
     public User loadByMailId(String mailId) {
         Optional<User> optionalUser = userRepository.findByMailId(mailId);
         if (optionalUser.isEmpty()) {
             throw new InvalidCredentialsException("Account doesn't exist with mail: " + mailId);
+        }
+
+        return optionalUser.get();
+    }
+
+    public User getUserByUsername(String username) {
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()) {
+            throw new InvalidCredentialsException("Account doesn't exist with username: " + username);
         }
 
         return optionalUser.get();

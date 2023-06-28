@@ -1,13 +1,17 @@
 package com.app.comentarioserver.controller;
 
+import com.app.comentarioserver.entity.Board;
 import com.app.comentarioserver.entity.User;
 import com.app.comentarioserver.exception.InvalidCredentialsException;
 import com.app.comentarioserver.exception.UserNotEnabledException;
 import com.app.comentarioserver.jwt.JwtTokenProvider;
 import com.app.comentarioserver.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.net.URISyntaxException;
@@ -30,7 +35,7 @@ import static com.app.comentarioserver.jwt.JwtTokenFilter.HEADER_PREFIX;
 public class UserController {
 
     private final UserService userService;
-
+    private final ObjectMapper objectMapper;
     private final AuthenticationManager authenticationManager;
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -96,10 +101,16 @@ public class UserController {
         return new ResponseEntity<>(userService.loadUserByUsername(username), HttpStatus.OK);
     }
 
-    @PostMapping("/user/update")
-    public ResponseEntity<UserDetails> updateUser(@RequestHeader(name = "Authorization") String token) {
+    @PutMapping("/user/update")
+    public ResponseEntity<User> updateUser(@RequestHeader(name = "Authorization") String token, @RequestBody UserRequest userRequest){
         String username = userService.getUsernameFromToken(token);
-        return new ResponseEntity<>(userService.loadUserByUsername(username), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateUser(username, userRequest), HttpStatus.OK);
     }
+
+//    @PutMapping(value = "/user/update-profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ResponseEntity<User> updateProfileImage(@RequestHeader(name = "Authorization") String token, @RequestParam("file") MultipartFile file) {
+//        String username = userService.getUsernameFromToken(token);
+//        return new ResponseEntity<>(userService.updateProfileImage(username, file), HttpStatus.OK);
+//    }
 
 }

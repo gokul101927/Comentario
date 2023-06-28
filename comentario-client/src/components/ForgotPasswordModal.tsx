@@ -22,8 +22,6 @@ const ForgotPasswordModal: React.FC<ModalProps> = ({ closeModal }) => {
   const [emailError, setEmailError] = useState("");
   const [otpError, setOtpError] = useState("");
 
-  const [valid, isValid] = useState(false);
-
   const handleEmail = () => {
     if (!email) {
       setEmailError("Email is required");
@@ -74,15 +72,13 @@ const ForgotPasswordModal: React.FC<ModalProps> = ({ closeModal }) => {
 
     if (!password) {
       setPasswordError("Password is required");
-      isValid(false);
+      return;
     } else {
       setPasswordError("");
-      isValid(true);
     }
 
-    if (valid) {
       // update password in the database
-    }
+    
   };
 
   return (

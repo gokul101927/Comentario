@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 
 interface ModalProps {
     closeModal: () => void;
@@ -6,9 +6,27 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ closeModal, children }) => {
+    const [isClosing, setIsClosing] = useState(false);
+
+    useEffect(() => {
+        if (isClosing) {
+            const timer = setTimeout(() => {
+                closeModal();
+            }, 300)
+
+            return () => {
+                clearTimeout(timer);
+            }
+        }
+    }, [isClosing, closeModal])
+
+    const handleClose = () => {
+        setIsClosing(true);
+    }
+
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center fadeIn">
-            <div className="fixed inset-0 bg-black opacity-60" onClick={closeModal}></div>
+        <div id='modal-container' className={`fixed inset-0 z-50 flex items-center justify-center ${isClosing ? 'fadeOut' : 'fadeIn'}`}>
+            <div className="fixed inset-0 bg-black opacity-60" onClick={handleClose}></div>
             <div className="z-10 bg-primaryWhite shadow p-8 rounded-xl w-80 md:w-96">
                 {children}
             </div>

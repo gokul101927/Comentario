@@ -1,140 +1,142 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from 'react-router-dom'
 
 import api from "../api/apiConfig";
+import LoadingSpinnerModal from "./LoadingSpinnerModal";
 
+interface ModalProps {
+    closeModal: () => void;
+}
 
-const SignupForm = () => {
-    const [fullname, setFullname] = useState("");
+const SignupForm: React.FC<ModalProps> = ({ closeModal }) => {
+    const [fullName, setFullName] = useState("");
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const [valid, isValid] = useState(false);
     const [emailSent, setEmailSent] = useState(false);
 
-    const [fullnameError, setFullnameError] = useState("");
-    const [userNameError, setUserNameError] = useState("");
+    const [fullNameError, setFullNameError] = useState("");
+    const [usernameError, setUsernameError] = useState("");
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
+
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (!fullname) {
-            setFullnameError("Full name is required");
-            isValid(false);
+        if (!fullName) {
+            setFullNameError("Full name is required");
+            return;
         } else {
-            setFullnameError("");
+            setFullNameError("");
         }
 
         if (!username) {
-            setUserNameError("Username is required");
-            isValid(false);
+            setUsernameError("Username is required");
+            return;
         } else {
-            setUserNameError("");
+            setUsernameError("");
         }
 
         if (!email) {
             setEmailError("Email is required");
-            isValid(false);
+            return;
         } else {
             setEmailError("");
         }
 
         if (!password) {
             setPasswordError("Password is required");
-            isValid(false);
+            return;
         } else {
             setPasswordError("");
         }
 
-        if (username && password && fullname && email) {
-            isValid(true);
+        if (fullNameError || usernameError || emailError || passwordError) {
+            return;
         }
+
+        console.log("submitted");
+        setLoading(true);
+        // Login the user
+        const requestBody = {
+            fullName: fullName,
+            username: username,
+            mailId: email,
+            password: password
+        };
+
+        api.post('/users/register', requestBody)
+            .then(response => {
+                console.log(response.data);
+                setEmailSent(true);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error(error);
+                const errorMessage = error.response.data.message;
+                if (errorMessage.includes("email")) {
+                    setEmailError(errorMessage);
+                } else if (errorMessage.includes("Password")) {
+                    setPasswordError(errorMessage);
+                } else if (errorMessage.includes("username")) {
+                    setUsernameError(errorMessage);
+                } else if (errorMessage.includes("fullname")) {
+                    setFullNameError(errorMessage);
+                }
+            });
+
     };
 
     const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
         if (event.code === 'Space') event.preventDefault()
     }
 
-    useEffect(() => {
-        if (valid) {
-            console.log("submitted");
-            // Login the user
-            const requestBody = {
-                fullName: fullname,
-                userName: username,
-                mailId: email,
-                password: password
-            };
-
-            api.post('/users/register', requestBody)
-                .then(response => {
-                    console.log(response.data);
-                        setEmailSent(true);
-                })
-                .catch(error => {
-                    isValid(false);
-                    console.error(error);
-                    const errorMessage = error.response.data.message;
-                    if (errorMessage.includes("email")) {
-                        setEmailError(errorMessage);
-                    } else if (errorMessage.includes("Password")) {
-                        setPasswordError(errorMessage);
-                    } else if (errorMessage.includes("username")) {
-                        setUserNameError(errorMessage);
-                    } else if (errorMessage.includes("fullname")) {
-                        setFullnameError(errorMessage);
-                    }
-                });
-        }
-    }, [valid, email, fullname, username, password])
-
     return (
         <form onSubmit={(e) => handleSubmit(e)}>
-            
-            {!emailSent ? <div className="flex flex-col space-y-3">
-            <h2 className="text-black font-bold">Get started now.</h2>
+            {!emailSent ?<div className="flex flex-col space-y-3">
+                <h2 className="text-black font-bold">Get started now.</h2>
                 <div className="flex flex-col">
                     <div className="flex justify-between">
                         <label
                             htmlFor="fullname"
-                            className={`block mb-2 text-sm font-small text-gray-900 ${fullnameError ? "text-red-500" : "text-black"
+                            className={`block mb-2 text-sm font-small text-gray-900 ${fullNameError ? "text-red-500" : "text-black"
                                 }`}
                         >
                             Full name
                         </label>
-                        <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end">{fullnameError}</small>
+                        <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end">{fullNameError}</small>
                     </div>
                     <input
                         type="fullname"
                         name="fullname"
                         id="fullname"
                         placeholder="Your full name"
-                        className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${fullnameError && "border-2 border-red-500"
+                        className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${fullNameError && "border-2 border-red-500"
                             }`}
-                        value={fullname}
-                        onChange={(e) => setFullname(e.target.value)}
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
                     ></input>
                 </div>
                 <div className="flex flex-col">
                     <div className="flex justify-between">
                         <label
                             htmlFor="username"
-                            className={`block mb-2 text-sm font-small text-gray-900 ${userNameError ? "text-red-500" : "text-black"
+                            className={`block mb-2 text-sm font-small text-gray-900 ${usernameError ? "text-red-500" : "text-black"
                                 }`}
                         >
                             Username
                         </label>
-                        <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end">{userNameError}</small>
+                        <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end">{usernameError}</small>
                     </div>
                     <input
                         type="username"
                         name="username"
                         id="username"
                         placeholder="Your username"
-                        className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${userNameError && "border-2 border-red-500"
+                        className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${usernameError && "border-2 border-red-500"
                             }`}
                         value={username}
                         onKeyDown={onKeyDown}
@@ -214,6 +216,7 @@ const SignupForm = () => {
                         />
                     </Link>
                 </div>}
+                {loading && <LoadingSpinnerModal closeModal={closeModal} />}
         </form>
     );
 };

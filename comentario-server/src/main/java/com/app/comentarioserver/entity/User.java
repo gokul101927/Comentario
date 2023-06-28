@@ -33,7 +33,7 @@ public class User implements UserDetails {
 
     @NotEmpty
     @NotNull
-    private String userName;
+    private String username;
 
     @NotEmpty
     @NotNull
@@ -45,7 +45,7 @@ public class User implements UserDetails {
     private String password;
 
     @NotNull
-    private Token verificationToken;
+    private transient Token verificationToken;
 
     @NotNull
     private String profileImageUrl;
@@ -61,14 +61,14 @@ public class User implements UserDetails {
     @JsonDeserialize(using = GrantedAuthorityDeserializer.class)
     private Collection<? extends GrantedAuthority> roles;
 
-    public User(String fullName, String userName, String mailId, String password) {
+    public User(String fullName, String username, String mailId, String password, String profileImageUrl) {
         this.fullName = fullName;
-        this.userName = userName;
+        this.username = username;
         this.mailId = mailId;
         this.password = password;
         this.roles = List.of(new SimpleGrantedAuthority("USER"));
         this.isVerified = false;
-        this.profileImageUrl = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+        this.profileImageUrl = profileImageUrl;
         this.boards = new LinkedList<>();
     }
 
@@ -92,7 +92,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.userName;
+        return this.username;
     }
 
     @Override

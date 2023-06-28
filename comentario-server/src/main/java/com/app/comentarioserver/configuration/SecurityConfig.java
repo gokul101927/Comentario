@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/users/login", "/users/register", "/users/forgot-password", "/users/reset-password", "/users/verify-register-token", "/users/all-users", "/users/delete-all", "/boards/**", "/boards/all-boards").permitAll()
+                        .requestMatchers("/users/login", "/users/register", "/users/forgot-password", "/users/reset-password", "/users/verify-register-token", "/users/all-users", "/users/delete-all", "/boards/**", "/boards/all-boards", "/boards/add").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -57,12 +57,9 @@ public class SecurityConfig {
         return authentication -> {
             String identifier =  String.valueOf(authentication.getPrincipal());
             String password = String.valueOf(authentication.getCredentials());
-            log.info(identifier);
             UserDetails userDetails = userDetailsService.loadUserByUsername(identifier);
 
             if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-                log.info(password);
-                log.info(userDetails.getPassword());
                 throw new InvalidCredentialsException("Password is wrong");
             }
 

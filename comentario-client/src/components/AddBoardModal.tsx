@@ -1,25 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CoverImageUpload from "./CoverImageUpload";
 import Modal from "./Modal";
 
 import api from "../api/apiConfig";
+import LoadingSpinnerModal from "./LoadingSpinnerModal";
 
 interface ModalProps {
     closeModal: () => void;
+    mailId: string;
 }
 
-const AddBoardModal: React.FC<ModalProps> = ({ closeModal }) => {
+const AddBoardModal: React.FC<ModalProps> = ({ closeModal, mailId }) => {
     const [title, setTitle] = useState("");
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [description, setDescription] = useState("");
     const [url, setUrl] = useState("");
     const [isSelf, setIsSelf] = useState(false);
 
-    const [valid, isValid] = useState(false);
-
     const [titleError, setTitleError] = useState("");
     const [descriptionError, setDescriptionError] = useState("");
     const [urlError, setUrlError] = useState("");
+
+    const [loading, setLoading] = useState(false);
 
     const radioChange = (): void => {
         setIsSelf(!isSelf);
@@ -31,63 +33,65 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal }) => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        console.log("clicked")
         if (!title) {
             setTitleError("title is required")
-            isValid(false);
+            return;
         } else {
             setTitleError("");
         }
 
         if (!description) {
             setDescriptionError("Password is required");
-            isValid(false);
+            return;
         } else {
             setDescriptionError("");
         }
 
         if (!url) {
             setUrlError("URL is required");
-            isValid(false);
+            return;
         } else {
             setUrlError("");
         }
 
-        if (title && description && url) {
-            isValid(true);
-        }        
-    };
 
+        setLoading(true);
+        closeModal();
+        const token = localStorage.getItem('jwt');
+        const config = {
+            headers: {
+                Authorization: token,
+                'Content-Type': `multipart/form-data`
+            }
+        };
 
-    useEffect(() => {
-        if (valid) {
-            console.log("submitted");
-            const token = localStorage.getItem('jwt');
-            const config = {
-                headers: {
-                  Authorization: token
-                }
-              };
-            // Login the user
+        const requestBody = {
+            title: title,
+            description: description,
+            url: url,
+            isSelf: isSelf,
+            mailId: mailId
+        };
 
-            const requestBody = {
-                coverImageUrl: selectedFile,
-                title: title,
-                description: description,
-                url: url,
-                isSelf: isSelf,
-                mailId: ""
-            };
-
-            const formData = new FormData();
+        const formData = new FormData();
+        if (selectedFile) {
             formData.append('file', selectedFile);
-
+            formData.append('data', JSON.stringify(requestBody));
         }
-    }, []);
+
+        api.post("/boards/add", formData, config)
+            .then(response => {
+                console.log(response)
+                setLoading(false);
+            })
+            .catch(error => console.error(error))
+    };
 
     return (
         <Modal closeModal={closeModal}>
             <form className="space-y-3" onSubmit={handleSubmit}>
-                <CoverImageUpload selectedFile={selectedFile} handleFile={handleFile}/>
+                <CoverImageUpload selectedFile={selectedFile} handleFile={handleFile} />
                 <div className="flex flex-col">
                     <input
                         type="title"
@@ -145,7 +149,7 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal }) => {
                     <button className="text-sm font-small text-white rounded-md p-2 font-bold bg-primaryBlue hover:brightness-125" type="submit">+ Create</button>
                 </div>
             </form>
-
+            {loading && <LoadingSpinnerModal closeModal={closeModal}/>}
         </Modal>
     )
 

@@ -45,4 +45,12 @@ public class Board {
         this.isSelf = isSelf;
         this.mailId = mailId;
     }
+
+    public Board(String title, String description, String url, boolean isSelf, String mailId) {
+        this.title = title;
+        this.description = description;
+        this.url = url;
+        this.isSelf = isSelf;
+        this.mailId = mailId;
+    }
 }

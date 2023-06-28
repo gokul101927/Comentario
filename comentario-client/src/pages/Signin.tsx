@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from "framer-motion";
 
 import api from "../api/apiConfig";
 import ForgotPasswordModal from "../components/ForgotPasswordModal";
+import LoadingSpinnerModal from "../components/LoadingSpinnerModal";
 
 interface ModalProps {
   modalOpen: boolean;
@@ -18,37 +19,29 @@ const Signin: React.FC<ModalProps> = ({ openModal, modalOpen, closeModal, handle
 
   const navigate = useNavigate();
 
-  const [valid, isValid] = useState(false);
-
   const [identifierError, setIdentifierError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!identifier || identifier.length === 0) {
       setIdentifierError("Email/Username is required");
-      isValid(false);
+      return;
     } else {
       setIdentifierError("");
     }
 
     if (!password) {
       setPasswordError("Password is required");
-      isValid(false);
+      return;
     } else {
       setPasswordError("");
     }
 
-    if (identifier && password) {
-      isValid(true);
-    }
-  };
-
-
-
-  useEffect(() => {
-    if (valid) {
-      console.log("submitted");
+    setLoading(true);
+    console.log("submitted");
       // Login the user
       const requestBody = {
         identifier: identifier,
@@ -61,9 +54,9 @@ const Signin: React.FC<ModalProps> = ({ openModal, modalOpen, closeModal, handle
           handleLogin(response.data);
           navigate('/');
           console.log("Logged in successfully");
+          setLoading(false);
         })
         .catch(error => {
-          isValid(false);
           console.error(error);
           const errorMessage = error.response.data.message;
           if (errorMessage.includes("email")) {
@@ -74,8 +67,9 @@ const Signin: React.FC<ModalProps> = ({ openModal, modalOpen, closeModal, handle
             setIdentifierError(errorMessage);
           }
         });
-    }
-  }, [valid, identifier, password, handleLogin, navigate]);
+  };
+
+
 
   return (
     <motion.div 
@@ -166,6 +160,7 @@ const Signin: React.FC<ModalProps> = ({ openModal, modalOpen, closeModal, handle
         </form>
       </div>
       : <ForgotPasswordModal closeModal={closeModal} />}
+      {loading && <LoadingSpinnerModal closeModal={closeModal} />}
     </motion.div>
   );
 };
