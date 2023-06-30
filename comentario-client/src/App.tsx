@@ -7,16 +7,39 @@ import { useEffect, useState } from 'react'
 import LocationProvider from './components/LocationProvider';
 import RoutesWithAnimation from './components/RoutesWithAnimation';
 
-function App() {
+interface User {
+  id: {
+    timestamp: number;
+    date: string;
+  };
+  fullName: string;
+  mailId: string;
+  password: string;
+  verificationToken: {
+    userToken: string;
+    expiryDate: string;
+  };
+  roles: Array<{
+    authority: string;
+  }>;
+  profileImageUrl: string;
+  enabled: boolean;
+  verified: boolean;
+  accountNonExpired: boolean;
+  accountNonLocked: boolean;
+  credentialsNonExpired: boolean;
+  username: string;
+  authorities: Array<{
+    authority: string;
+  }>;
+}
 
-  // https://ik.imagekit.io/dpkmzcpsk/ -> URL endpoint
-  // public_iAjFQG/rW/KjYppzKPyAVXK+wOo= -> public key
-  // private_Dq/hybLSktZ3LXg2jO4gy/kh5Ts= -> private key
+function App() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn, login, logout } = useAuthentication();
-  const [loggedInUser, setLoggedInUser] = useState({});
-  
+  const [loggedInUser, setLoggedInUser] = useState<User>();
+
   const openModal = () => {
     setModalOpen(true);
     document.body.classList.add("modal-open")
@@ -57,8 +80,8 @@ function App() {
   return (
     <main >
       <BrowserRouter >
-      <LocationProvider>
-          <RoutesWithAnimation modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} isLoggedIn={isLoggedIn} handleLogout={handleLogout} handleLogin={handleLogin} loggedInUser={loggedInUser}/>
+        <LocationProvider>
+          <RoutesWithAnimation modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} isLoggedIn={isLoggedIn} handleLogout={handleLogout} handleLogin={handleLogin} loggedInUser={loggedInUser} />
         </LocationProvider>
       </BrowserRouter>
     </main >

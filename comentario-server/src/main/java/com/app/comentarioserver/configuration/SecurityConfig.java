@@ -1,6 +1,7 @@
 package com.app.comentarioserver.configuration;
 
 import com.app.comentarioserver.exception.InvalidCredentialsException;
+import com.app.comentarioserver.exception.UserNotEnabledException;
 import com.app.comentarioserver.jwt.JwtTokenFilter;
 import com.app.comentarioserver.jwt.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +54,6 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManagerBean(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-        log.info("Authentication started");
         return authentication -> {
             String identifier =  String.valueOf(authentication.getPrincipal());
             String password = String.valueOf(authentication.getCredentials());
@@ -64,7 +64,7 @@ public class SecurityConfig {
             }
 
             if (!userDetails.isEnabled()) {
-                throw new DisabledException("Account not active");
+                throw new UserNotEnabledException("User not verified");
             }
 
             return new UsernamePasswordAuthenticationToken(identifier, null, userDetails.getAuthorities());

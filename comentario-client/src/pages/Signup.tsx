@@ -7,7 +7,6 @@ import { useState } from "react";
 
 interface ModalProps {
   closeModal: () => void;
-  mailId: string;
 }
 
 const Signup: React.FC<ModalProps> = ({ closeModal }) => {

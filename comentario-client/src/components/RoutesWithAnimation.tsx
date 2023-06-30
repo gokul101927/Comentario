@@ -12,7 +12,34 @@ interface ModalProps {
     closeModal: () => void;
     handleLogout: () => void;
     handleLogin: (token: string) => void;
-    loggedInUser: object;
+    loggedInUser: User;
+}
+
+interface User {
+    id: {
+        timestamp: number;
+        date: string;
+    };
+    fullName: string;
+    mailId: string;
+    password: string;
+    verificationToken: {
+        userToken: string;
+        expiryDate: string;
+    };
+    roles: Array<{
+        authority: string;
+    }>;
+    profileImageUrl: string;
+    enabled: boolean;
+    verified: boolean;
+    accountNonExpired: boolean;
+    accountNonLocked: boolean;
+    credentialsNonExpired: boolean;
+    username: string;
+    authorities: Array<{
+        authority: string;
+    }>;
 }
 
 const RoutesWithAnimation: React.FC<ModalProps> = ({handleLogout, isLoggedIn, openModal, closeModal, modalOpen, handleLogin, loggedInUser}) => {
@@ -25,7 +52,7 @@ const RoutesWithAnimation: React.FC<ModalProps> = ({handleLogout, isLoggedIn, op
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/dashboard" element={<Dashboard isLoggedIn={isLoggedIn} handleLogout={handleLogout} modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} loggedInUser={loggedInUser}/>} />
                 <Route path="/sign-in" element={<Signin modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} handleLogin={handleLogin} />} />
-                <Route path="/sign-up" element={<Signup />} />
+                <Route path="/sign-up" element={<Signup closeModal={closeModal}/>} />
                 <Route path="/my-profile" element={<MyProfile isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser}/>} />
                 <Route path="*" element={<Navigate to="/dashboard" />}></Route>
             </Route>

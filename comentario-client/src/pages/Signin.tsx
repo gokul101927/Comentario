@@ -40,7 +40,7 @@ const Signin: React.FC<ModalProps> = ({ openModal, modalOpen, closeModal, handle
       setPasswordError("");
     }
 
-    setLoading(true);
+  
     console.log("submitted");
     // Login the user
     const requestBody = {
@@ -50,6 +50,7 @@ const Signin: React.FC<ModalProps> = ({ openModal, modalOpen, closeModal, handle
 
     api.post('/users/login', requestBody)
       .then(response => {
+        setLoading(true);
         console.log(response.data);
         handleLogin(response.data);
         navigate('/');
@@ -59,17 +60,17 @@ const Signin: React.FC<ModalProps> = ({ openModal, modalOpen, closeModal, handle
       .catch(error => {
         console.error(error);
         const errorMessage = error.response.data.message;
-        if (errorMessage.includes("email")) {
+        if (errorMessage.includes("Email")) {
           setIdentifierError(errorMessage);
-        } else if (errorMessage.includes("password")) {
+        } else if (errorMessage.includes("Password")) {
           setPasswordError(errorMessage);
-        } else if (errorMessage.includes("username")) {
+        } else if (errorMessage.includes("Username")) {
+          setIdentifierError(errorMessage);
+        } else if (errorMessage.includes("verified")) {
           setIdentifierError(errorMessage);
         }
       });
   };
-
-
 
   return (
     <motion.div

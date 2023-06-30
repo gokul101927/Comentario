@@ -1,13 +1,10 @@
 package com.app.comentarioserver.controller;
 
-import com.app.comentarioserver.entity.Board;
 import com.app.comentarioserver.entity.User;
 import com.app.comentarioserver.exception.InvalidCredentialsException;
 import com.app.comentarioserver.exception.UserNotEnabledException;
-import com.app.comentarioserver.jwt.JwtTokenProvider;
 import com.app.comentarioserver.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.imagekit.sdk.exceptions.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,10 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
-
-import static com.app.comentarioserver.jwt.JwtTokenFilter.HEADER_PREFIX;
 
 @RestController
 @Slf4j
@@ -35,10 +31,21 @@ import static com.app.comentarioserver.jwt.JwtTokenFilter.HEADER_PREFIX;
 public class UserController {
 
     private final UserService userService;
-    private final ObjectMapper objectMapper;
+
     private final AuthenticationManager authenticationManager;
 
-    private final JwtTokenProvider jwtTokenProvider;
+    @GetMapping("/all-users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete-all")
+    public void deleteAllUsers() {
+        userService.deleteAllUsers();
+    }
+
+    // Delete everything from above
+
 
     @PostMapping(value = "/register", consumes = "application/json")
     public ResponseEntity<User> registerUser(@RequestBody UserRequest userRequest) {
@@ -53,16 +60,6 @@ public class UserController {
         } else {
             return new RedirectView("http://localhost:5173/sign-up");
         }
-    }
-
-    @GetMapping("/all-users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/delete-all")
-    public void deleteAllUsers() {
-        userService.deleteAllUsers();
     }
 
     @PostMapping(value = "/login", consumes = "application/json")
@@ -82,7 +79,7 @@ public class UserController {
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestParam("mailId") String mailId) {
 
-        if (userService.loadByMailId(mailId).isEnabled()) {
+        if (userService.getByMailId(mailId).isEnabled()) {
             return new ResponseEntity<>(userService.fetchPasswordResetOtp(mailId), HttpStatus.OK);
         } else {
             throw new UserNotEnabledException("Kindly verify your email.");
@@ -107,10 +104,10 @@ public class UserController {
         return new ResponseEntity<>(userService.updateUser(username, userRequest), HttpStatus.OK);
     }
 
-//    @PutMapping(value = "/user/update-profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<User> updateProfileImage(@RequestHeader(name = "Authorization") String token, @RequestParam("file") MultipartFile file) {
-//        String username = userService.getUsernameFromToken(token);
-//        return new ResponseEntity<>(userService.updateProfileImage(username, file), HttpStatus.OK);
-//    }
+    @PutMapping(value = "/user/update-profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<User> updateProfileImage(@RequestHeader(name = "Authorization") String token, @RequestParam("file") MultipartFile file) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
+        String username = userService.getUsernameFromToken(token);
+        return new ResponseEntity<>(userService.updateProfileImage(username, file), HttpStatus.OK);
+    }
 
 }

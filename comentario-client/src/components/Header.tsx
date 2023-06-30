@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 interface ModalProps {
     isLoggedIn: boolean;
@@ -37,6 +37,7 @@ interface User {
 const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }) => {
 
     const [isDropdownOpen, setDropdownOpen] = useState(true);
+    const navigate = useNavigate();
 
     const toggleDropdownOpen = (): void => {
         setDropdownOpen(!isDropdownOpen);
@@ -44,7 +45,12 @@ const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }
 
     useEffect(() => {
         setDropdownOpen(!isDropdownOpen);
-    }, []);
+    }, [isDropdownOpen]);
+
+    const logoutUser = (): void => {
+        handleLogout();
+        navigate("/sign-in");
+    }
 
     return (
         <header className="sticky top-0">
@@ -81,7 +87,7 @@ const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }
                                                     <Link to="/my-profile" className="block px-4 py-2 hover:bg-gray-400 hover:text-white ">My profile</Link>
                                                 </li>
                                                 <li>
-                                                    <div onClick={handleLogout} className="block px-4 py-2 hover:bg-red-400 text-red-700">Logout</div>
+                                                    <div onClick={logoutUser} className="block px-4 py-2 hover:bg-red-400 text-red-700">Logout</div>
                                                 </li>
                                             </ul>
                                         </div>}

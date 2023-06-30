@@ -5,16 +5,18 @@ import com.app.comentarioserver.controller.UserRequest;
 import com.app.comentarioserver.entity.Board;
 import com.app.comentarioserver.entity.Token;
 import com.app.comentarioserver.entity.User;
-import com.app.comentarioserver.exception.InvalidCredentialsException;
 import com.app.comentarioserver.exception.InvalidTokenException;
 import com.app.comentarioserver.exception.UserAlreadyExistsException;
+import com.app.comentarioserver.exception.UserNotEnabledException;
 import com.app.comentarioserver.jwt.JwtTokenProvider;
 import com.app.comentarioserver.repository.UserRepository;
+import io.imagekit.sdk.ImageKit;
+import io.imagekit.sdk.exceptions.*;
+import io.imagekit.sdk.models.FileCreateRequest;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
@@ -22,11 +24,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -43,21 +45,31 @@ public class UserService implements UserDetailsService {
 
     private final JavaMailSender mailSender;
 
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
+    private final ImageKit imageKit;
+
+    private final PasswordEncoder encoder;
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
+
+    public void deleteAllUsers() {
+        userRepository.deleteAll();
+    }
+
+    // Delete everything from above
+
 
     public User addUser(UserRequest userRequest) {
         if (checkIfMailIdExists(userRequest.getMailId())) {
-            throw new UserAlreadyExistsException("User already exists with email: " + userRequest.getMailId());
+            throw new UserAlreadyExistsException("User already exists with this Email");
         }
 
         if (checkIfUsernameExists(userRequest.getUsername())) {
-            throw new UserAlreadyExistsException("User already exists with username: " + userRequest.getUsername());
+            throw new UserAlreadyExistsException("User already exists with Username");
         }
 
-        User user = new User(userRequest.getFullName(), userRequest.getUsername(), userRequest.getMailId(), encoder().encode(userRequest.getPassword()), userRequest.getProfileImageUrl());
+        User user = new User(userRequest.getFullName(), userRequest.getUsername(), userRequest.getMailId(), encoder.encode(userRequest.getPassword()), userRequest.getProfileImageUrl());
         user.setRoles(List.of(new SimpleGrantedAuthority("User")));
         user.setVerified(false);
         Token token = new Token();
@@ -91,7 +103,7 @@ public class UserService implements UserDetailsService {
             mimeMessageHelper.setTo(to);
             mimeMessageHelper.setText(htmlContent, true);
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
         mailSender.send(message);
@@ -106,8 +118,7 @@ public class UserService implements UserDetailsService {
     }
 
     public String fetchPasswordResetOtp(String mailId) {
-        Random rnd = new Random();
-        int number = rnd.nextInt(999999);
+        int number = new Random().nextInt(999999);
         String verificationTokenValue = String.format("%06d", number);
 
         String subject = "Password reset";
@@ -126,50 +137,58 @@ public class UserService implements UserDetailsService {
         return verificationTokenValue;
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
     public String loginUser(AuthRequest authRequest, Authentication authentication) {
 
-        String token = jwtTokenProvider.createToken(authentication);
+        String jwtToken = jwtTokenProvider.createToken(authentication);
 
-        log.info(token);
         if (!checkUserVerification(authRequest.getIdentifier())) {
-            return "User not verified";
+            Token token = new Token();
+            User user = loadByIdentifier(authRequest.getIdentifier());
+            user.setVerificationToken(token);
+
+            String verificationTokenValue = user.getVerificationToken().getUserToken();
+            String to = user.getMailId();
+            String subject = "Welcome, " + user.getFullName();
+            String htmlContent = """
+                <html>
+                <body>
+                <h1>Welcome</h1>
+                <p>Please click the below button to verify your account</p>""" +
+                    "<a href=\"http://localhost:8080/users/verify-register-token?token=" + verificationTokenValue + "&email=" + user.getMailId() + "\">Verify Email</a>" +
+                    """
+                    </body>
+                    </html>""";
+
+            sendEmail(to, subject, htmlContent);
+            userRepository.save(user);
+            throw new UserNotEnabledException("User not verified");
         }
-        return token;
+        return jwtToken;
     }
 
     public boolean checkUserVerification(String identifier) {
-        User user;
-        if (Pattern.compile("^(.+)@(\\S+)$").matcher(identifier).matches()) {
-            user = userRepository.findByMailId(identifier).orElseThrow();
-        } else {
-            user = userRepository.findByUsername(identifier).orElseThrow();
-        }
-
+        User user = loadByIdentifier(identifier);
         return user.isEnabled();
     }
 
-    public void deleteAllUsers() {
-        userRepository.deleteAll();
+    @Override
+    public UserDetails loadUserByUsername(String identifier) {
+        return loadByIdentifier(identifier);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+    public User loadByIdentifier(String identifier) {
 
-            if (Pattern.compile("^(.+)@(\\S+)$").matcher(identifier).matches()) {
-                return userRepository.findByMailId(identifier).orElseThrow(() -> {
-                    throw new UsernameNotFoundException("Unable to fine user with this email");
-                });
+        if (Pattern.compile("^(.+)@(\\S+)$").matcher(identifier).matches()) {
+            return userRepository.findByMailId(identifier).orElseThrow(() -> {
+                throw new UsernameNotFoundException("Email does not exist");
+            });
 
-            } else {
-                return userRepository.findByUsername(identifier).orElseThrow(() -> {
-                    throw new UsernameNotFoundException("Unable to fine user with this username");
-                });
+        } else {
+            return userRepository.findByUsername(identifier).orElseThrow(() -> {
+                throw new UsernameNotFoundException("Username does not exist");
+            });
 
-            }
+        }
     }
 
     public String getUsernameFromToken(String token) {
@@ -211,19 +230,26 @@ public class UserService implements UserDetailsService {
         user.setUsername(userRequest.getUsername());
         user.setMailId(userRequest.getMailId());
         user.setPassword(userRequest.getPassword());
-        user.setProfileImageUrl(userRequest.getProfileImageUrl());
         return userRepository.save(user);
     }
 
-//    public User updateProfileImage(String username, MultipartFile file) {
-//        User user = getUserByUsername(username);
-//        user.setProfileImageUrl();
-//    }
+    public User updateProfileImage(String username, MultipartFile file) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
+        User user = getUserByUsername(username);
+        user.setProfileImageUrl(uploadImage(file));
+        return userRepository.save(user);
+    }
 
-    public User loadByMailId(String mailId) {
+    public String uploadImage(MultipartFile image) throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+        byte[] imageBytes = image.getBytes();
+        FileCreateRequest fileCreateRequest = new FileCreateRequest(imageBytes, "filename");
+        fileCreateRequest.setFolder("Comentario/");
+        return imageKit.upload(fileCreateRequest).getUrl();
+    }
+
+    public User getByMailId(String mailId) {
         Optional<User> optionalUser = userRepository.findByMailId(mailId);
         if (optionalUser.isEmpty()) {
-            throw new InvalidCredentialsException("Account doesn't exist with mail: " + mailId);
+            throw new UsernameNotFoundException("Email does not exist");
         }
 
         return optionalUser.get();
@@ -232,17 +258,16 @@ public class UserService implements UserDetailsService {
     public User getUserByUsername(String username) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         if (optionalUser.isEmpty()) {
-            throw new InvalidCredentialsException("Account doesn't exist with username: " + username);
+            throw new UsernameNotFoundException("Username does not exist");
         }
 
         return optionalUser.get();
     }
 
-    public void addBoardToTheUser(Board board, String username) {
-        User user = loadByMailId(username);
+    public void addBoardToTheUser(Board board, String mailId) {
+        User user = getByMailId(mailId);
         user.setBoards(board);
         userRepository.save(user);
     }
-
 
 }

@@ -36,6 +36,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
+    @ExceptionHandler(UserNotEnabledException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotEnabledException(UserNotEnabledException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("User not enabled", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+
     @Data
     @AllArgsConstructor
     public static class ErrorResponse {

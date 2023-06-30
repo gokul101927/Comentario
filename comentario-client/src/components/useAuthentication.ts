@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import api from '../api/apiConfig';
 
+
 const useAuthentication = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
   useEffect(() => {
     const token = localStorage.getItem('jwt');
     if (token) {
@@ -27,19 +29,19 @@ const useAuthentication = () => {
         })
       
     }
-  }, []);
-
-  const login = (token: string): void => {
-    localStorage.setItem('jwt', token);
-    setIsLoggedIn(true);
-    console.log("logged in")
-  };
+  });
 
   const logout = () => {
     localStorage.removeItem('jwt');
     setIsLoggedIn(false);
     window.location.reload();
     console.log("logged out")
+  };
+
+  const login = (token: string): void => {
+    localStorage.setItem('jwt', token);
+    setIsLoggedIn(true);
+    console.log("logged in")
   };
 
   return { isLoggedIn, login, logout };
