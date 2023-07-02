@@ -34,11 +34,13 @@ interface User {
   }>;
 }
 
+type UserState = Omit<User, 'password' | 'verificationToken'>;
+
 function App() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn, login, logout } = useAuthentication();
-  const [loggedInUser, setLoggedInUser] = useState<User>();
+  const [loggedInUser, setLoggedInUser] = useState<UserState | null>(null);
 
   const openModal = () => {
     setModalOpen(true);

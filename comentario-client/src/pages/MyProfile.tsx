@@ -8,7 +8,7 @@ import EditProfile from '../components/EditProfile';
 interface ModalProps {
     isLoggedIn: boolean;
     handleLogout: () => void;
-    loggedInUser: User;
+    loggedInUser: UserState | null;
 }
 
 interface User {
@@ -38,6 +38,8 @@ interface User {
     }>;
 }
 
+type UserState = Omit<User, 'password' | 'verificationToken'>;
+
 const MyProfile: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }) => {
 
     const navigate = useNavigate();
@@ -56,7 +58,7 @@ const MyProfile: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUse
         >
             <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser} />
             <div className='container mx-auto p-2 pt-8 flex flex-col gap-4 lg:flex-row'>
-                <ProfileCard profileImageUrl={loggedInUser.profileImageUrl}/>
+                <ProfileCard profileImageUrl={loggedInUser?.profileImageUrl}/>
                 <EditProfile />
             </div>
         </motion.div>

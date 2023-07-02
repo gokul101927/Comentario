@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 
 interface Props {
-    profileImageUrl: string;
+    profileImageUrl: string | undefined;
 }
 
 const ProfileImageUpload: React.FC<Props> = ({ profileImageUrl }) => {

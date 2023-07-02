@@ -5,7 +5,7 @@ interface ModalProps {
   isLoggedIn: boolean;
   openModal: () => void;
   closeModal: () => void;
-  mailId: string;
+  mailId: string | undefined;
 }
 
 const YourBoards: React.FC<ModalProps> = ({ modalOpen, openModal, closeModal, mailId }) => {

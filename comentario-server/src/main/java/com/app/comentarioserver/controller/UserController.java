@@ -54,7 +54,7 @@ public class UserController {
 
     @GetMapping("/verify-register-token")
     public RedirectView verifyRegisterToken(@RequestParam("token") String token, @RequestParam("email") String email) throws URISyntaxException {
-        log.info("verification started");
+
         if (userService.validateVerificationToken(token, email)) {
             return new RedirectView("http://localhost:5173/sign-in");
         } else {
@@ -72,19 +72,35 @@ public class UserController {
         } catch (BadCredentialsException e) {
             throw new InvalidCredentialsException(e.getMessage());
         }
-
         return new ResponseEntity<>(userService.loginUser(authRequest, authentication), HttpStatus.OK);
     }
 
-    @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@RequestParam("mailId") String mailId) {
+    @PutMapping("/reset-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody AuthRequest authRequest) {
+        boolean status = userService.resetPassword(authRequest.getIdentifier(), authRequest.getPassword());
 
+        if (status) {
+            Authentication authentication;
+            try {
+                log.info("Authenticated started");
+                authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getIdentifier(), authRequest.getPassword()));
+                log.info("Authenticated");
+            } catch (BadCredentialsException e) {
+                throw new InvalidCredentialsException(e.getMessage());
+            }
+            return new ResponseEntity<>(userService.loginUser(authRequest, authentication), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Error updating password", HttpStatus.BAD_GATEWAY);
+    }
+
+    @GetMapping("/verify-email")
+    public ResponseEntity<String> verifyEmail(@RequestParam("mailId") String mailId) {
         if (userService.getByMailId(mailId).isEnabled()) {
             return new ResponseEntity<>(userService.fetchPasswordResetOtp(mailId), HttpStatus.OK);
         } else {
-            throw new UserNotEnabledException("Kindly verify your email.");
+            throw new UserNotEnabledException("User not verified");
         }
-
     }
 
     @GetMapping("/validate")

@@ -59,7 +59,6 @@ public class UserService implements UserDetailsService {
 
     // Delete everything from above
 
-
     public User addUser(UserRequest userRequest) {
         if (checkIfMailIdExists(userRequest.getMailId())) {
             throw new UserAlreadyExistsException("User already exists with this Email");
@@ -119,7 +118,7 @@ public class UserService implements UserDetailsService {
 
     public String fetchPasswordResetOtp(String mailId) {
         int number = new Random().nextInt(999999);
-        String verificationTokenValue = String.format("%06d", number);
+        String otp = String.format("%06d", number);
 
         String subject = "Password reset";
         String htmlContent = """
@@ -128,13 +127,20 @@ public class UserService implements UserDetailsService {
                 <h1>Welcome</h1>
                 <p>Here is your one time token for password reset</p>
                 <p>It'll expire in a day, kindly don't share it with anyone</p>""" +
-                verificationTokenValue +
+                otp +
                 """
                 </body>
                 </html>
                         """;
         sendEmail(mailId, subject, htmlContent);
-        return verificationTokenValue;
+        return otp;
+    }
+
+    public boolean resetPassword(String mailId, String password) {
+        User user = getByMailId(mailId);
+        user.setPassword(encoder.encode(password));
+        userRepository.save(user);
+        return true;
     }
 
     public String loginUser(AuthRequest authRequest, Authentication authentication) {
@@ -177,17 +183,10 @@ public class UserService implements UserDetailsService {
     }
 
     public User loadByIdentifier(String identifier) {
-
         if (Pattern.compile("^(.+)@(\\S+)$").matcher(identifier).matches()) {
-            return userRepository.findByMailId(identifier).orElseThrow(() -> {
-                throw new UsernameNotFoundException("Email does not exist");
-            });
-
+            return getByMailId(identifier);
         } else {
-            return userRepository.findByUsername(identifier).orElseThrow(() -> {
-                throw new UsernameNotFoundException("Username does not exist");
-            });
-
+            return getUserByUsername(identifier);
         }
     }
 

@@ -7,7 +7,7 @@ import LoadingSpinnerModal from "./LoadingSpinnerModal";
 
 interface ModalProps {
     closeModal: () => void;
-    mailId: string;
+    mailId: string | undefined;
 }
 
 const AddBoardModal: React.FC<ModalProps> = ({ closeModal, mailId }) => {

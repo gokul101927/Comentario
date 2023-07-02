@@ -33,12 +33,12 @@ public class BoardController {
         boardService.deleteAll();
     }
 
+    // Delete everything from above
+
     @GetMapping("/all-boards")
     public ResponseEntity<List<Board>> allBoards() {
         return new ResponseEntity<>(boardService.allBoards(), HttpStatus.OK);
     }
-
-    // Delete everything from above
 
     @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Board> addBoard(@RequestParam("file")MultipartFile file, @RequestParam("data") String board) throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {

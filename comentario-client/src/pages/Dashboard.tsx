@@ -9,7 +9,7 @@ interface ModalProps {
   openModal: () => void;
   closeModal: () => void;
   handleLogout: () => void;
-  loggedInUser: User;
+  loggedInUser: UserState | null;
 }
 
 interface User {
@@ -39,6 +39,8 @@ interface User {
   }>;
 }
 
+type UserState = Omit<User, 'password' | 'verificationToken'>;
+
 const Dashboard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, openModal, closeModal, modalOpen, loggedInUser }) => {
   return (
     <motion.div
@@ -47,7 +49,7 @@ const Dashboard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, openModal, 
       transition={{ duration: 1 }}
     >
       <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser} />
-      { !isLoggedIn && <YourBoards modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} isLoggedIn={isLoggedIn} mailId={loggedInUser.mailId}/>}
+      { isLoggedIn && <YourBoards modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} isLoggedIn={isLoggedIn} mailId={loggedInUser?.mailId}/>}
       <PublicBoards />
     </motion.div>
   )

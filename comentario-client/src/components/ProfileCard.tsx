@@ -1,7 +1,7 @@
 import ProfileImageUpload from "./ProfileImageUpload"
 
 interface Props {
-    profileImageUrl: string;
+    profileImageUrl: string | undefined;
 }
 
 const ProfileCard: React.FC<Props> = ({profileImageUrl}) => {

@@ -12,7 +12,7 @@ interface ModalProps {
     closeModal: () => void;
     handleLogout: () => void;
     handleLogin: (token: string) => void;
-    loggedInUser: User;
+    loggedInUser: UserState | undefined;
 }
 
 interface User {
@@ -41,6 +41,8 @@ interface User {
         authority: string;
     }>;
 }
+
+type UserState = Omit<User, 'password' | 'verificationToken'>;
 
 const RoutesWithAnimation: React.FC<ModalProps> = ({handleLogout, isLoggedIn, openModal, closeModal, modalOpen, handleLogin, loggedInUser}) => {
 

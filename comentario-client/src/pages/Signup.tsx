@@ -56,10 +56,6 @@ const Signup: React.FC<ModalProps> = ({ closeModal }) => {
             setPasswordError("");
         }
 
-        if (fullNameError || usernameError || emailError || passwordError) {
-            return;
-        }
-
         console.log("submitted");
         setLoading(true);
         // Login the user
@@ -79,15 +75,16 @@ const Signup: React.FC<ModalProps> = ({ closeModal }) => {
             .catch(error => {
                 console.error(error);
                 const errorMessage = error.response.data.message;
-                if (errorMessage.includes("email")) {
+                if (errorMessage.includes("Email")) {
                     setEmailError(errorMessage);
                 } else if (errorMessage.includes("Password")) {
                     setPasswordError(errorMessage);
-                } else if (errorMessage.includes("username")) {
+                } else if (errorMessage.includes("Username")) {
                     setUsernameError(errorMessage);
-                } else if (errorMessage.includes("fullname")) {
+                } else if (errorMessage.includes("Fullname")) {
                     setFullNameError(errorMessage);
                 }
+                setLoading(false);
             });
 
     };

@@ -34,7 +34,6 @@ const useAuthentication = () => {
   const logout = () => {
     localStorage.removeItem('jwt');
     setIsLoggedIn(false);
-    window.location.reload();
     console.log("logged out")
   };
 

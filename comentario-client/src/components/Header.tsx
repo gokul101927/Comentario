@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 
 interface ModalProps {
     isLoggedIn: boolean;
     handleLogout: () => void;
-    loggedInUser: User;
+    loggedInUser: UserState | null;
 }
 
 interface User {
@@ -34,18 +34,16 @@ interface User {
     }>;
 }
 
+type UserState = Omit<User, 'password' | 'verificationToken'>;
+
 const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }) => {
 
-    const [isDropdownOpen, setDropdownOpen] = useState(true);
+    const [isDropdownOpen, setDropdownOpen] = useState(false);
     const navigate = useNavigate();
 
     const toggleDropdownOpen = (): void => {
         setDropdownOpen(!isDropdownOpen);
     }
-
-    useEffect(() => {
-        setDropdownOpen(!isDropdownOpen);
-    }, [isDropdownOpen]);
 
     const logoutUser = (): void => {
         handleLogout();
@@ -55,7 +53,7 @@ const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }
     return (
         <header className="sticky top-0">
             <div className='bg-primaryWhite shadow-lg'>
-                <nav className='p-4'>
+                <nav className='p-2'>
                     <div className="flex items-center justify-between">
                         <div>
                             <Link to="/">
@@ -73,13 +71,13 @@ const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }
                                 {!isLoggedIn ? <Link to="/sign-in" className="block text-sm font-small text-white rounded-md p-2 px-4 bg-primaryBlue hover:brightness-125 font-bold">Sign in</Link>
                                     :
                                     <div className='space-y-2'>
-                                        <div onClick={toggleDropdownOpen} className='flex gap-2 items-center cursor-pointer rounded-lg pr-2 hover:bg-gray-200 hover:shadow-xl'>
+                                        <div onClick={toggleDropdownOpen} className='flex gap-2 items-center cursor-pointer rounded-lg p-2 hover:bg-gray-200 hover:shadow-xl'>
                                             <img
-                                                src={loggedInUser.profileImageUrl}
+                                                src={loggedInUser?.profileImageUrl}
                                                 alt="logo"
                                                 className="rounded-full h-8 w-8 object-center object-cover"
                                             />
-                                            <div className='text-black font-small font-bold'>{loggedInUser.fullName}</div>
+                                            <div className='text-black font-small font-bold'>{loggedInUser?.fullName}</div>
                                         </div>
                                         {isDropdownOpen && <div className='absolute border right-2 z-50 bg-white rounded-lg shadow-xl w-44'>
                                             <ul className="py-2 text-sm text-gray-700 divide-y divide-solid divide-gray-200">
