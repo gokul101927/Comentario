@@ -263,8 +263,8 @@ public class UserService implements UserDetailsService {
         return optionalUser.get();
     }
 
-    public void addBoardToTheUser(Board board, String mailId) {
-        User user = getByMailId(mailId);
+    public void addBoardToTheUser(Board board, String username) {
+        User user = getUserByUsername(username);
         user.setBoards(board);
         userRepository.save(user);
     }

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import Header from '../components/Header'
 import PublicBoards from '../components/PublicBoards'
 import YourBoards from '../components/YourBoards'
+import { UserState } from '../interfaces/types';
 
 interface ModalProps {
   modalOpen: boolean;
@@ -12,35 +13,6 @@ interface ModalProps {
   loggedInUser: UserState | null;
 }
 
-interface User {
-  id: {
-    timestamp: number;
-    date: string;
-  };
-  fullName: string;
-  mailId: string;
-  password: string;
-  verificationToken: {
-    userToken: string;
-    expiryDate: string;
-  };
-  roles: Array<{
-    authority: string;
-  }>;
-  profileImageUrl: string;
-  enabled: boolean;
-  verified: boolean;
-  accountNonExpired: boolean;
-  accountNonLocked: boolean;
-  credentialsNonExpired: boolean;
-  username: string;
-  authorities: Array<{
-    authority: string;
-  }>;
-}
-
-type UserState = Omit<User, 'password' | 'verificationToken'>;
-
 const Dashboard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, openModal, closeModal, modalOpen, loggedInUser }) => {
   return (
     <motion.div
@@ -49,7 +21,7 @@ const Dashboard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, openModal, 
       transition={{ duration: 1 }}
     >
       <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser} />
-      { isLoggedIn && <YourBoards modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} isLoggedIn={isLoggedIn} mailId={loggedInUser?.mailId}/>}
+      { isLoggedIn && <YourBoards modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} isLoggedIn={isLoggedIn} loggedInUser={loggedInUser}/>}
       <PublicBoards />
     </motion.div>
   )

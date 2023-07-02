@@ -38,18 +38,19 @@ public class Board {
     private boolean isSelf;
 
     @NotNull
-    private String mailId;
+    private String username;
 
+    @NotNull
     private List<Feedback> feedbacks;
 
-    public Board(String coverImageUrl, String title, String description, String url, boolean isSelf, String mailId) {
+    public Board(String coverImageUrl, String title, String description, String url, boolean isSelf, String mailId, String username) {
         this.coverImageUrl = coverImageUrl;
         this.title = title;
         this.description = description;
         this.url = url;
         this.isSelf = isSelf;
-        this.mailId = mailId;
+        this.username = username;
         this.feedbacks = new LinkedList<>();
     }
-    
+
 }

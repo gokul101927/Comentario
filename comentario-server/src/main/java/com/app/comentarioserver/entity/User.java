@@ -2,9 +2,7 @@ package com.app.comentarioserver.entity;
 
 import com.app.comentarioserver.configuration.GrantedAuthorityDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -42,6 +40,8 @@ public class User implements UserDetails {
 
     @NotEmpty
     @NotNull
+    @Max(15)
+    @Min(8)
     private String password;
 
     @NotNull
@@ -52,10 +52,10 @@ public class User implements UserDetails {
 
     private boolean isVerified;
 
-    private List<Board> boards;
+    private transient List<Board> boards;
 
     public void setBoards(Board board) {
-        boards.add(board);
+        this.boards.add(board);
     }
 
     @JsonDeserialize(using = GrantedAuthorityDeserializer.class)
@@ -71,7 +71,6 @@ public class User implements UserDetails {
         this.profileImageUrl = profileImageUrl;
         this.boards = new LinkedList<>();
     }
-
 
     public User(String mailId, String password, Collection<? extends GrantedAuthority> roles) {
         this.mailId = mailId;

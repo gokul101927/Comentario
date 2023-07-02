@@ -2,7 +2,7 @@
   overflow: hidden;
 }
 
-button:disabled {
+button:disabled, input:disabled {
   cursor: not-allowed;
   pointer-events: all !important;
 }

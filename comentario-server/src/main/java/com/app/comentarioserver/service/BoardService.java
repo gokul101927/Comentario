@@ -34,7 +34,7 @@ public class BoardService {
     public Board addBoard(Board board, MultipartFile file) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
         board.setCoverImageUrl(uploadCoverImage(file));
         Board newBoard = boardRepository.save(board);
-        userService.addBoardToTheUser(newBoard, board.getMailId());
+        userService.addBoardToTheUser(newBoard, board.getUsername());
         return newBoard;
     }
 

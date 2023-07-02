@@ -27,7 +27,6 @@ const useAuthentication = () => {
           logout();
           console.log("logged out")
         })
-      
     }
   });
 

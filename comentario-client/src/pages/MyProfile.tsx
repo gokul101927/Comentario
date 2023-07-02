@@ -5,41 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import ProfileCard from '../components/ProfileCard';
 import EditProfile from '../components/EditProfile';
 
+import { UserState } from '../interfaces/types';
+
 interface ModalProps {
     isLoggedIn: boolean;
     handleLogout: () => void;
     loggedInUser: UserState | null;
     closeModal: () => void;
 }
-
-interface User {
-    id: {
-        timestamp: number;
-        date: string;
-    };
-    fullName: string;
-    mailId: string;
-    password: string;
-    verificationToken: {
-        userToken: string;
-        expiryDate: string;
-    };
-    roles: Array<{
-        authority: string;
-    }>;
-    profileImageUrl: string;
-    enabled: boolean;
-    verified: boolean;
-    accountNonExpired: boolean;
-    accountNonLocked: boolean;
-    credentialsNonExpired: boolean;
-    username: string;
-    authorities: Array<{
-        authority: string;
-    }>;
-}
-
-type UserState = Omit<User, 'password' | 'verificationToken'>;
 
 const MyProfile: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser, closeModal }) => {
 
@@ -60,7 +33,7 @@ const MyProfile: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUse
             <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser} />
             <div className='container mx-auto p-2 pt-8 flex flex-col gap-4 lg:flex-row'>
                 <ProfileCard profileImageUrl={loggedInUser?.profileImageUrl} closeModal={closeModal}/>
-                <EditProfile />
+                <EditProfile loggedInUser={loggedInUser} closeModal={closeModal}/>
             </div>
         </motion.div>
     )

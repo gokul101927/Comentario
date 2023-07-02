@@ -53,7 +53,12 @@ const Signup: React.FC<ModalProps> = ({ closeModal }) => {
             setPasswordError("Password is required");
             return;
         } else {
-            setPasswordError("");
+            if (password.length >= 8) {
+                setPasswordError("");
+            } else {
+                setPasswordError("Password must be at least 8 characters");
+                return;
+            }
         }
 
         console.log("submitted");
@@ -201,8 +206,8 @@ const Signup: React.FC<ModalProps> = ({ closeModal }) => {
                         className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:shadow-xl focus:bg-primaryWhite ${passwordError && "border-2 border-red-500"
                             }`}
                         value={password}
-                        min={8}
-                        max={15}
+                        min='8'
+                        max='15'
                         onChange={(e) => setPassword(e.target.value)}
                     ></input>
                 </div>

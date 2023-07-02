@@ -7,10 +7,10 @@ import LoadingSpinnerModal from "./LoadingSpinnerModal";
 
 interface ModalProps {
     closeModal: () => void;
-    mailId: string | undefined;
+    username: string | undefined;
 }
 
-const AddBoardModal: React.FC<ModalProps> = ({ closeModal, mailId }) => {
+const AddBoardModal: React.FC<ModalProps> = ({ closeModal, username }) => {
     const [title, setTitle] = useState("");
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [description, setDescription] = useState("");
@@ -57,7 +57,6 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, mailId }) => {
         }
 
         setLoading(true);
-        closeModal();
         const token = localStorage.getItem('jwt');
         const config = {
             headers: {
@@ -71,7 +70,7 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, mailId }) => {
             description: description,
             url: url,
             isSelf: isSelf,
-            mailId: mailId
+            username: username
         };
 
         const formData = new FormData();
@@ -84,8 +83,12 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, mailId }) => {
             .then(response => {
                 console.log(response)
                 setLoading(false);
+                window.location.reload();
             })
-            .catch(error => console.error(error))
+            .catch(error => {
+                console.error(error)
+                setLoading(false);
+            })
     };
 
     return (
