@@ -9,6 +9,7 @@ interface ModalProps {
     isLoggedIn: boolean;
     handleLogout: () => void;
     loggedInUser: UserState | null;
+    closeModal: () => void;
 }
 
 interface User {
@@ -40,13 +41,13 @@ interface User {
 
 type UserState = Omit<User, 'password' | 'verificationToken'>;
 
-const MyProfile: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }) => {
+const MyProfile: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser, closeModal }) => {
 
     const navigate = useNavigate();
 
     useEffect(() => {
         if (!isLoggedIn) {
-            // navigate("/sign-in")
+            navigate("/sign-in")
         }
     }, [isLoggedIn, navigate])
 
@@ -58,7 +59,7 @@ const MyProfile: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUse
         >
             <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser} />
             <div className='container mx-auto p-2 pt-8 flex flex-col gap-4 lg:flex-row'>
-                <ProfileCard profileImageUrl={loggedInUser?.profileImageUrl}/>
+                <ProfileCard profileImageUrl={loggedInUser?.profileImageUrl} closeModal={closeModal}/>
                 <EditProfile />
             </div>
         </motion.div>

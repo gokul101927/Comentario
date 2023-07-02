@@ -34,13 +34,42 @@ interface User {
   }>;
 }
 
+interface Boards {
+  id: {
+    timestamp: number;
+    date: string;
+  };
+  fullName: string;
+  mailId: string;
+  password: string;
+  verificationToken: {
+    userToken: string;
+    expiryDate: string;
+  };
+  roles: Array<{
+    authority: string;
+  }>;
+  profileImageUrl: string;
+  enabled: boolean;
+  verified: boolean;
+  accountNonExpired: boolean;
+  accountNonLocked: boolean;
+  credentialsNonExpired: boolean;
+  username: string;
+  authorities: Array<{
+    authority: string;
+  }>;
+}
+
 type UserState = Omit<User, 'password' | 'verificationToken'>;
 
 function App() {
 
-  const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn, login, logout } = useAuthentication();
+
+  const [modalOpen, setModalOpen] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState<UserState | null>(null);
+  const [allBoards, setAllBoards] = useState();
 
   const openModal = () => {
     setModalOpen(true);
@@ -78,6 +107,8 @@ function App() {
         })
     }
   }, [isLoggedIn])
+
+  useEffect
 
   return (
     <main >

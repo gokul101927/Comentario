@@ -22,6 +22,7 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, mailId }) => {
     const [urlError, setUrlError] = useState("");
 
     const [loading, setLoading] = useState(false);
+    const [disabled, setDisabled] = useState(true);
 
     const radioChange = (): void => {
         setIsSelf(!isSelf);
@@ -29,6 +30,7 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, mailId }) => {
 
     const handleFile = (file: File | null): void => {
         setSelectedFile(file);
+        setDisabled(false);
     }
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -145,7 +147,7 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, mailId }) => {
                     </div>
                 </div>
                 <div className="flex justify-end">
-                    <button className="text-sm font-small text-white rounded-md p-2 font-bold bg-primaryBlue hover:brightness-125" type="submit">+ Create</button>
+                    <button disabled={disabled} className="text-sm font-small text-white rounded-md p-2 font-bold bg-primaryBlue hover:brightness-125" type="submit">+ Create</button>
                 </div>
             </form>
             {loading && <LoadingSpinnerModal closeModal={closeModal} />}

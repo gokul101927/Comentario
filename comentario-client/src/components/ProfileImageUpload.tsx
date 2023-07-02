@@ -2,10 +2,11 @@ import { useEffect, useState } from "react"
 
 interface Props {
     profileImageUrl: string | undefined;
+    selectedFile: File | null;
+    handleFile: (file: File | null) => void;
 }
 
-const ProfileImageUpload: React.FC<Props> = ({ profileImageUrl }) => {
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+const ProfileImageUpload: React.FC<Props> = ({ profileImageUrl, selectedFile, handleFile }) => {
     const [preview, setPreview] = useState("")
 
     useEffect(() => {
@@ -22,11 +23,11 @@ const ProfileImageUpload: React.FC<Props> = ({ profileImageUrl }) => {
 
     const onSelectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) {
-            setSelectedFile(null)
+            handleFile(null)
             return
         }
 
-        setSelectedFile(e.target.files[0])
+        handleFile(e.target.files[0])
     }
 
     return (

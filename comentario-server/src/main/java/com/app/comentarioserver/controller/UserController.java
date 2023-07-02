@@ -123,6 +123,7 @@ public class UserController {
     @PutMapping(value = "/user/update-profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<User> updateProfileImage(@RequestHeader(name = "Authorization") String token, @RequestParam("file") MultipartFile file) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
         String username = userService.getUsernameFromToken(token);
+        log.info(username);
         return new ResponseEntity<>(userService.updateProfileImage(username, file), HttpStatus.OK);
     }
 

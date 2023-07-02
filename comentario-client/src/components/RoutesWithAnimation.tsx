@@ -12,7 +12,7 @@ interface ModalProps {
     closeModal: () => void;
     handleLogout: () => void;
     handleLogin: (token: string) => void;
-    loggedInUser: UserState | undefined;
+    loggedInUser: UserState | null;
 }
 
 interface User {
@@ -55,7 +55,7 @@ const RoutesWithAnimation: React.FC<ModalProps> = ({handleLogout, isLoggedIn, op
                 <Route path="/dashboard" element={<Dashboard isLoggedIn={isLoggedIn} handleLogout={handleLogout} modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} loggedInUser={loggedInUser}/>} />
                 <Route path="/sign-in" element={<Signin modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} handleLogin={handleLogin} />} />
                 <Route path="/sign-up" element={<Signup closeModal={closeModal}/>} />
-                <Route path="/my-profile" element={<MyProfile isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser}/>} />
+                <Route path="/my-profile" element={<MyProfile isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser} closeModal={closeModal}/>} />
                 <Route path="*" element={<Navigate to="/dashboard" />}></Route>
             </Route>
         </Routes>

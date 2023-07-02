@@ -2,6 +2,11 @@
   overflow: hidden;
 }
 
+button:disabled {
+  cursor: not-allowed;
+  pointer-events: all !important;
+}
+
 .fadeIn {
   animation: 0.8s fadeIn forwards;
 }

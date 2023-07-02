@@ -11,6 +11,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.LinkedList;
+import java.util.List;
+
 @Document(collection = "boards")
 @Getter
 @Setter
@@ -37,6 +40,8 @@ public class Board {
     @NotNull
     private String mailId;
 
+    private List<Feedback> feedbacks;
+
     public Board(String coverImageUrl, String title, String description, String url, boolean isSelf, String mailId) {
         this.coverImageUrl = coverImageUrl;
         this.title = title;
@@ -44,13 +49,7 @@ public class Board {
         this.url = url;
         this.isSelf = isSelf;
         this.mailId = mailId;
+        this.feedbacks = new LinkedList<>();
     }
-
-    public Board(String title, String description, String url, boolean isSelf, String mailId) {
-        this.title = title;
-        this.description = description;
-        this.url = url;
-        this.isSelf = isSelf;
-        this.mailId = mailId;
-    }
+    
 }

@@ -224,7 +224,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User updateUser(String username, UserRequest userRequest) {
-        User user = getUserByUsername(username);
+        User user = loadByIdentifier(username);
         user.setFullName(userRequest.getFullName());
         user.setUsername(userRequest.getUsername());
         user.setMailId(userRequest.getMailId());
@@ -233,7 +233,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User updateProfileImage(String username, MultipartFile file) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
-        User user = getUserByUsername(username);
+        User user = loadByIdentifier(username);
         user.setProfileImageUrl(uploadImage(file));
         return userRepository.save(user);
     }
