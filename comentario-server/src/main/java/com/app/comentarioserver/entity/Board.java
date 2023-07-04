@@ -1,7 +1,5 @@
 package com.app.comentarioserver.entity;
 
-import com.app.comentarioserver.controller.AuthRequest;
-import com.app.comentarioserver.controller.UserRequest;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +19,7 @@ import java.util.List;
 public class Board {
 
     @Id
-    private ObjectId id;
+    private String id;
 
     @NotNull
     private String coverImageUrl;
@@ -41,9 +39,10 @@ public class Board {
     private String username;
 
     @NotNull
+    @DBRef
     private List<Feedback> feedbacks;
 
-    public Board(String coverImageUrl, String title, String description, String url, boolean isSelf, String mailId, String username) {
+    public Board(String coverImageUrl, String title, String description, String url, boolean isSelf, String username) {
         this.coverImageUrl = coverImageUrl;
         this.title = title;
         this.description = description;

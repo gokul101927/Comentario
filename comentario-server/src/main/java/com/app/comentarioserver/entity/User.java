@@ -7,6 +7,7 @@ import lombok.*;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -40,8 +41,7 @@ public class User implements UserDetails {
 
     @NotEmpty
     @NotNull
-    @Max(15)
-    @Min(8)
+
     private String password;
 
     @NotNull
@@ -52,6 +52,7 @@ public class User implements UserDetails {
 
     private boolean isVerified;
 
+    @DBRef
     private transient List<Board> boards;
 
     public void setBoards(Board board) {

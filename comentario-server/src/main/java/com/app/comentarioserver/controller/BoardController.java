@@ -42,13 +42,12 @@ public class BoardController {
 
     @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Board> addBoard(@RequestParam("file") MultipartFile file, @RequestParam("data") String board) throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
-        log.info("Accessed");
         Board newBoard = objectMapper.readValue(board, Board.class);
         return new ResponseEntity<>(boardService.addBoard(newBoard, file), HttpStatus.OK);
     }
 
     @GetMapping("/boards/{id}")
-    public ResponseEntity<Board> getBoard(@RequestParam("id") ObjectId id) {
+    public ResponseEntity<Board> getBoard(@RequestParam("id") String id) {
         return new ResponseEntity<>(boardService.getBoard(id), HttpStatus.OK);
     }
 }

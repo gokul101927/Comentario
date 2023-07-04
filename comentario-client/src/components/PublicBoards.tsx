@@ -11,7 +11,6 @@ const PublicBoards = () => {
     useEffect(() => {
         api.get('/boards/all-boards')
           .then(response => {
-            console.log(response.data);
             setAllBoards(response.data);
           })
       }, []);

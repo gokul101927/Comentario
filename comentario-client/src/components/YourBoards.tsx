@@ -22,12 +22,12 @@ const YourBoards: React.FC<ModalProps> = ({ modalOpen, openModal, closeModal, lo
           {loggedInUser && loggedInUser.boards.length > 0 && loggedInUser.boards.map((board, index) =>
             <DisplayBoard board={board} key={index} />)}
         </div>
-
-        {loggedInUser && loggedInUser.boards.length === 0 && <div className='mt-4 py-4 rounded-lg border border-2 border-dashed border-black w-full'>
+        {loggedInUser && !loggedInUser?.boards && 
+        <div className='mt-4 py-4 rounded-lg border border-2 border-dashed border-black w-full'>
           <h2 className='text-gray-500 py-12 text-center'>No boards yet.</h2>
         </div>}
       </div>
-
+      
       {modalOpen && <AddBoardModal closeModal={closeModal} username={loggedInUser?.username} />}
     </div>
   )

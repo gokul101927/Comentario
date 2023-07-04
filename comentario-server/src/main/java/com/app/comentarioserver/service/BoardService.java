@@ -38,7 +38,7 @@ public class BoardService {
         return newBoard;
     }
 
-    public Board getBoard(ObjectId id) {
+    public Board getBoard(String id) {
         return boardRepository.findById(id).orElseThrow();
     }
 

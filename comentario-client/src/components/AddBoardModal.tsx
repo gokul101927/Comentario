@@ -15,7 +15,7 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, username }) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [description, setDescription] = useState("");
     const [url, setUrl] = useState("");
-    const [isSelf, setIsSelf] = useState(false);
+    const [isSelf, setIsSelf] = useState(true);
 
     const [titleError, setTitleError] = useState("");
     const [descriptionError, setDescriptionError] = useState("");
@@ -23,10 +23,6 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, username }) => {
 
     const [loading, setLoading] = useState(false);
     const [disabled, setDisabled] = useState(true);
-
-    const radioChange = (): void => {
-        setIsSelf(!isSelf);
-    }
 
     const handleFile = (file: File | null): void => {
         setSelectedFile(file);
@@ -93,6 +89,7 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, username }) => {
 
     return (
         <Modal closeModal={closeModal}>
+            <h1 className="text-black text-sm font-bold pb-2">Create new board.</h1>
             <form className="space-y-3" onSubmit={handleSubmit}>
                 <CoverImageUpload selectedFile={selectedFile} handleFile={handleFile} />
                 <div className="flex flex-col">
@@ -109,16 +106,16 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, username }) => {
                     ></input>
                 </div>
                 <div className="flex flex-col">
-                    <input
-                        type="description"
+                    <textarea
                         name="description"
+                        rows={4}
                         id="description"
                         placeholder="Description of the software"
                         className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:shadow-xl focus:bg-primaryWhite ${descriptionError && "border-2 border-red-500 placeholder:text-red-500"
                             }`}
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                    ></input>
+                    ></textarea>
                 </div>
                 <div className="flex flex-col">
                     <input
@@ -134,17 +131,16 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, username }) => {
                 </div>
                 <div className="flex w-full gap-4">
                     <div className="w-1/2">
-                        <input type="radio" name="option" id="self" className="peer hidden" onChange={radioChange} checked={isSelf} />
+                        <input type="radio" name="self" id="self" className="peer hidden" onChange={() => setIsSelf(true)} checked={isSelf} />
                         <label
                             htmlFor="self"
                             className="block cursor-pointer bg-gray-100 text-gray-400 select-none rounded-md p-2 text-center peer-checked:bg-primaryBlue peer-checked:font-bold peer-checked:text-white"
                         >Self</label>
                     </div>
                     <div className="w-1/2">
-                        <input type="radio" name="option" id="out-source" className="peer hidden" onChange={radioChange} checked={!isSelf} />
+                        <input type="radio" name="out-source" id="out-source" className="peer hidden" onChange={() => setIsSelf(false)} checked={!isSelf} />
                         <label
                             htmlFor="out-source"
-
                             className="block cursor-pointer bg-gray-100 text-gray-400 select-none rounded-md p-2 text-center peer-checked:bg-primaryBlue peer-checked:font-bold peer-checked:text-white"
                         >Out sourced</label>
                     </div>

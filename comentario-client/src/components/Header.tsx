@@ -79,13 +79,23 @@ const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }
                                             />
                                             <div className='text-black font-small font-bold'>{loggedInUser?.fullName}</div>
                                         </div>
-                                        {isDropdownOpen && <div className='absolute border right-2 z-60 bg-white rounded-lg shadow-xl w-44'>
-                                            <ul className="py-2 text-sm text-gray-700 divide-y divide-solid divide-gray-200">
+                                        {isDropdownOpen && <div className='absolute border right-2 z-20 bg-white rounded-lg shadow-xl w-44'>
+                                            <ul className="py-2 z-20 text-sm text-gray-700 divide-y divide-solid divide-gray-200">
                                                 <li>
-                                                    <Link to="/my-profile" className="block px-4 py-2 hover:bg-gray-300 font-bold">My profile</Link>
+                                                    
+                                                    <Link to="/my-profile" className="flex z-20 items-center gap-2 px-4 py-2 hover:bg-gray-300 font-bold">
+                                                    <img src="../src/assets/profile-icon.png"
+                                                        alt="logo"
+                                                        className="profile-icon h-4">
+                                                    </img>My profile</Link>
                                                 </li>
-                                                <li>
-                                                    <div onClick={logoutUser} className="block cursor-pointer px-4 py-2 font-bold hover:bg-red-400 text-red-400 hover:text-primaryWhite">Logout</div>
+                                                <li >
+                                                   
+                                                    <div onClick={logoutUser} className="flex z-20 items-center gap-2 cursor-pointer px-4 py-2 font-bold hover:bg-red-500 text-red-500 hover:text-primaryWhite">
+                                                    <img src="../src/assets/logout.png"
+                                                        alt="logo"
+                                                        className="profile-icon h-4">
+                                                    </img>Logout</div>
                                                 </li>
                                             </ul>
                                         </div>}

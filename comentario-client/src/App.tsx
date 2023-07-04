@@ -1,6 +1,5 @@
 import { BrowserRouter } from 'react-router-dom'
 import './App.css'
-import useAuthentication from "./components/useAuthentication";
 import api from './api/apiConfig'
 
 import { useEffect, useState } from 'react'
@@ -11,10 +10,9 @@ import { UserState } from './interfaces/types';
 
 function App() {
 
-  const { isLoggedIn, login, logout } = useAuthentication();
-
   const [modalOpen, setModalOpen] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState<UserState | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const openModal = () => {
     setModalOpen(true);
@@ -34,9 +32,21 @@ function App() {
     logout();
   };
 
+  const logout = () => {
+    localStorage.removeItem('jwt');
+    setIsLoggedIn(false);
+    console.log("logged out")
+  };
+
+  const login = (token: string): void => {
+    localStorage.setItem('jwt', token);
+    setIsLoggedIn(true);
+    console.log("logged in")
+  };
+
   useEffect(() => {
-    if (isLoggedIn) {
-      const token = localStorage.getItem('jwt');
+    const token = localStorage.getItem('jwt');
+    if (token) {
       const config = {
         headers: {
           Authorization: token
@@ -44,23 +54,26 @@ function App() {
       };
       api.get('/users/user', config)
         .then((response) => {
+          setIsLoggedIn(true);
           setLoggedInUser(response.data)
           console.log(response.data);
         })
         .catch(err => {
           console.error(err)
-          logout();
+          setIsLoggedIn(false);
+          setLoggedInUser(null)
+          localStorage.removeItem('jwt');
+          console.log("logged out")
         })
     }
-  }, [isLoggedIn, logout])
 
-  
+  }, [isLoggedIn])
 
   return (
     <main >
       <BrowserRouter >
         <LocationProvider>
-          <RoutesWithAnimation modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} isLoggedIn={isLoggedIn} handleLogout={handleLogout} handleLogin={handleLogin} loggedInUser={loggedInUser}/>
+          <RoutesWithAnimation modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} isLoggedIn={isLoggedIn} handleLogout={handleLogout} handleLogin={handleLogin} loggedInUser={loggedInUser} />
         </LocationProvider>
       </BrowserRouter>
     </main >
