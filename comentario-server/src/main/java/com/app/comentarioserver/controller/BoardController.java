@@ -1,13 +1,12 @@
 package com.app.comentarioserver.controller;
 
+import com.app.comentarioserver.dto.BoardDto;
 import com.app.comentarioserver.entity.Board;
 import com.app.comentarioserver.service.BoardService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.imagekit.sdk.exceptions.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -42,12 +41,13 @@ public class BoardController {
 
     @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Board> addBoard(@RequestParam("file") MultipartFile file, @RequestParam("data") String board) throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
-        Board newBoard = objectMapper.readValue(board, Board.class);
+        BoardDto boardDto = objectMapper.readValue(board, BoardDto.class);
+        Board newBoard = new Board(boardDto);
         return new ResponseEntity<>(boardService.addBoard(newBoard, file), HttpStatus.OK);
     }
 
-    @GetMapping("/boards/{id}")
-    public ResponseEntity<Board> getBoard(@RequestParam("id") String id) {
-        return new ResponseEntity<>(boardService.getBoard(id), HttpStatus.OK);
+    @GetMapping("/board/{boardId}")
+    public ResponseEntity<Board> getBoard(@PathVariable String boardId) {
+        return new ResponseEntity<>(boardService.getBoard(boardId), HttpStatus.OK);
     }
 }

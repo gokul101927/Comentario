@@ -1,11 +1,13 @@
 package com.app.comentarioserver.entity;
 
+import com.app.comentarioserver.dto.FeedbackDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Document(collection = "feedbacks")
@@ -27,11 +29,27 @@ public class Feedback {
 
     private List<Comment> comments;
 
-    public Feedback(String title, Category category, String description, int upVotes, List<Comment> comments) {
-        this.title = title;
-        this.category = category;
-        this.description = description;
-        this.upVotes = upVotes;
-        this.comments = comments;
+    private String boardId;
+
+    @Override
+    public String toString() {
+        return "Feedback{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", category=" + category +
+                ", description='" + description + '\'' +
+                ", upVotes=" + upVotes +
+                ", comments=" + comments +
+                ", boardId='" + boardId + '\'' +
+                '}';
+    }
+
+    public Feedback(FeedbackDto feedbackDto) {
+        this.title = feedbackDto.title();
+        this.category = feedbackDto.category();
+        this.description = feedbackDto.description();
+        this.upVotes = 0;
+        this.comments = new LinkedList<>();
+        this.boardId = feedbackDto.boardId();
     }
 }

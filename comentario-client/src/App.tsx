@@ -67,10 +67,10 @@ function App() {
         })
     }
 
-  }, [isLoggedIn])
+  }, [])
 
   return (
-    <main >
+    <main className='text-sm lg:text-base'>
       <BrowserRouter >
         <LocationProvider>
           <RoutesWithAnimation modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} isLoggedIn={isLoggedIn} handleLogout={handleLogout} handleLogin={handleLogin} loggedInUser={loggedInUser} />

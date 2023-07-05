@@ -1,5 +1,7 @@
 package com.app.comentarioserver.controller;
 
+import com.app.comentarioserver.dto.AuthRequest;
+import com.app.comentarioserver.dto.UserRequest;
 import com.app.comentarioserver.entity.User;
 import com.app.comentarioserver.exception.InvalidCredentialsException;
 import com.app.comentarioserver.exception.UserNotEnabledException;

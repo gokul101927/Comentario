@@ -1,10 +1,10 @@
 package com.app.comentarioserver.entity;
 
+import com.app.comentarioserver.dto.BoardDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -38,17 +38,20 @@ public class Board {
     @NotNull
     private String username;
 
-    @NotNull
     @DBRef
     private List<Feedback> feedbacks;
 
-    public Board(String coverImageUrl, String title, String description, String url, boolean isSelf, String username) {
-        this.coverImageUrl = coverImageUrl;
-        this.title = title;
-        this.description = description;
-        this.url = url;
-        this.isSelf = isSelf;
-        this.username = username;
+    public void setFeedbacks(Feedback feedback) {
+        this.feedbacks.add(feedback);
+    }
+
+    public Board(BoardDto boardDto) {
+        this.coverImageUrl = boardDto.coverImageUrl();
+        this.title = boardDto.title();
+        this.description = boardDto.description();
+        this.url = boardDto.url();
+        this.isSelf = boardDto.isSelf();
+        this.username = boardDto.username();
         this.feedbacks = new LinkedList<>();
     }
 

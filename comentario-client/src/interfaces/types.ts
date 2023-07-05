@@ -27,10 +27,7 @@ interface User{
 }
 
 export interface Board {
-    id: {
-      timestamp: number;
-      date: string;
-    };
+    id: string,
     coverImageUrl: string;
     title: string;
     description: string;
@@ -41,7 +38,26 @@ export interface Board {
   }
   
 export interface Feedback {
-    feedback: string;
+  id: string,
+  title: string;
+  description: string;
+  category: Category;
+  upVotes: number;
+  comments: Comments[];
+  boardId: string;
+}
+
+export enum Category {
+  UI = "UI",
+  UX = "UX",
+  Enhancement = "Enhancement",
+  Feature = "Feature",
+  Bug = "Bug"
+}
+
+export interface Comments {
+  id: string,
+  comment: string;
 }
   
 export type UserState = Omit<User, 'password' | 'verificationToken'>;

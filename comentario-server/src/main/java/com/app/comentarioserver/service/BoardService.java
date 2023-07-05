@@ -1,6 +1,8 @@
 package com.app.comentarioserver.service;
 
 import com.app.comentarioserver.entity.Board;
+import com.app.comentarioserver.entity.Feedback;
+import com.app.comentarioserver.entity.User;
 import com.app.comentarioserver.repository.BoardRepository;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.exceptions.*;
@@ -38,8 +40,8 @@ public class BoardService {
         return newBoard;
     }
 
-    public Board getBoard(String id) {
-        return boardRepository.findById(id).orElseThrow();
+    public Board getBoard(String boardId) {
+        return boardRepository.findById(boardId).orElseThrow();
     }
 
     public void deleteAll() {
@@ -51,5 +53,11 @@ public class BoardService {
         FileCreateRequest fileCreateRequest = new FileCreateRequest(imageBytes, "filename");
         fileCreateRequest.setFolder("Comentario/");
         return imageKit.upload(fileCreateRequest).getUrl();
+    }
+
+    public void addFeedbackToTheBoard(String id, Feedback feedback) {
+        Board board = boardRepository.findById(id).orElseThrow();
+        board.setFeedbacks(feedback);
+        boardRepository.save(board);
     }
 }

@@ -1,7 +1,7 @@
 package com.app.comentarioserver.service;
 
-import com.app.comentarioserver.controller.AuthRequest;
-import com.app.comentarioserver.controller.UserRequest;
+import com.app.comentarioserver.dto.AuthRequest;
+import com.app.comentarioserver.dto.UserRequest;
 import com.app.comentarioserver.entity.Board;
 import com.app.comentarioserver.entity.Token;
 import com.app.comentarioserver.entity.User;

@@ -16,6 +16,8 @@ public class FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
 
+    private final BoardService boardService;
+
     public List<Feedback> getAllFeedbacks() {
         return feedbackRepository.findAll();
     }
@@ -25,6 +27,11 @@ public class FeedbackService {
     }
 
     public Feedback addFeedback(Feedback feedback) {
+        boardService.addFeedbackToTheBoard(feedback.getBoardId(), feedback);
         return feedbackRepository.save(feedback);
+    }
+
+    public void deleteAll() {
+        feedbackRepository.deleteAll();
     }
 }

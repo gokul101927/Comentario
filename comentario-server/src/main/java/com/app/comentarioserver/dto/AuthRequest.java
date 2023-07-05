@@ -1,4 +1,4 @@
-package com.app.comentarioserver.controller;
+package com.app.comentarioserver.dto;
 
 import lombok.Data;
 

@@ -1,9 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { motion } from 'framer-motion';
-import { UserState } from '../interfaces/types';
+import { Board, UserState } from '../interfaces/types';
 import Header from "../components/Header";
 import DisplayFeedback from "../components/DisplayFeedback";
+import api from "../api/apiConfig";
 import AddFeedbackModal from "../components/AddFeedbackModal";
+import { useEffect, useState } from "react";
 
 interface ModalProps {
     modalOpen: boolean;
@@ -14,7 +16,34 @@ interface ModalProps {
     loggedInUser: UserState | null;
 }
 
-const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser, modalOpen, closeModal , openModal}) => {
+const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser, modalOpen, closeModal, openModal }) => {
+
+    const params = useParams();
+    const boardId = params.boardId;
+
+    const [board, setBoard] = useState<Board>();
+
+    useEffect(() => {
+        const token = localStorage.getItem('jwt');
+        if (token) {
+            const config = {
+                headers: {
+                    Authorization: token
+                }
+            };
+            api.get(`/boards/board/${boardId}`, config)
+                .then((response) => {
+                    console.log(response.data);
+                    setBoard(response.data);
+                })
+                .catch(err => {
+                    console.error(err)
+                    localStorage.removeItem('jwt');
+                    console.log("logged out")
+                })
+        }
+
+    }, [boardId])
 
     return (
         <motion.div
@@ -77,7 +106,7 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                 </div>
                 <div className="w-full flex flex-col gap-4">
                     <div className="container p-8 w-full h-16 shadow-xl bg-primaryWhite rounded-lg flex justify-between items-center">
-                        <div className="flex items-center gap-4">
+                        <div className="hidden md:flex items-center gap-4">
                             <img
                                 src="../src/assets/opinion.png"
                                 alt="feedback icon"
@@ -98,15 +127,19 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                         <div>
                             <button
                                 type="button"
-                                className=" font-bold text-white bg-primaryBlue rounded-md p-2 w-full hover:brightness-125"  onClick={openModal}>
+                                className=" font-bold text-white bg-primaryBlue rounded-md p-2 w-full hover:brightness-125" onClick={openModal}>
                                 + Add feedback
                             </button>
                         </div>
 
                     </div>
-                    <DisplayFeedback />
+
+                    {board?.feedbacks ? board?.feedbacks.map((feedback, index) =>
+                        <DisplayFeedback key={index} feedback={feedback} username={board.username}/>)
+                        : <h1 className="text-black font-bold">No boards currently</h1>}
+
                 </div>
-                {modalOpen && <AddFeedbackModal closeModal={closeModal} />}
+                {modalOpen && <AddFeedbackModal closeModal={closeModal} boardId={board?.id} />}
             </div>
         </motion.div>
     )

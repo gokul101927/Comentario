@@ -1,32 +1,24 @@
 import { useState } from "react";
 import Modal from "./Modal";
-
+import { Category } from "../interfaces/types";
 import api from "../api/apiConfig";
 import LoadingSpinnerModal from "./LoadingSpinnerModal";
 
 interface Props {
     closeModal: () => void;
+    boardId: string | undefined;
 }
 
-enum Category {
-    UI = "UI",
-    UX = "UX",
-    Enhancement = "Enhancement",
-    Feature = "Feature",
-    Bug = "Bug"
-}
 
-const AddFeedbackModal: React.FC<Props> = ({ closeModal }) => {
+const AddFeedbackModal: React.FC<Props> = ({ closeModal, boardId }) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [categoryType, setCategoryType] = useState<Category>();
+    const [categoryType, setCategoryType] = useState("");
 
     const [titleError, setTitleError] = useState("");
     const [descriptionError, setDescriptionError] = useState("");
 
     const [loading, setLoading] = useState(false);
-    const [disabled, setDisabled] = useState(true);
-
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -49,15 +41,28 @@ const AddFeedbackModal: React.FC<Props> = ({ closeModal }) => {
         const config = {
             headers: {
                 Authorization: token,
-                'Content-Type': `multipart/form-data`
             }
         };
 
         const requestBody = {
             title: title,
+            category: categoryType,
             description: description,
-            categoryType: categoryType,
+            boardId: boardId
         };
+
+        api.post("/feedbacks/add", requestBody, config)
+            .then(response => {
+                console.log(response)
+                setLoading(false);
+                window.location.reload();
+                closeModal();
+            })
+            .catch(error => {
+                console.error(error)
+                setLoading(false);
+                closeModal();
+            })
 
     };
 
@@ -79,7 +84,7 @@ const AddFeedbackModal: React.FC<Props> = ({ closeModal }) => {
                     ></input>
                 </div>
                 <div className="flex flex-col">
-                    <select id="sort" className="cursor-pointer text-black p-2 rounded-md bg-gray-100 border-0 border-gray-200 appearance-none focus:outline-none focus:ring-0 peer">
+                    <select id="sort" className="cursor-pointer text-black p-2 rounded-md bg-gray-100 border-0 border-gray-200 appearance-none focus:outline-none focus:ring-0 peer" onChange={(e) => setCategoryType(e.target.value)}>
                         <option disabled selected>Select a category</option>
                         <option value={Category.UI} >{Category.UI}</option>
                         <option value={Category.UX} >{Category.UX}</option>
@@ -103,7 +108,7 @@ const AddFeedbackModal: React.FC<Props> = ({ closeModal }) => {
                 </div>
 
                 <div className="flex justify-end">
-                    <button disabled={disabled} className="text-sm font-small text-white rounded-md p-2 font-bold bg-primaryBlue hover:brightness-125" type="submit">+ Create</button>
+                    <button className="text-sm font-small text-white rounded-md p-2 font-bold bg-primaryBlue hover:brightness-125" type="submit">+ Create</button>
                 </div>
             </form>
             {loading && <LoadingSpinnerModal closeModal={closeModal} />}

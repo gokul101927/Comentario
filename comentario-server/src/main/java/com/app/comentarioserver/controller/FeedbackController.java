@@ -1,5 +1,6 @@
 package com.app.comentarioserver.controller;
 
+import com.app.comentarioserver.dto.FeedbackDto;
 import com.app.comentarioserver.entity.Board;
 import com.app.comentarioserver.entity.Feedback;
 import com.app.comentarioserver.entity.User;
@@ -25,13 +26,21 @@ public class FeedbackController {
 
     private final FeedbackService feedbackService;
 
+    @DeleteMapping("/delete-all")
+    public void deleteAllFeedbacks() {
+        feedbackService.deleteAll();
+    }
+
     @GetMapping("/all-feedbacks")
     public ResponseEntity<List<Feedback>> allBoards() {
         return new ResponseEntity<>(feedbackService.getAllFeedbacks(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/add", consumes = "application/json")
-    public ResponseEntity<Feedback> registerUser(@RequestBody Feedback feedback) {
+    public ResponseEntity<Feedback> addFeedback(@RequestBody FeedbackDto feedbackDto) {
+
+        Feedback feedback = new Feedback(feedbackDto);
+        log.info(feedback.toString());
         return new ResponseEntity<>(feedbackService.addFeedback(feedback), HttpStatus.OK);
     }
 }
