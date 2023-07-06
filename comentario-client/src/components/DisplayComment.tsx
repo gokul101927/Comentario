@@ -1,25 +1,27 @@
-const DisplayComment = () => {
-    return (
-        <div className='container flex flex-row bg-primaryWhite rounded-md p-8 justify-between'>
-            <div className="flex gap-8">
-                <div className="w-16 md:w-auto">
-                    <img src="../src/assets/profile.png"
-                        alt="logo"
-                        className="h-12 md:h-16 rounded-full">
-                    </img>
-                </div>
-                <div>
-                    <h4 className="text-primaryBlue font-bold text-sm">@iamgokull</h4>
-                    <div className="flex items-center gap-2">
-                    <p className="text-black text-sm">Images and screencasts can enhance comments on solutions.</p>
-                    </div>
+import { Comment } from "../interfaces/types";
 
-                    <div className="pt-2">
-                        <button className="text-primaryBlue font-bold">Reply</button>
+interface Props {
+    comment: Comment | undefined;
+}
+
+const DisplayComment:React.FC<Props> = ({comment}) => {
+
+    return (
+        <div className="container flex flex-col bg-primaryWhite rounded-md p-4">
+            <div className="flex flex-row justify-between">
+                <div className="flex md:gap-8 items-center">
+                    <div className="w-16 md:w-auto">
+                        <img src={comment?.profileUrl}
+                            alt="logo"
+                            className="h-12 w-12 object-center object-cover rounded-full">
+                        </img>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <h4 className="text-primaryBlue font-bold text-sm">@{comment?.username}</h4>
+                        <p className="text-gray-600 text-sm font-bold">{comment?.commentTitle}</p>
                     </div>
                 </div>
             </div>
-            
         </div>
     )
 }

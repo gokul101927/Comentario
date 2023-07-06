@@ -6,17 +6,21 @@ import LoadingSpinnerModal from "./LoadingSpinnerModal";
 
 interface Props {
     closeModal: () => void;
+    handleFeedbackAdd: () => void;
     boardId: string | undefined;
+    username: string | undefined;
+    profileUrl: string | undefined;
 }
 
 
-const AddFeedbackModal: React.FC<Props> = ({ closeModal, boardId }) => {
+const AddFeedbackModal: React.FC<Props> = ({ closeModal, boardId, username, profileUrl, handleFeedbackAdd }) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [categoryType, setCategoryType] = useState("");
+    const [categoryType, setCategoryType] = useState<Category| "">("");
 
     const [titleError, setTitleError] = useState("");
     const [descriptionError, setDescriptionError] = useState("");
+    const [categoryTypeError, setcategoryTypeError] = useState("");
 
     const [loading, setLoading] = useState(false);
 
@@ -36,6 +40,13 @@ const AddFeedbackModal: React.FC<Props> = ({ closeModal, boardId }) => {
             setDescriptionError("");
         }
 
+        if (!categoryType) {
+            setcategoryTypeError("Password is required");
+            return;
+        } else {
+            setcategoryTypeError("");
+        }
+
         setLoading(true);
         const token = localStorage.getItem('jwt');
         const config = {
@@ -48,14 +59,16 @@ const AddFeedbackModal: React.FC<Props> = ({ closeModal, boardId }) => {
             title: title,
             category: categoryType,
             description: description,
-            boardId: boardId
+            boardId: boardId,
+            username: username,
+            profileUrl: profileUrl
         };
 
         api.post("/feedbacks/add", requestBody, config)
             .then(response => {
                 console.log(response)
                 setLoading(false);
-                window.location.reload();
+                handleFeedbackAdd();
                 closeModal();
             })
             .catch(error => {
@@ -84,13 +97,16 @@ const AddFeedbackModal: React.FC<Props> = ({ closeModal, boardId }) => {
                     ></input>
                 </div>
                 <div className="flex flex-col">
-                    <select id="sort" className="cursor-pointer text-black p-2 rounded-md bg-gray-100 border-0 border-gray-200 appearance-none focus:outline-none focus:ring-0 peer" onChange={(e) => setCategoryType(e.target.value)}>
-                        <option disabled selected>Select a category</option>
-                        <option value={Category.UI} >{Category.UI}</option>
-                        <option value={Category.UX} >{Category.UX}</option>
-                        <option value={Category.Enhancement} >{Category.Enhancement}</option>
-                        <option value={Category.Feature} >{Category.Feature}</option>
-                        <option value={Category.Bug} >{Category.Bug}</option>
+                    <select 
+                    id="sort" 
+                    className={`cursor-pointer text-black p-2 rounded-md bg-gray-100 border-0 border-gray-200 appearance-none focus:outline-none focus:ring-0 peer ${categoryTypeError && "border-2 border-red-500 placeholder:text-red-500"
+                            }`}
+                    value={categoryType} 
+                    onChange={(e) => setCategoryType(e.target.value as Category)}>
+                        <option disabled value="">Select a category</option>
+                        {Object.values(Category).map((category) => (
+                            <option key={category} value={category}>{category}</option>
+                        ))}
                     </select>
                 </div>
 

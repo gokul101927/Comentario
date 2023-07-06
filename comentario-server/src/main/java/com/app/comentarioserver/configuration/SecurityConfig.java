@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/users/login", "/users/register", "/users/verify-email", "/users/reset-password", "/users/verify-register-token", "/users/all-users", "/users/delete-all", "/boards/delete-all", "/feedbacks/delete-all", "/boards/all-boards", "/feedbacks/all-feedbacks").permitAll()
+                        .requestMatchers("/users/login", "/users/register", "/users/verify-email", "/users/reset-password", "/users/verify-register-token", "/users/all-users", "/users/delete-all", "/boards/delete-all", "/feedbacks/delete-all", "/boards/all-boards", "/feedbacks/all-feedbacks", "/feedbacks/feedback/**", "/boards/board/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();

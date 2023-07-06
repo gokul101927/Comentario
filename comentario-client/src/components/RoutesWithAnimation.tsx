@@ -31,8 +31,8 @@ const RoutesWithAnimation: React.FC<ModalProps> = ({handleLogout, isLoggedIn, op
                 <Route path="/sign-in" element={<Signin modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} handleLogin={handleLogin} />} />
                 <Route path="/sign-up" element={<Signup closeModal={closeModal}/>} />
                 <Route path="/my-profile" element={<MyProfile isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser} closeModal={closeModal}/>} />
-                <Route path="/feedback/:boardId" element={<Feedback isLoggedIn={isLoggedIn} handleLogout={handleLogout} modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} loggedInUser={loggedInUser}/>} />
-                <Route path="/comment" element={<Comment isLoggedIn={isLoggedIn} handleLogout={handleLogout} modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} loggedInUser={loggedInUser}/>} />
+                <Route path="/board/:boardId" element={<Feedback isLoggedIn={isLoggedIn} handleLogout={handleLogout} modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} loggedInUser={loggedInUser}/>} />
+                <Route path="/feedback/:feedbackId" element={<Comment isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser}/>} />
                 <Route path="*" element={<Navigate to="/dashboard" />}></Route>
             </Route>
         </Routes>

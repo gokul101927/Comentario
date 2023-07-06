@@ -27,7 +27,7 @@ interface User{
 }
 
 export interface Board {
-    id: string,
+    id: string;
     coverImageUrl: string;
     title: string;
     description: string;
@@ -38,13 +38,21 @@ export interface Board {
   }
   
 export interface Feedback {
-  id: string,
+  id: string;
   title: string;
   description: string;
   category: Category;
-  upVotes: number;
-  comments: Comments[];
+  upVotes: UpVote[];
+  comments: Comment[];
   boardId: string;
+  username: string;
+  profileUrl: string;
+}
+
+export interface UpVote {
+  id: string;
+  user: User;
+  feedbacl: Feedback;
 }
 
 export enum Category {
@@ -55,9 +63,10 @@ export enum Category {
   Bug = "Bug"
 }
 
-export interface Comments {
-  id: string,
-  comment: string;
+export interface Comment {
+  profileUrl: string;
+  username: string;
+  commentTitle: string;
 }
   
 export type UserState = Omit<User, 'password' | 'verificationToken'>;

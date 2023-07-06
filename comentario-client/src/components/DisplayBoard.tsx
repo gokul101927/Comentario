@@ -13,7 +13,7 @@ const DisplayBoard: React.FC<Props> = ({ board }) => {
 
     return (
         <div className="bg-primaryWhite w-full p-6 rounded-md shadow flex flex-col space-y-3">
-            <Link to={`/feedback/${board.id}`}>
+            <Link to={`/board/${board.id}`}>
             <img
                 src={board.coverImageUrl}
                 alt="image"
@@ -34,7 +34,7 @@ const DisplayBoard: React.FC<Props> = ({ board }) => {
             </div>
             <p className="text-black">{board.description}</p>
             <div className="flex justify-between">
-                <button className="text-sm font-small text-white bg-primaryBlue rounded-md p-2 hover:brightness-125" onClick={() => navigate(`/feedback/${board.id}`)}>Provide feedback</button>
+                <button className="text-sm font-small text-white bg-primaryBlue rounded-md p-2 hover:brightness-125" onClick={() => navigate(`/board/${board.id}`)}>Provide feedback</button>
                 <div className="flex gap-2 items-center">
                     <img
                         src="../src/assets/feedback-icon.png"

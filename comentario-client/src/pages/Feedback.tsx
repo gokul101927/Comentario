@@ -2,10 +2,10 @@ import { Link, useParams } from "react-router-dom";
 import { motion } from 'framer-motion';
 import { Board, UserState } from '../interfaces/types';
 import Header from "../components/Header";
-import DisplayFeedback from "../components/DisplayFeedback";
 import api from "../api/apiConfig";
 import AddFeedbackModal from "../components/AddFeedbackModal";
 import { useEffect, useState } from "react";
+import DisplayFeedbacksBasedOnConditions from "../components/DisplayFeedbacksBasedOnConditions";
 
 interface ModalProps {
     modalOpen: boolean;
@@ -22,28 +22,25 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
     const boardId = params.boardId;
 
     const [board, setBoard] = useState<Board>();
+    const [feedbackAdded, setFeedbackAdded] = useState(false);
 
     useEffect(() => {
-        const token = localStorage.getItem('jwt');
-        if (token) {
-            const config = {
-                headers: {
-                    Authorization: token
-                }
-            };
-            api.get(`/boards/board/${boardId}`, config)
+
+            api.get(`/boards/board/${boardId}`)
                 .then((response) => {
                     console.log(response.data);
                     setBoard(response.data);
                 })
                 .catch(err => {
                     console.error(err)
-                    localStorage.removeItem('jwt');
-                    console.log("logged out")
                 })
-        }
+        
 
-    }, [boardId])
+    }, [feedbackAdded, boardId])
+
+    const handleFeedbackAdd = () => {
+        setFeedbackAdded(true);
+    }
 
     return (
         <motion.div
@@ -52,13 +49,13 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
             transition={{ duration: 1 }}
         >
             <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser} />
-            <div className="container mx-auto p-2 pt-8 flex flex-col gap-4 xl:flex-row">
-                <div className="hidden md:flex flex-row justify-between gap-4 xl:flex-col w-full xl:w-auto">
-                    <div className="container flex flex-col px-6 py-4 justify-end rounded-xl bg-primaryWhite bg-gradient-to-r from-primaryBlue to-primaryWhite w-72 h-44">
-                        <h1 className="font-bold word-wrap max-w-[210px]">Title for this software</h1>
-                        <h4 className="drop-shadow-xl text-sm">@iamgokull</h4>
+            <div className="container h-screen mx-auto p-2 pt-8 flex flex-col gap-4 xl:flex-row">
+                <div className="hidden md:flex flex-row justify-between xl:justify-start gap-4 xl:flex-col w-full xl:w-auto">
+                    <div className=" flex flex-col px-6 py-4 justify-end rounded-xl bg-primaryWhite bg-gradient-to-r from-primaryBlue to-primaryWhite w-72 h-44">
+                        <h1 className="font-bold word-wrap max-w-[210px]">{board?.title}</h1>
+                        <h4 className="drop-shadow-xl text-sm">@{board?.username}</h4>
                     </div>
-                    <div className="container rounded-xl bg-primaryWhite w-72 h-44">
+                    <div className="rounded-xl bg-primaryWhite w-72 h-44">
                         <div className="p-4 pt-8 flex flex-wrap gap-2">
                             <button className="transition ease-in-out delay-150 duration-300 bg-bgColor rounded-xl text-primaryBlue p-2 px-4 text-sm font-bold hover:text-primaryWhite hover:bg-primaryBlue">All</button>
                             <button className="transition ease-in-out delay-150 duration-300 bg-bgColor rounded-xl text-primaryBlue p-2 px-4 text-sm font-bold hover:text-primaryWhite hover:bg-primaryBlue">UI</button>
@@ -68,7 +65,7 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                             <button className="transition ease-in-out delay-150 duration-300 bg-bgColor rounded-xl text-primaryBlue p-2 px-4 text-sm font-bold hover:text-primaryWhite hover:bg-primaryBlue">Bug</button>
                         </div>
                     </div>
-                    <div className="container rounded-xl bg-primaryWhite w-72 h-44">
+                    <div className="rounded-xl bg-primaryWhite w-72 h-44">
                         <div className="p-4 space-y-4">
                             <Link to="#" className="text-primaryBlue font-bold text-sm hover:underline">View roadmap</Link>
                             <div className="flex justify-between items-center w-full">
@@ -105,14 +102,14 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                     </div>
                 </div>
                 <div className="w-full flex flex-col gap-4">
-                    <div className="container p-8 w-full h-16 shadow-xl bg-primaryWhite rounded-lg flex justify-between items-center">
+                    <div className="container md:top-56 xl:top-0  p-8 w-full h-16 shadow-xl bg-primaryWhite rounded-lg flex justify-between items-center">
                         <div className="hidden md:flex items-center gap-4">
                             <img
                                 src="../src/assets/opinion.png"
                                 alt="feedback icon"
                                 className=" h-8"
                             />
-                            <h1 className="text-black font-bold text-xl">12 Feedbacks</h1>
+                            <h1 className="text-black font-bold text-xl">{board?.feedbacks.length} Feedbacks</h1>
                         </div>
 
                         <div>
@@ -127,19 +124,22 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                         <div>
                             <button
                                 type="button"
-                                className=" font-bold text-white bg-primaryBlue rounded-md p-2 w-full hover:brightness-125" onClick={openModal}>
+                                className="text-sm font-bold text-white bg-primaryBlue rounded-md p-2 w-full hover:brightness-125" 
+                                onClick={openModal}
+                                disabled={!isLoggedIn}>
                                 + Add feedback
                             </button>
                         </div>
 
                     </div>
 
-                    {board?.feedbacks ? board?.feedbacks.map((feedback, index) =>
-                        <DisplayFeedback key={index} feedback={feedback} username={board.username}/>)
-                        : <h1 className="text-black font-bold">No boards currently</h1>}
+                    <div className="container">
+                        <DisplayFeedbacksBasedOnConditions feedbacks={board?.feedbacks}/>
+                    </div>
+
 
                 </div>
-                {modalOpen && <AddFeedbackModal closeModal={closeModal} boardId={board?.id} />}
+                {modalOpen && <AddFeedbackModal closeModal={closeModal} boardId={board?.id} username={loggedInUser?.username} profileUrl={loggedInUser?.profileImageUrl} handleFeedbackAdd={handleFeedbackAdd}/>}
             </div>
         </motion.div>
     )

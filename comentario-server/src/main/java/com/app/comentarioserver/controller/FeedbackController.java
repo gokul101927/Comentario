@@ -1,20 +1,16 @@
 package com.app.comentarioserver.controller;
 
 import com.app.comentarioserver.dto.FeedbackDto;
-import com.app.comentarioserver.entity.Board;
+import com.app.comentarioserver.entity.Comment;
 import com.app.comentarioserver.entity.Feedback;
-import com.app.comentarioserver.entity.User;
 import com.app.comentarioserver.service.FeedbackService;
-import io.imagekit.sdk.exceptions.*;
+import com.app.comentarioserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -26,6 +22,8 @@ public class FeedbackController {
 
     private final FeedbackService feedbackService;
 
+    private final UserService userService;
+
     @DeleteMapping("/delete-all")
     public void deleteAllFeedbacks() {
         feedbackService.deleteAll();
@@ -36,11 +34,20 @@ public class FeedbackController {
         return new ResponseEntity<>(feedbackService.getAllFeedbacks(), HttpStatus.OK);
     }
 
+    @GetMapping("/feedback/{id}")
+    public ResponseEntity<Feedback> getFeedback(@PathVariable String id) {
+        return new ResponseEntity<>(feedbackService.getFeedbackFormId(id), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/add", consumes = "application/json")
     public ResponseEntity<Feedback> addFeedback(@RequestBody FeedbackDto feedbackDto) {
 
         Feedback feedback = new Feedback(feedbackDto);
-        log.info(feedback.toString());
         return new ResponseEntity<>(feedbackService.addFeedback(feedback), HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/comment/post")
+    public  ResponseEntity<Feedback> postComment(@RequestParam("id") String id, @RequestBody Comment comment) {
+        return new ResponseEntity<>(feedbackService.postComment(id, comment), HttpStatus.OK);
     }
 }

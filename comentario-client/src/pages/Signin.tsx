@@ -53,6 +53,7 @@ const Signin: React.FC<ModalProps> = ({ openModal, modalOpen, closeModal, handle
         console.log(response.data);
         handleLogin(response.data);
         navigate('/');
+        window.location.reload();
         console.log("Logged in successfully");
         setLoading(false);
       })

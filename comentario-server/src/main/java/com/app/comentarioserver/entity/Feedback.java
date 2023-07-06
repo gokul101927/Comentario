@@ -5,8 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,31 +27,38 @@ public class Feedback {
 
     private String description;
 
-    private int upVotes;
+    @DBRef
+    private List<UpVote> upVotes;
 
     private List<Comment> comments;
 
     private String boardId;
 
-    @Override
-    public String toString() {
-        return "Feedback{" +
-                "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", category=" + category +
-                ", description='" + description + '\'' +
-                ", upVotes=" + upVotes +
-                ", comments=" + comments +
-                ", boardId='" + boardId + '\'' +
-                '}';
+    private String username;
+
+    private String profileUrl;
+
+    public void setComments(Comment comment) {
+        this.comments.add(comment);
     }
+
+    public void addUpVote(UpVote upVote) {
+        upVotes.add(upVote);
+    }
+
+    public void removeUpVote(UpVote upVote) {
+        upVotes.remove(upVote);
+    }
+
 
     public Feedback(FeedbackDto feedbackDto) {
         this.title = feedbackDto.title();
         this.category = feedbackDto.category();
         this.description = feedbackDto.description();
-        this.upVotes = 0;
+        this.upVotes = new ArrayList<>();
         this.comments = new LinkedList<>();
         this.boardId = feedbackDto.boardId();
+        this.username = feedbackDto.username();
+        this.profileUrl = feedbackDto.profileUrl();
     }
 }

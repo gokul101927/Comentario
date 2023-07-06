@@ -1,35 +1,93 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Feedback } from "../interfaces/types"
+import { Link } from "react-router-dom";
+import api from "../api/apiConfig";
 
 interface Props {
-    feedback: Feedback;
-    username: string;
+    feedback: Feedback | undefined;
 }
 
-const DisplayFeedback:React.FC<Props> = ({feedback, username}) => {
+const DisplayFeedback: React.FC<Props> = ({ feedback }) => {
+    const [upVote, setUpVote] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem('jwt');
+        const config = {
+            headers: {
+                Authorization: token,
+            }
+        };
+        api.get(`/feedbacks/upvote/${feedback?.id}`, config)
+        .then(response => {
+            console.log(response.data);
+            setUpVote(response.data);
+        })
+        .catch(error => {
+            console.error(error);
+        })
+    }, [upVote, feedback?.id])
+
+    const handleUpVote = () => {
+        const token = localStorage.getItem('jwt');
+        if (token) {
+            const config = {
+                headers: {
+                    Authorization: token,
+                }
+            };
+            if (upVote) {
+                api.delete(`/feedbacks/upvote/delete/${feedback?.id}`, config)
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.error(error);
+                })
+            } else {
+                api.put(`/feedbacks/upvote/add/${feedback?.id}`, config)
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.error(error);
+                })
+            }
+        }
+        
+        
+    }
+
     return (
         <div className='container flex flex-row bg-primaryWhite rounded-md p-8 justify-between'>
-            <div className="flex gap-8">
+            <div className="flex md:gap-8">
                 <div className="w-16 md:w-auto">
-                    <img src="../src/assets/profile.png"
-                        alt="logo"
-                        className="h-12 md:h-16 rounded-full">
+                    <img src={feedback?.profileUrl}
+                        alt="profile Image"
+                        className="h-12 w-12 md:h-16 md:w-16 object-center object-cover rounded-full">
                     </img>
                 </div>
                 <div>
-                    <h4 className="text-primaryBlue font-bold text-sm">@{username}</h4>
-                    <div className="flex items-center gap-2">
-                        <h1 className="text-black font-bold">{feedback.title}</h1>
-                        <span className="bg-bgColor rounded-xl text-primaryBlue p-2 text-sm shadow-xl font-bold">{feedback.category}</span>
+                    <h4 className="text-primaryBlue font-bold text-sm">@{feedback?.username}</h4>
+                    <div className="mt-1">
+                        <div className="flex items-center gap-2">
+                            <Link to={`/feedback/${feedback?.id}`}>
+                                <h1 className="text-black font-bold">{feedback?.title}</h1>
+                            </Link>
+
+                            <span className="bg-bgColor rounded-xl text-primaryBlue p-2 text-sm shadow-xl font-bold">{feedback?.category}</span>
+                        </div>
+
+                        <p className="text-black text-sm">{feedback?.description}</p>
                     </div>
 
-                    <p className="text-black text-sm">{feedback.description}</p>
-                    <div className="pt-2 flex items-end gap-1">
-                        <img src="../src/assets/up-arrow-filled.png"
+                    <div className="pt-4 flex items-end gap-1">
+                        <img src={`${upVote ? "../src/assets/up-arrow-filled.png" : "../src/assets/up-arrow.png" } `}
                             alt="logo"
-                            className="h-6">
+                            className="h-6 cursor-pointer"
+                            
+                            onClick={handleUpVote}>
                         </img>
-                        <p className="text-primaryBlue font-bold">{feedback.upVotes}</p>
+                        <p className={`${upVote ? "text-primaryBlue" : "text-black"}  font-bold`}>{feedback?.upVotes.length}</p>
                     </div>
                 </div>
             </div>
@@ -38,7 +96,7 @@ const DisplayFeedback:React.FC<Props> = ({feedback, username}) => {
                     alt="logo"
                     className="h-6">
                 </img>
-                <p className="text-black font-bold">{feedback.comments?.length}</p>
+                <p className="text-black font-bold">{feedback?.comments?.length}</p>
             </div>
         </div>
     )
