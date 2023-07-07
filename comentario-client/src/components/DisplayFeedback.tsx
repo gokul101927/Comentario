@@ -7,9 +7,14 @@ interface Props {
     feedback: Feedback | undefined;
 }
 
+interface Response {
+    status: boolean;
+    count: number;
+}
+
 const DisplayFeedback: React.FC<Props> = ({ feedback }) => {
     const [upVote, setUpVote] = useState(false);
-
+    const [upVoteCount, setUpVoteCount] = useState(0);
     useEffect(() => {
         const token = localStorage.getItem('jwt');
         const config = {
@@ -18,14 +23,18 @@ const DisplayFeedback: React.FC<Props> = ({ feedback }) => {
             }
         };
         api.get(`/feedbacks/upvote/${feedback?.id}`, config)
-        .then(response => {
-            console.log(response.data);
-            setUpVote(response.data);
-        })
-        .catch(error => {
-            console.error(error);
-        })
-    }, [upVote, feedback?.id])
+            .then(response => {
+                console.log(response.data)
+                const data: Response = response.data;
+                setUpVote(data.status);
+                setUpVoteCount(data.count);
+                console.log(data.status, data.count)
+            })
+            .catch(error => {
+                console.error(error);
+            })
+        
+    }, [upVote, feedback?.id, upVoteCount])
 
     const handleUpVote = () => {
         const token = localStorage.getItem('jwt');
@@ -37,24 +46,28 @@ const DisplayFeedback: React.FC<Props> = ({ feedback }) => {
             };
             if (upVote) {
                 api.delete(`/feedbacks/upvote/delete/${feedback?.id}`, config)
-                .then(response => {
-                    console.log(response.data);
-                })
-                .catch(error => {
-                    console.error(error);
-                })
+                    .then(response => {
+                        console.log(response.data);
+                        setUpVote(false);
+                        setUpVoteCount(response.data.upVoteCount)
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    })
             } else {
-                api.put(`/feedbacks/upvote/add/${feedback?.id}`, config)
-                .then(response => {
-                    console.log(response.data);
-                })
-                .catch(error => {
-                    console.error(error);
-                })
+                api.patch(`/feedbacks/upvote/add/${feedback?.id}`, config)
+                    .then(response => {
+                        console.log(response.data);
+                        setUpVote(true);
+                        setUpVoteCount(response.data.upVoteCount)
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    })
             }
         }
-        
-        
+
+
     }
 
     return (
@@ -81,13 +94,12 @@ const DisplayFeedback: React.FC<Props> = ({ feedback }) => {
                     </div>
 
                     <div className="pt-4 flex items-end gap-1">
-                        <img src={`${upVote ? "../src/assets/up-arrow-filled.png" : "../src/assets/up-arrow.png" } `}
+                        <img src={`${upVote ? "../src/assets/up-arrow-filled.png" : "../src/assets/up-arrow.png"} `}
                             alt="logo"
                             className="h-6 cursor-pointer"
-                            
                             onClick={handleUpVote}>
                         </img>
-                        <p className={`${upVote ? "text-primaryBlue" : "text-black"}  font-bold`}>{feedback?.upVotes.length}</p>
+                        <p className={`${upVote ? "text-primaryBlue" : "text-black"}  font-bold`}>{upVoteCount}</p>
                     </div>
                 </div>
             </div>

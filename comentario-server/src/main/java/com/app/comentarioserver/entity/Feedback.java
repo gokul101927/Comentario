@@ -27,8 +27,7 @@ public class Feedback {
 
     private String description;
 
-    @DBRef
-    private List<UpVote> upVotes;
+    private List<String> upVoteUsernames;
 
     private List<Comment> comments;
 
@@ -42,20 +41,27 @@ public class Feedback {
         this.comments.add(comment);
     }
 
-    public void addUpVote(UpVote upVote) {
-        this.upVotes.add(upVote);
+    public void addUpVote(String upVoteUsername) {
+        this.upVoteUsernames.add(upVoteUsername);
     }
 
-    public void removeUpVote(UpVote upVote) {
-        this.upVotes.remove(upVote);
+    public void removeUpVote(String upVoteUsername) {
+        this.upVoteUsernames.remove(upVoteUsername);
     }
 
+    public boolean hasUpVoted(String upVoteUsername) {
+        return this.upVoteUsernames.contains(upVoteUsername);
+    }
+
+    public int getUpVoteCount() {
+        return this.upVoteUsernames.size();
+    }
 
     public Feedback(FeedbackDto feedbackDto) {
         this.title = feedbackDto.title();
         this.category = feedbackDto.category();
         this.description = feedbackDto.description();
-        this.upVotes = new ArrayList<>();
+        this.upVoteUsernames = new ArrayList<>();
         this.comments = new LinkedList<>();
         this.boardId = feedbackDto.boardId();
         this.username = feedbackDto.username();

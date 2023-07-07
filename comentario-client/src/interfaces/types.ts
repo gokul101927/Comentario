@@ -42,11 +42,12 @@ export interface Feedback {
   title: string;
   description: string;
   category: Category;
-  upVotes: UpVote[];
+  upVoteUsernames: string[];
   comments: Comment[];
   boardId: string;
   username: string;
   profileUrl: string;
+  upVoteCount: number;
 }
 
 export interface UpVote {

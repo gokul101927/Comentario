@@ -2,16 +2,12 @@ package com.app.comentarioserver.service;
 
 import com.app.comentarioserver.entity.Comment;
 import com.app.comentarioserver.entity.Feedback;
-import com.app.comentarioserver.entity.UpVote;
-import com.app.comentarioserver.entity.User;
 import com.app.comentarioserver.repository.FeedbackRepository;
-import com.app.comentarioserver.repository.UpVoteRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -19,8 +15,6 @@ import java.util.Optional;
 public class FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
-
-    private final UpVoteRepository upVoteRepository;
 
     private final BoardService boardService;
 
