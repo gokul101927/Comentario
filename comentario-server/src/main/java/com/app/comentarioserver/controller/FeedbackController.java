@@ -34,9 +34,9 @@ public class FeedbackController {
         return new ResponseEntity<>(feedbackService.getAllFeedbacks(), HttpStatus.OK);
     }
 
-    @GetMapping("/feedback/{id}")
-    public ResponseEntity<Feedback> getFeedback(@PathVariable String id) {
-        return new ResponseEntity<>(feedbackService.getFeedbackFormId(id), HttpStatus.OK);
+    @GetMapping("/feedback/{feedbackId}")
+    public ResponseEntity<Feedback> getFeedback(@PathVariable String feedbackId) {
+        return new ResponseEntity<>(feedbackService.getFeedbackFormId(feedbackId), HttpStatus.OK);
     }
 
     @PostMapping(value = "/add", consumes = "application/json")

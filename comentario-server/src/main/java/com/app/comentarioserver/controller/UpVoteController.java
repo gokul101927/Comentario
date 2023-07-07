@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -25,10 +26,9 @@ public class UpVoteController {
     private final UserService userService;
 
     @GetMapping(value = "/{feedbackId}")
-    public ResponseEntity<Boolean> checkUpVote(@PathVariable String feedbackId, @CurrentSecurityContext(expression = "authentication.principal")
-    Principal principal) {
-        log.info(principal.getName());
-        return new ResponseEntity<>(feedbackService.checkUpVote(principal.getName(), feedbackId), HttpStatus.OK);
+    public ResponseEntity<Boolean> checkUpVote(@PathVariable String feedbackId, Authentication authentication) {
+        return new ResponseEntity<>(feedbackService.checkUpVote(
+                authentication.getName(), feedbackId), HttpStatus.OK);
     }
 
     @PutMapping(value = "/add/{feedbackId}")

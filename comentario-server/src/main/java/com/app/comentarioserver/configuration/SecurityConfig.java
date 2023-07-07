@@ -7,6 +7,7 @@ import com.app.comentarioserver.jwt.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,6 +34,7 @@ import java.util.List;
 @Slf4j
 public class SecurityConfig {
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JwtTokenProvider jwtTokenProvider) throws Exception {
         return httpSecurity
@@ -42,12 +44,15 @@ public class SecurityConfig {
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/users/login", "/users/register", "/users/verify-email", "/users/reset-password", "/users/verify-register-token", "/users/all-users", "/users/delete-all", "/boards/delete-all", "/feedbacks/delete-all", "/boards/all-boards", "/feedbacks/all-feedbacks", "/feedbacks/feedback/**", "/boards/board/**").permitAll()
+                        .requestMatchers("/users/login", "/users/register", "/users/verify-email", "/users/reset-password", "/users/verify-register-token", "/users/all-users", "/users/delete-all").permitAll()
+                        .requestMatchers( "/boards/delete-all", "/boards/all-boards", "/boards/board/{boardId}").permitAll()
+                        .requestMatchers( "/feedbacks/delete-all", "/feedbacks/all-feedbacks", "/feedbacks/feedback/{feedbackId}").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
 
     }
+
 
     @Bean
     public AuthenticationManager authenticationManagerBean(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
@@ -64,7 +69,7 @@ public class SecurityConfig {
                 throw new UserNotEnabledException("User not verified");
             }
 
-            return new UsernamePasswordAuthenticationToken(identifier, null, userDetails.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(identifier, password, userDetails.getAuthorities());
         };
     }
 
