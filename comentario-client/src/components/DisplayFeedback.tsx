@@ -52,7 +52,6 @@ const DisplayFeedback: React.FC<Props> = ({ feedback }) => {
                 api
                     .delete(`/feedbacks/upvote/delete/${feedback?.id}`, config)
                     .then(response => {
-                        console.log('Delete Request:', response.config);
                         console.log('Delete Response:', response.data);
                         setUpVote(false);
                         setUpVoteCount(response.data.upVoteCount);
@@ -64,7 +63,6 @@ const DisplayFeedback: React.FC<Props> = ({ feedback }) => {
                 api
                     .put(`/feedbacks/upvote/add/${feedback?.id}`, null, config)
                     .then(response => {
-                        console.log('Add Request:', response.config);
                         console.log('Add Response:', response.data);
                         setUpVote(true);
                         setUpVoteCount(response.data.upVoteCount);

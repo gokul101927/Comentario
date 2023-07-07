@@ -52,15 +52,19 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
             <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser} />
             <div className="container h-screen mx-auto p-2 pt-8 flex flex-col gap-4 xl:flex-row">
                 <div className="hidden md:flex flex-row justify-between xl:justify-start gap-4 xl:flex-col w-full xl:w-auto">
-                    <div className=" flex flex-col px-6 py-4 justify-end rounded-xl bg-primaryWhite bg-gradient-to-r from-primaryBlue to-primaryWhite w-72 h-44">
-                        <h1 className="font-bold word-wrap max-w-[210px]">{board?.title}</h1>
-                        <h4 className="drop-shadow-xl text-sm">@{board?.username}</h4>
-                    </div>
+                    <Link target="_blank" rel="noopener noreferrer" to={board ? board.url : "#"}>
+                        <div className=" flex flex-col px-6 py-4 justify-end rounded-xl bg-primaryWhite bg-gradient-to-r from-primaryBlue to-primaryWhite w-72 h-44">
+                            <h1 className="font-bold word-wrap max-w-[210px]">{board?.title}</h1>
+                            <h4 className="drop-shadow-xl text-sm">@{board?.username}</h4>
+                        </div>
+                    </Link>
+
                     <div className="rounded-xl bg-primaryWhite w-72 h-44">
                         <div className="p-4 pt-8 flex flex-wrap gap-2">
                             {Object.values(Category).map((category) => (
                                 <button className={`${tagType === category && "text-primaryWhite bg-primaryBlue"} bg-bgColor text-primaryBlue transition ease-in-out delay-150 duration-300 rounded-xl p-2 px-4 text-sm font-bold hover:text-primaryWhite hover:bg-primaryBlue`} onClick={() => {
-                                    setTagType(category)}}>{category}</button>
+                                    setTagType(category)
+                                }}>{category}</button>
                             ))}
                         </div>
                     </div>
@@ -132,7 +136,7 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                     </div>
 
                     <div className="container">
-                        <DisplayFeedbacksBasedOnConditions feedbacks={board?.feedbacks} sortType={sortType} tagType={tagType}/>
+                        <DisplayFeedbacksBasedOnConditions feedbacks={board?.feedbacks} sortType={sortType} tagType={tagType} />
                     </div>
 
 

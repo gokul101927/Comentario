@@ -12,27 +12,40 @@ const DisplayBoard: React.FC<Props> = ({ board }) => {
     if (!board) return;
 
     return (
-        <div className="bg-primaryWhite w-full p-6 rounded-md shadow flex flex-col space-y-3">
-            <Link to={`/board/${board.id}`}>
-            <img
-                src={board.coverImageUrl}
-                alt="image"
-                className="rounded-md object-center object-cover h-44 w-full"
-            />
-            </Link>
-            
-            <div className="flex justify-between">
-                <h3 className="text-black font-bold">{board.title}</h3>
-                <div className="flex gap-1 items-end">
+        <div className="bg-primaryWhite w-full p-6 rounded-md shadow flex flex-col justify-between space-y-3">
+            <div>
+                <Link target="_blank" rel="noopener noreferrer" to={board.url}>
                     <img
-                        src="../src/assets/authored-by-icon.png"
-                        alt="feedback icon"
-                        className=" h-5"
+                        src={board.coverImageUrl}
+                        alt="image"
+                        className="rounded-md object-center object-cover h-44 w-full"
                     />
-                    <h3 className="text-sm font-small font-bold text-gray-500">{board.username}</h3>
+                </Link>
+                <div className="flex flex-col justify-between mt-4">
+                    <div className="flex justify-between items-center">
+                        <div className="flex gap-1 items-center">
+                            <h3 className="text-black font-bold py-2">{board.title}</h3>
+                            {board.self &&
+                                <img
+                                    src="../src/assets/self.png"
+                                    alt="feedback icon"
+                                    className=" h-4"
+                                />}
+                        </div>
+
+                        <div className="flex gap-1 items-end py-2">
+                            <img
+                                src="../src/assets/authored-by-icon.png"
+                                alt="feedback icon"
+                                className=" h-5"
+                            />
+                            <h3 className="text-sm font-small font-bold text-gray-500">{board.username}</h3>
+                        </div>
+
+                    </div>
+                    <p className="text-black break-words">{board.description}</p>
                 </div>
             </div>
-            <p className="text-black">{board.description}</p>
             <div className="flex justify-between">
                 <button className="text-sm font-small text-white bg-primaryBlue rounded-md p-2 hover:brightness-125" onClick={() => navigate(`/board/${board.id}`)}>Provide feedback</button>
                 <div className="flex gap-2 items-center">

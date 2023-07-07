@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Feedback, FeedbackSortTypes, Category } from "../interfaces/types"
 import DisplayFeedback from "./DisplayFeedback"
+import NoFeedback from "./NoFeedback";
 
 interface Props {
     feedbacks: Feedback[] | undefined;
@@ -51,14 +52,15 @@ const DisplayFeedbacksBasedOnConditions: React.FC<Props> = ({ feedbacks, sortTyp
         } else {
             setFeedbackList(feedbacks);
         }
-        
+
     }, [tagType, feedbacks])
 
     return (
         <div className="flex flex-col gap-4">
-            {feedbackList ? feedbackList.map((feedback, index) =>
+            {feedbackList && feedbackList.map((feedback, index) =>
                 <DisplayFeedback key={index} feedback={feedback} />)
-                : <h1 className="text-black font-bold">No boards currently</h1>}
+                }
+            {feedbackList?.length === 0 && <NoFeedback />}
         </div>
     )
 }

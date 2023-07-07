@@ -18,7 +18,6 @@ public class FeedbackService {
 
     private final BoardService boardService;
 
-    private final UserService userService;
 
     public List<Feedback> getAllFeedbacks() {
         return feedbackRepository.findAll();

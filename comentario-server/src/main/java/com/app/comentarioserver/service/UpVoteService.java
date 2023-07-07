@@ -12,15 +12,15 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class UpVoteService {
-
     private final UserService userService;
     private final FeedbackService feedbackService;
 
     private final FeedbackRepository feedbackRepository;
 
-    public Map<Boolean, Integer> checkUpVote(String username, String feedbackId) {
+    public Map<Boolean, Integer> checkUpVote(String identifier, String feedbackId) {
         Map<Boolean, Integer> map = new HashMap<>();
         Feedback feedback = feedbackService.getFeedbackFormId(feedbackId);
+        String username = userService.getUsernameFromMailId(identifier);
         map.put(feedback.hasUpVoted(username), feedback.getUpVoteCount());
         return map;
     }

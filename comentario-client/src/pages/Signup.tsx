@@ -39,7 +39,12 @@ const Signup: React.FC<ModalProps> = ({ closeModal }) => {
             setUsernameError("Username is required");
             return;
         } else {
-            setUsernameError("");
+            if (username.length >= 5) {
+                setUsernameError("");
+            } else {
+                setUsernameError("Username must be at least 5 characters");
+                return;
+            }
         }
 
         if (!email) {
@@ -161,6 +166,7 @@ const Signup: React.FC<ModalProps> = ({ closeModal }) => {
                                     }`}
                                 value={username}
                                 onKeyDown={onKeyDown}
+                                maxLength={12}
                                 onChange={(e) => setUsername(e.target.value)}
                             ></input>
                         </div>
@@ -206,8 +212,7 @@ const Signup: React.FC<ModalProps> = ({ closeModal }) => {
                                 className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:shadow-xl focus:bg-primaryWhite ${passwordError && "border-2 border-red-500"
                                     }`}
                                 value={password}
-                                min='8'
-                                max='15'
+                                maxLength={12}
                                 onChange={(e) => setPassword(e.target.value)}
                             ></input>
                         </div>

@@ -80,7 +80,7 @@ const Signin: React.FC<ModalProps> = ({ openModal, modalOpen, closeModal, handle
       transition={{ duration: 1 }}
       className="flex justify-center items-center min-h-screen">
       {!modalOpen ?
-        <div className="bg-primaryWhite shadow p-8 space-y-5 rounded-xl w-80 md:w-96">
+        <div className="container bg-primaryWhite shadow p-8 space-y-5 rounded-xl w-80 md:w-96">
 
           <div className="flex justify-center p-4 items-center">
             <Link to="/">

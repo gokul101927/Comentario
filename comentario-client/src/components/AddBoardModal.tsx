@@ -98,7 +98,7 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, username }) => {
                         name="title"
                         id="title"
                         placeholder="Title of the software"
-
+                        maxLength={32}
                         className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:shadow-xl focus:bg-primaryWhite ${titleError && "border-2 border-red-500 placeholder:text-red-500"
                             }`}
                         value={title}
@@ -113,6 +113,7 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, username }) => {
                         placeholder="Description of the software"
                         className={`bg-gray-100 p-2 rounded-md text-black focus:outline-none focus:shadow-xl focus:bg-primaryWhite ${descriptionError && "border-2 border-red-500 placeholder:text-red-500"
                             }`}
+                        maxLength={100}
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                     ></textarea>
