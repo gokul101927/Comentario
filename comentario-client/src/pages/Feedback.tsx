@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { motion } from 'framer-motion';
-import { Board, UserState } from '../interfaces/types';
+import { Board, UserState, FeedbackSortTypes } from '../interfaces/types';
 import Header from "../components/Header";
 import api from "../api/apiConfig";
 import AddFeedbackModal from "../components/AddFeedbackModal";
@@ -24,19 +24,19 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
     const [board, setBoard] = useState<Board>();
     const [feedbackAdded, setFeedbackAdded] = useState(false);
 
+    const [sortType, setSortType] = useState<FeedbackSortTypes | "">("");
+
     useEffect(() => {
+        api.get(`/boards/board/${boardId}`)
+            .then((response) => {
+                console.log(response.data);
+                setBoard(response.data);
+            })
+            .catch(err => {
+                console.error(err)
+            })
 
-            api.get(`/boards/board/${boardId}`)
-                .then((response) => {
-                    console.log(response.data);
-                    setBoard(response.data);
-                })
-                .catch(err => {
-                    console.error(err)
-                })
-        
-
-    }, [feedbackAdded, boardId])
+    }, [feedbackAdded, boardId, sortType])
 
     const handleFeedbackAdd = () => {
         setFeedbackAdded(true);
@@ -115,16 +115,15 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                         <div>
                             <label htmlFor="sort" className="text-black text-sm">Sort by: </label>
                             <select id="sort" className="font-bold cursor-pointer text-black bg-transparent border-0 border-gray-200 appearance-none focus:outline-none focus:ring-0 peer">
-                                <option value="most-upvotes" selected>Most upvotes</option>
-                                <option value="least-upvotes">Least upvotes</option>
-                                <option value="most-comments">Most comments</option>
-                                <option value="least-comments">Least comments</option>
+                                {Object.values(FeedbackSortTypes).map((type) => (
+                                    <option key={type} value={type} onSelect={() => setSortType(type)}>{type}</option>
+                                ))}
                             </select>
                         </div>
                         <div>
                             <button
                                 type="button"
-                                className="text-sm font-bold text-white bg-primaryBlue rounded-md p-2 w-full hover:brightness-125" 
+                                className="text-sm font-bold text-white bg-primaryBlue rounded-md p-2 w-full hover:brightness-125"
                                 onClick={openModal}
                                 disabled={!isLoggedIn}>
                                 + Add feedback
@@ -134,12 +133,12 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                     </div>
 
                     <div className="container">
-                        <DisplayFeedbacksBasedOnConditions feedbacks={board?.feedbacks}/>
+                        <DisplayFeedbacksBasedOnConditions feedbacks={board?.feedbacks} sortType={sortType}/>
                     </div>
 
 
                 </div>
-                {modalOpen && <AddFeedbackModal closeModal={closeModal} boardId={board?.id} username={loggedInUser?.username} profileUrl={loggedInUser?.profileImageUrl} handleFeedbackAdd={handleFeedbackAdd}/>}
+                {modalOpen && <AddFeedbackModal closeModal={closeModal} boardId={board?.id} username={loggedInUser?.username} profileUrl={loggedInUser?.profileImageUrl} handleFeedbackAdd={handleFeedbackAdd} />}
             </div>
         </motion.div>
     )

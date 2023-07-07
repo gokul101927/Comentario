@@ -64,6 +64,13 @@ export enum Category {
   Bug = "Bug"
 }
 
+export enum FeedbackSortTypes {
+  MostUpVotes = "Most Upvotes",
+  LeastUpVotes = "Least Upvotes",
+  MostComments = "Most Comments",
+  LeastComments = "Least Comments"
+}
+
 export interface Comment {
   profileUrl: string;
   username: string;
