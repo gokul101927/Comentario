@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { motion } from 'framer-motion';
-import { Board, UserState, FeedbackSortTypes } from '../interfaces/types';
+import { Board, UserState, FeedbackSortTypes, Category } from '../interfaces/types';
 import Header from "../components/Header";
 import api from "../api/apiConfig";
 import AddFeedbackModal from "../components/AddFeedbackModal";
@@ -24,7 +24,8 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
     const [board, setBoard] = useState<Board>();
     const [feedbackAdded, setFeedbackAdded] = useState(false);
 
-    const [sortType, setSortType] = useState<FeedbackSortTypes | "">("");
+    const [sortType, setSortType] = useState<FeedbackSortTypes | "">(FeedbackSortTypes.MostUpVotes);
+    const [tagType, setTagType] = useState<Category | "">(Category.All);
 
     useEffect(() => {
         api.get(`/boards/board/${boardId}`)
@@ -57,12 +58,10 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                     </div>
                     <div className="rounded-xl bg-primaryWhite w-72 h-44">
                         <div className="p-4 pt-8 flex flex-wrap gap-2">
-                            <button className="transition ease-in-out delay-150 duration-300 bg-bgColor rounded-xl text-primaryBlue p-2 px-4 text-sm font-bold hover:text-primaryWhite hover:bg-primaryBlue">All</button>
-                            <button className="transition ease-in-out delay-150 duration-300 bg-bgColor rounded-xl text-primaryBlue p-2 px-4 text-sm font-bold hover:text-primaryWhite hover:bg-primaryBlue">UI</button>
-                            <button className="transition ease-in-out delay-150 duration-300 bg-bgColor rounded-xl text-primaryBlue p-2 px-4 text-sm font-bold hover:text-primaryWhite hover:bg-primaryBlue">UX</button>
-                            <button className="transition ease-in-out delay-150 duration-300 bg-bgColor rounded-xl text-primaryBlue p-2 px-4 text-sm font-bold hover:text-primaryWhite hover:bg-primaryBlue">Enhancement</button>
-                            <button className="transition ease-in-out delay-150 duration-300 bg-bgColor rounded-xl text-primaryBlue p-2 px-4 text-sm font-bold hover:text-primaryWhite hover:bg-primaryBlue">Feature</button>
-                            <button className="transition ease-in-out delay-150 duration-300 bg-bgColor rounded-xl text-primaryBlue p-2 px-4 text-sm font-bold hover:text-primaryWhite hover:bg-primaryBlue">Bug</button>
+                            {Object.values(Category).map((category) => (
+                                <button className={`${tagType === category && "text-primaryWhite bg-primaryBlue"} bg-bgColor text-primaryBlue transition ease-in-out delay-150 duration-300 rounded-xl p-2 px-4 text-sm font-bold hover:text-primaryWhite hover:bg-primaryBlue`} onClick={() => {
+                                    setTagType(category)}}>{category}</button>
+                            ))}
                         </div>
                     </div>
                     <div className="rounded-xl bg-primaryWhite w-72 h-44">
@@ -133,7 +132,7 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                     </div>
 
                     <div className="container">
-                        <DisplayFeedbacksBasedOnConditions feedbacks={board?.feedbacks} sortType={sortType}/>
+                        <DisplayFeedbacksBasedOnConditions feedbacks={board?.feedbacks} sortType={sortType} tagType={tagType}/>
                     </div>
 
 

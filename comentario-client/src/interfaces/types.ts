@@ -57,6 +57,7 @@ export interface UpVote {
 }
 
 export enum Category {
+  All = "All",
   UI = "UI",
   UX = "UX",
   Enhancement = "Enhancement",

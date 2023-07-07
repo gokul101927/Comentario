@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { Feedback, FeedbackSortTypes } from "../interfaces/types"
+import { Feedback, FeedbackSortTypes, Category } from "../interfaces/types"
 import DisplayFeedback from "./DisplayFeedback"
 
 interface Props {
     feedbacks: Feedback[] | undefined;
     sortType: FeedbackSortTypes | "";
+    tagType: Category | "";
 }
 
-const DisplayFeedbacksBasedOnConditions: React.FC<Props> = ({ feedbacks, sortType }) => {
+const DisplayFeedbacksBasedOnConditions: React.FC<Props> = ({ feedbacks, sortType, tagType }) => {
 
     const [feedbackList, setFeedbackList] = useState<Feedback[] | undefined>();
 
@@ -27,8 +28,31 @@ const DisplayFeedbacksBasedOnConditions: React.FC<Props> = ({ feedbacks, sortTyp
         } else {
             setFeedbackList(feedbacks);
         }
-        console.log(sortType)
     }, [sortType, feedbacks])
+
+    useEffect(() => {
+        if (tagType === Category.UI) {
+            const uiFeedbacks = feedbacks?.filter((feedback) => feedback.category.includes(Category.UI));
+            setFeedbackList(uiFeedbacks);
+        } else if (tagType === Category.UX) {
+            const uxFeedbacks = feedbacks?.filter((feedback) => feedback.category.includes(Category.UX));
+            setFeedbackList(uxFeedbacks);
+        } else if (tagType === Category.Feature) {
+            const featureFeedbacks = feedbacks?.filter((feedback) => feedback.category.includes(Category.Feature));
+            setFeedbackList(featureFeedbacks);
+        } else if (tagType === Category.Enhancement) {
+            const enhancementFeedbacks = feedbacks?.filter((feedback) => feedback.category.includes(Category.Enhancement));
+            setFeedbackList(enhancementFeedbacks);
+        } else if (tagType === Category.Bug) {
+            const bugFeedbacks = feedbacks?.filter((feedback) => feedback.category.includes(Category.Bug));
+            setFeedbackList(bugFeedbacks);
+        } else if (tagType === Category.All) {
+            setFeedbackList(feedbacks);
+        } else {
+            setFeedbackList(feedbacks);
+        }
+        
+    }, [tagType, feedbacks])
 
     return (
         <div className="flex flex-col gap-4">
