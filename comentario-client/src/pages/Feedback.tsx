@@ -114,9 +114,9 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
 
                         <div>
                             <label htmlFor="sort" className="text-black text-sm">Sort by: </label>
-                            <select id="sort" className="font-bold cursor-pointer text-black bg-transparent border-0 border-gray-200 appearance-none focus:outline-none focus:ring-0 peer">
+                            <select onChange={(e) => setSortType(e.target.value as FeedbackSortTypes)} id="sort" className="font-bold cursor-pointer text-black bg-transparent border-0 border-gray-200 appearance-none focus:outline-none focus:ring-0 peer">
                                 {Object.values(FeedbackSortTypes).map((type) => (
-                                    <option key={type} value={type} onSelect={() => setSortType(type)}>{type}</option>
+                                    <option key={type} value={type} >{type}</option>
                                 ))}
                             </select>
                         </div>
