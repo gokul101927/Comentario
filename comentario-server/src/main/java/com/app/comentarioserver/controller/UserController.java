@@ -66,15 +66,16 @@ public class UserController {
 
     @PostMapping(value = "/login", consumes = "application/json")
     public ResponseEntity<String> signIn(@RequestBody AuthRequest authRequest) {
-        Authentication authentication;
+
         try {
             log.info("Authenticated started");
-            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getIdentifier(), authRequest.getPassword()));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getIdentifier(), authRequest.getPassword()));
             log.info("Authenticated");
+            return new ResponseEntity<>(userService.loginUser(authRequest, authentication), HttpStatus.OK);
         } catch (BadCredentialsException e) {
             throw new InvalidCredentialsException(e.getMessage());
         }
-        return new ResponseEntity<>(userService.loginUser(authRequest, authentication), HttpStatus.OK);
+
     }
 
     @PutMapping("/reset-password")
@@ -111,22 +112,21 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<UserDetails> getUserFromToken(@RequestHeader(name = "Authorization") String token) {
+    public ResponseEntity<UserDetails> getUserFromToken(@RequestHeader("Authorization") String token) {
         String username = userService.getUsernameFromToken(token);
         return new ResponseEntity<>(userService.loadUserByUsername(username), HttpStatus.OK);
     }
 
     @PutMapping("/user/update")
-    public ResponseEntity<User> updateUser(@RequestHeader(name = "Authorization") String token, @RequestBody UserRequest userRequest){
-        String username = userService.getUsernameFromToken(token);
-        return new ResponseEntity<>(userService.updateUser(username, userRequest), HttpStatus.OK);
+    public ResponseEntity<User> updateUser(Authentication authentication, @RequestBody UserRequest userRequest){
+        User user = (User) authentication.getPrincipal();
+        return new ResponseEntity<>(userService.updateUser(user.getMailId(), userRequest), HttpStatus.OK);
     }
 
     @PutMapping(value = "/user/update-profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<User> updateProfileImage(@RequestHeader(name = "Authorization") String token, @RequestParam("file") MultipartFile file) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
-        String username = userService.getUsernameFromToken(token);
-        log.info(username);
-        return new ResponseEntity<>(userService.updateProfileImage(username, file), HttpStatus.OK);
+    public ResponseEntity<User> updateProfileImage(Authentication authentication, @RequestParam("file") MultipartFile file) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
+        User user = (User) authentication.getPrincipal();
+        return new ResponseEntity<>(userService.updateProfileImage(user.getMailId(), file), HttpStatus.OK);
     }
 
 }

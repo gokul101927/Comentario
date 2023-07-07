@@ -17,13 +17,16 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Slf4j
-@RequiredArgsConstructor
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     public static final String HEADER_PREFIX = "Bearer_";
 
     private final JwtTokenProvider jwtTokenProvider;
+
+    public JwtTokenFilter(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -32,11 +35,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
             if (authentication != null) {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
             }
         }
 
         filterChain.doFilter(request, response);
-        log.info("The name is " + SecurityContextHolder.getContext().getAuthentication().getName());
+
     }
 
     public String resolveToken(HttpServletRequest httpServletRequest) {

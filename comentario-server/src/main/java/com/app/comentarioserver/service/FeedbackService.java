@@ -40,34 +40,6 @@ public class FeedbackService {
         return newFeedback;
     }
 
-    public boolean checkUpVote(String username, String feedbackId) {
-        User user = userService.loadByIdentifier(username);
-        Feedback feedback = getFeedbackFormId(feedbackId);
-        return upVoteRepository.findByUserAndFeedback(user, feedback).isPresent();
-    }
-
-    public Feedback upVote(String username, String feedbackId) {
-        User user = userService.loadByIdentifier(username);
-        Feedback feedback = getFeedbackFormId(feedbackId);
-
-        UpVote upVote = new UpVote();
-        upVote.setUser(user);
-        upVote.setFeedback(feedback);
-        upVoteRepository.save(upVote);
-
-        feedback.addUpVote(upVote);
-        return feedbackRepository.save(feedback);
-    }
-
-    public Feedback removeUpVote(String username, String feedbackId) {
-        User user = userService.loadByIdentifier(username);
-        Feedback feedback = getFeedbackFormId(feedbackId);
-        UpVote upVote = upVoteRepository.findByUserAndFeedback(user, feedback).orElseThrow();
-        upVoteRepository.delete(upVote);
-        feedback.removeUpVote(upVote);
-        return feedbackRepository.save(feedback);
-    }
-
     public Feedback postComment(String id, Comment comment) {
         Feedback feedback = feedbackRepository.findById(id).orElseThrow();
         feedback.setComments(comment);

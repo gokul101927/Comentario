@@ -43,10 +43,11 @@ public class JwtTokenProvider {
     }
 
     public String createToken(Authentication authentication) {
-        String email = authentication.getName();
+        String identifier = authentication.getName();
+        log.info(identifier);
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
-        Claims claims = Jwts.claims().setSubject(email);
+        Claims claims = Jwts.claims().setSubject(identifier);
 
         if (!authorities.isEmpty()) {
             claims.put(AUTHORITIES_KEY, authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(",")));
@@ -76,7 +77,8 @@ public class JwtTokenProvider {
 
         User principal = new User(claims.getSubject(), "", authorities);
 
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        return authentication;
     }
 
     public boolean validateToken(String token) {

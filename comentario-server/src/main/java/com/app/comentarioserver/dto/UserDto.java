@@ -2,7 +2,6 @@ package com.app.comentarioserver.dto;
 
 import com.app.comentarioserver.entity.Board;
 import com.app.comentarioserver.entity.Token;
-import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;

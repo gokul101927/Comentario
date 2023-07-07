@@ -43,11 +43,11 @@ public class Feedback {
     }
 
     public void addUpVote(UpVote upVote) {
-        upVotes.add(upVote);
+        this.upVotes.add(upVote);
     }
 
     public void removeUpVote(UpVote upVote) {
-        upVotes.remove(upVote);
+        this.upVotes.remove(upVote);
     }
 
 

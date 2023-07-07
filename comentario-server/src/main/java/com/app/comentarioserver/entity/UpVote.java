@@ -1,5 +1,6 @@
 package com.app.comentarioserver.entity;
 
+import com.app.comentarioserver.dto.UserDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

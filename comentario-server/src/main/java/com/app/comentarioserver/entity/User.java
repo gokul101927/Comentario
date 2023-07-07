@@ -1,6 +1,7 @@
 package com.app.comentarioserver.entity;
 
 import com.app.comentarioserver.configuration.GrantedAuthorityDeserializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -24,7 +25,7 @@ import java.util.List;
 public class User implements UserDetails {
 
     @Id
-    private ObjectId id;
+    private String id;
 
     @NotEmpty
     @NotNull
@@ -41,7 +42,7 @@ public class User implements UserDetails {
 
     @NotEmpty
     @NotNull
-
+    @JsonIgnore
     private String password;
 
     @NotNull
@@ -111,6 +112,22 @@ public class User implements UserDetails {
     @Transient
     public boolean isCredentialsNonExpired() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", username='" + username + '\'' +
+                ", mailId='" + mailId + '\'' +
+                ", password='" + password + '\'' +
+                ", verificationToken=" + verificationToken +
+                ", profileImageUrl='" + profileImageUrl + '\'' +
+                ", isVerified=" + isVerified +
+                ", boards=" + boards +
+                ", roles=" + roles +
+                '}';
     }
 
     @Override
