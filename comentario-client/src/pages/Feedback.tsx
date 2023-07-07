@@ -27,6 +27,7 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
     const [sortType, setSortType] = useState<FeedbackSortTypes | "">(FeedbackSortTypes.MostUpVotes);
     const [tagType, setTagType] = useState<Category | "">(Category.All);
 
+
     useEffect(() => {
         api.get(`/boards/board/${boardId}`)
             .then((response) => {
@@ -51,15 +52,15 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
         >
             <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser} />
             <div className="container h-screen mx-auto p-2 pt-8 flex flex-col gap-4 xl:flex-row">
-                <div className="hidden md:flex flex-row justify-between xl:justify-start gap-4 xl:flex-col w-full xl:w-auto">
+                <div className="hidden md:grid md:grid-cols-3 xl:flex xl:flex-row justify-between xl:justify-start gap-4 xl:flex-col xl:w-auto">
                     <Link target="_blank" rel="noopener noreferrer" to={board ? board.url : "#"}>
-                        <div className=" flex flex-col px-6 py-4 justify-end rounded-xl bg-primaryWhite bg-gradient-to-r from-primaryBlue to-primaryWhite w-72 h-44">
+                        <div className="flex flex-1 flex-col px-6 py-4 justify-end rounded-xl bg-primaryWhite bg-gradient-to-r from-primaryBlue to-primaryWhite w-full xl:w-72 h-44">
                             <h1 className="font-bold word-wrap max-w-[210px]">{board?.title}</h1>
                             <h4 className="drop-shadow-xl text-sm">@{board?.username}</h4>
                         </div>
                     </Link>
 
-                    <div className="rounded-xl bg-primaryWhite w-72 h-44">
+                    <div className="flex flex-1 rounded-xl bg-primaryWhite w-full xl:w-72 h-44">
                         <div className="p-4 pt-8 flex flex-wrap gap-2">
                             {Object.values(Category).map((category) => (
                                 <button className={`${tagType === category && "text-primaryWhite bg-primaryBlue"} bg-bgColor text-primaryBlue transition ease-in-out delay-150 duration-300 rounded-xl p-2 px-4 text-sm font-bold hover:text-primaryWhite hover:bg-primaryBlue`} onClick={() => {
@@ -68,8 +69,8 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                             ))}
                         </div>
                     </div>
-                    <div className="rounded-xl bg-primaryWhite w-72 h-44">
-                        <div className="p-4 space-y-4">
+                    <div className="flex flex-1 rounded-xl bg-primaryWhite w-full xl:w-72 h-44">
+                        <div className="p-4 space-y-4 w-full">
                             <Link to="#" className="text-primaryBlue font-bold text-sm hover:underline">View roadmap</Link>
                             <div className="flex justify-between items-center w-full">
                                 <div className="flex items-center gap-2">
@@ -105,21 +106,29 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                     </div>
                 </div>
                 <div className="w-full flex flex-col gap-4">
-                    <div className="container md:top-56 xl:top-0  p-8 w-full h-16 shadow-xl bg-primaryWhite rounded-lg flex justify-between items-center">
-                        <div className="hidden md:flex items-center gap-4">
+                    <div className="container md:top-56 xl:top-0 p-4 md:p-8 w-full h-16 shadow-xl bg-primaryWhite rounded-lg flex justify-between items-center">
+                        <div className="hidden md:flex items-center gap-2 md:gap-4">
                             <img
                                 src="../src/assets/opinion.png"
                                 alt="feedback icon"
-                                className=" h-8"
+                                className="h-6 md:h-8"
                             />
-                            <h1 className="text-black font-bold text-xl">{board?.feedbacks.length} Feedbacks</h1>
+                            <h1 className="text-black font-bold text-base md:text-xl" >{board?.feedbacks.length} Feedbacks</h1>
                         </div>
 
-                        <div>
-                            <label htmlFor="sort" className="text-black text-sm">Sort by: </label>
+                        <div className="flex flex-col md:flex-row">
+                            <label htmlFor="sort" className=" text-black text-sm">Sort by: </label>
                             <select onChange={(e) => setSortType(e.target.value as FeedbackSortTypes)} id="sort" className="font-bold cursor-pointer text-black bg-transparent border-0 border-gray-200 appearance-none focus:outline-none focus:ring-0 peer">
                                 {Object.values(FeedbackSortTypes).map((type) => (
                                     <option key={type} value={type} >{type}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="flex flex-col md:hidden">
+                            <label htmlFor="sort" className=" text-black text-sm">Tags: </label>
+                            <select onChange={(e) => setTagType(e.target.value as Category)} id="sort" className="font-bold cursor-pointer text-black bg-transparent border-0 border-gray-200 appearance-none focus:outline-none focus:ring-0 peer">
+                                {Object.values(Category).map((category) => (
+                                    <option key={category} value={category} >{category}</option>
                                 ))}
                             </select>
                         </div>
@@ -135,6 +144,9 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
 
                     </div>
 
+                    <div className="block md:hidden px-2">
+                        <Link to="#" className="text-primaryBlue font-bold text-sm hover:underline">View roadmap</Link>
+                    </div>
                     <div className="container">
                         <DisplayFeedbacksBasedOnConditions feedbacks={board?.feedbacks} sortType={sortType} tagType={tagType} />
                     </div>
@@ -143,6 +155,7 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                 </div>
                 {modalOpen && <AddFeedbackModal closeModal={closeModal} boardId={board?.id} username={loggedInUser?.username} profileUrl={loggedInUser?.profileImageUrl} handleFeedbackAdd={handleFeedbackAdd} />}
             </div>
+
         </motion.div>
     )
 }

@@ -51,8 +51,8 @@ const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }
     }
 
     return (
-        <header className="sticky top-0">
-            <div className='bg-primaryWhite shadow-lg'>
+        <header className="sticky top-0 ">
+            <div className='bg-primaryWhite shadow-lg z-999'>
                 <nav className='p-2'>
                     <div className="flex items-center justify-between">
                         <div>
