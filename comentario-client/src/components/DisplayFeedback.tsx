@@ -7,14 +7,11 @@ interface Props {
     feedback: Feedback | undefined;
 }
 
-interface Response {
-    status: boolean;
-    count: number;
-}
 
 const DisplayFeedback: React.FC<Props> = ({ feedback }) => {
     const [upVote, setUpVote] = useState(false);
     const [upVoteCount, setUpVoteCount] = useState(0);
+
     useEffect(() => {
         const token = localStorage.getItem('jwt');
         const config = {
@@ -25,49 +22,60 @@ const DisplayFeedback: React.FC<Props> = ({ feedback }) => {
         api.get(`/feedbacks/upvote/${feedback?.id}`, config)
             .then(response => {
                 console.log(response.data)
-                const data: Response = response.data;
-                setUpVote(data.status);
-                setUpVoteCount(data.count);
-                console.log(data.status, data.count)
+                const propertyNames = Object.keys(response.data);
+                const key = propertyNames[0];
+                const value = response.data[key];
+                if (key==="true") {
+                    setUpVote(true);
+                } else {
+                    setUpVote(false);
+                }
+                setUpVoteCount(value);
             })
             .catch(error => {
                 console.error(error);
             })
-        
-    }, [upVote, feedback?.id, upVoteCount])
+
+    }, [upVote, upVoteCount, feedback?.id])
+
 
     const handleUpVote = () => {
         const token = localStorage.getItem('jwt');
         if (token) {
+
             const config = {
                 headers: {
-                    Authorization: token,
+                    'Authorization': token,
                 }
             };
             if (upVote) {
-                api.delete(`/feedbacks/upvote/delete/${feedback?.id}`, config)
+                api
+                    .delete(`/feedbacks/upvote/delete/${feedback?.id}`, config)
                     .then(response => {
-                        console.log(response.data);
+                        console.log('Delete Request:', response.config);
+                        console.log('Delete Response:', response.data);
                         setUpVote(false);
-                        setUpVoteCount(response.data.upVoteCount)
+                        setUpVoteCount(response.data.upVoteCount);
                     })
                     .catch(error => {
-                        console.error(error);
-                    })
+                        console.error('Delete Error:', error);
+                    });
             } else {
-                api.patch(`/feedbacks/upvote/add/${feedback?.id}`, config)
+                api
+                    .put(`/feedbacks/upvote/add/${feedback?.id}`, null, config)
                     .then(response => {
-                        console.log(response.data);
+                        console.log('Add Request:', response.config);
+                        console.log('Add Response:', response.data);
                         setUpVote(true);
-                        setUpVoteCount(response.data.upVoteCount)
+                        setUpVoteCount(response.data.upVoteCount);
                     })
                     .catch(error => {
-                        console.error(error);
-                    })
+                        console.error('Add Error:', error);
+                    });
             }
+        } else {
+            console.error('Token is null or empty');
         }
-
-
     }
 
     return (

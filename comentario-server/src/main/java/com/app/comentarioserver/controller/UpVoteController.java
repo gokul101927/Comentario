@@ -29,8 +29,9 @@ public class UpVoteController {
                 user.getMailId(), feedbackId), HttpStatus.OK);
     }
 
-    @PatchMapping("/add/{feedbackId}")
-    public ResponseEntity<Feedback> upVoteFeedback(@PathVariable String feedbackId, Authentication authentication) {
+
+    @PutMapping(value = "/add/{feedbackId}")
+    public ResponseEntity<Feedback> addUpVote(@PathVariable String feedbackId, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return new ResponseEntity<>(upVoteService.upVote(user.getMailId(), feedbackId), HttpStatus.OK);
     }

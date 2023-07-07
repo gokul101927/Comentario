@@ -25,15 +25,16 @@ public class UpVoteService {
         return map;
     }
 
-    public Feedback upVote(String username, String feedbackId) {
+    public Feedback upVote(String identifier, String feedbackId) {
         Feedback feedback =feedbackService. getFeedbackFormId(feedbackId);
-
+        String username = userService.getUsernameFromMailId(identifier);
         feedback.addUpVote(username);
         return feedbackRepository.save(feedback);
     }
 
-    public Feedback removeUpVote(String username, String feedbackId) {
+    public Feedback removeUpVote(String identifier, String feedbackId) {
         Feedback feedback = feedbackService.getFeedbackFormId(feedbackId);
+        String username = userService.getUsernameFromMailId(identifier);
         feedback.removeUpVote(username);
         return feedbackRepository.save(feedback);
     }

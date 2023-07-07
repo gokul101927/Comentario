@@ -8,9 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Document(collection = "feedbacks")
 @Getter
@@ -27,7 +25,7 @@ public class Feedback {
 
     private String description;
 
-    private List<String> upVoteUsernames;
+    private Set<String> upVoteUsernames;
 
     private List<Comment> comments;
 
@@ -61,7 +59,7 @@ public class Feedback {
         this.title = feedbackDto.title();
         this.category = feedbackDto.category();
         this.description = feedbackDto.description();
-        this.upVoteUsernames = new ArrayList<>();
+        this.upVoteUsernames = new HashSet<>();
         this.comments = new LinkedList<>();
         this.boardId = feedbackDto.boardId();
         this.username = feedbackDto.username();

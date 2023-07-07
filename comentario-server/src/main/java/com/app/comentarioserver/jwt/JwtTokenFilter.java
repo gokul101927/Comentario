@@ -31,11 +31,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = resolveToken(request);
-        if (token != null && jwtTokenProvider.validateToken(token)) {
+        log.info(token);
+        if (token != null && !token.equals("Token is null") && jwtTokenProvider.validateToken(token)) {
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
             if (authentication != null) {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-
             }
         }
 
@@ -48,6 +48,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         if (bearerToken != null && bearerToken.startsWith(HEADER_PREFIX)) {
             return bearerToken.substring(HEADER_PREFIX.length()).trim();
         }
-        return null;
+        return "Token is null";
     }
 }

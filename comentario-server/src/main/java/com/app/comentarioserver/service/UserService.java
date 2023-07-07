@@ -190,6 +190,10 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public String getUsernameFromMailId(String mailId) {
+        return loadByIdentifier(mailId).getUsername();
+    }
+
     public String getUsernameFromToken(String token) {
         String jwtToken = token.substring(HEADER_PREFIX.length()).trim();
 
