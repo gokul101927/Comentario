@@ -85,7 +85,7 @@ const AddFeedbackModal: React.FC<Props> = ({ closeModal, boardId, username, prof
             <form className="space-y-3" onSubmit={handleSubmit}>
                 <div className="flex flex-col">
                     <input
-                        type="title"
+                        type="text"
                         name="title"
                         id="title"
                         placeholder="Title of the software"

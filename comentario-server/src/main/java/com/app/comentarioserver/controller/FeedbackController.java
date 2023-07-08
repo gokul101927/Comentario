@@ -3,6 +3,7 @@ package com.app.comentarioserver.controller;
 import com.app.comentarioserver.dto.FeedbackDto;
 import com.app.comentarioserver.entity.Comment;
 import com.app.comentarioserver.entity.Feedback;
+import com.app.comentarioserver.entity.Roadmap;
 import com.app.comentarioserver.service.FeedbackService;
 import com.app.comentarioserver.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @Slf4j
@@ -49,5 +51,11 @@ public class FeedbackController {
     @PutMapping(value = "/comment/post")
     public  ResponseEntity<Feedback> postComment(@RequestParam("id") String id, @RequestBody Comment comment) {
         return new ResponseEntity<>(feedbackService.postComment(id, comment), HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/feedback/add-plan")
+    public  ResponseEntity<Feedback> addRoadmap(@RequestParam("id") String id, @RequestBody String value) {
+        Roadmap roadmap = Roadmap.valueOf(value.toUpperCase().replace("\"", ""));
+        return new ResponseEntity<>(feedbackService.addFeedbackToRoadmap(id, roadmap), HttpStatus.OK);
     }
 }

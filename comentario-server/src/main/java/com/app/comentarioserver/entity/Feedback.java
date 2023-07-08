@@ -1,6 +1,7 @@
 package com.app.comentarioserver.entity;
 
 import com.app.comentarioserver.dto.FeedbackDto;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,6 +36,12 @@ public class Feedback {
 
     private String profileUrl;
 
+    private Roadmap roadmap;
+
+    public void setRoadmap(Roadmap roadmap) {
+        this.roadmap = roadmap;
+    }
+
     public void setComments(Comment comment) {
         this.comments.add(comment);
     }
@@ -61,6 +68,7 @@ public class Feedback {
         this.description = feedbackDto.description();
         this.upVoteUsernames = new HashSet<>();
         this.comments = new LinkedList<>();
+        this.roadmap = Roadmap.NONE;
         this.boardId = feedbackDto.boardId();
         this.username = feedbackDto.username();
         this.profileUrl = feedbackDto.profileUrl();

@@ -7,9 +7,10 @@ interface Props {
     feedbacks: Feedback[] | undefined;
     sortType: FeedbackSortTypes | "";
     tagType: Category | "";
+    displayEditPlan: boolean;
 }
 
-const DisplayFeedbacksBasedOnConditions: React.FC<Props> = ({ feedbacks, sortType, tagType }) => {
+const DisplayFeedbacksBasedOnConditions: React.FC<Props> = ({ feedbacks, sortType, tagType, displayEditPlan }) => {
 
     const [feedbackList, setFeedbackList] = useState<Feedback[] | undefined>();
 
@@ -58,7 +59,7 @@ const DisplayFeedbacksBasedOnConditions: React.FC<Props> = ({ feedbacks, sortTyp
     return (
         <div className="flex flex-col gap-4">
             {feedbackList && feedbackList.map((feedback, index) =>
-                <DisplayFeedback key={index} feedback={feedback} />)
+                <DisplayFeedback key={index} feedback={feedback} displayEditPlan={displayEditPlan}/>)
                 }
             {feedbackList?.length === 0 && <NoFeedback />}
         </div>

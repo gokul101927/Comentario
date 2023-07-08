@@ -17,7 +17,6 @@ interface ModalProps {
 
 const Comment: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }) => {
     const navigate = useNavigate();
-    const goBack = "< Go back";
 
     const params = useParams();
     const feedbackId = params.feedbackId;
@@ -26,14 +25,14 @@ const Comment: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
     const [comment, commentAdded] = useState(false);
 
     useEffect(() => {
-            api.get(`/feedbacks/feedback/${feedbackId}`)
-                .then(response => {
-                    setFeedback(response.data);
-                    console.log(response.data);
-                })
-                .catch(error => {
-                    console.error(error);
-                })
+        api.get(`/feedbacks/feedback/${feedbackId}`)
+            .then(response => {
+                setFeedback(response.data);
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+            })
 
     }, [feedbackId, comment]);
 
@@ -69,10 +68,16 @@ const Comment: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
             transition={{ duration: 1 }}>
             <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser} />
             <div className="container mx-auto  p-2 pt-8 flex flex-col gap-4">
-                <div className='cursor-pointer text-black hover:text-primaryBlue' onClick={() => navigate(-1)}> {goBack}</div>
+                <div className='cursor-pointer flex gap-2 items-center text-black hover:text-primaryBlue' onClick={() => navigate(-1)}>
+                    <img
+                        src="../src/assets/previous.png"
+                        alt="feedback icon"
+                        className=" h-5"
+                    />
+                    Go back</div>
                 <div className='w-full md:w-10/12 mx-auto flex flex-col gap-4'>
                     <div className='shadow-xl '>
-                        <DisplayFeedback feedback={feedback} />
+                        <DisplayFeedback feedback={feedback} displayEditPlan={false}/>
                     </div>
                     <div className='container bg-primaryWhite rounded-md p-8 justify-between'>
                         <h1 className='text-black font-bold'>{feedback?.comments.length} Comments</h1>
@@ -82,7 +87,7 @@ const Comment: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
                                 <DisplayComment key={index} comment={comment} />)}
                         </div>
                     </div>
-                    <PostComment handleComment={handleComment} isLoggedIn={isLoggedIn}/>
+                    <PostComment handleComment={handleComment} isLoggedIn={isLoggedIn} />
                 </div>
 
             </div>

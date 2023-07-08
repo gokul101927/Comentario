@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { motion } from 'framer-motion';
-import { Board, UserState, FeedbackSortTypes, Category } from '../interfaces/types';
+import { Board, UserState, FeedbackSortTypes, Category, Roadmaptype } from '../interfaces/types';
 import Header from "../components/Header";
 import api from "../api/apiConfig";
 import AddFeedbackModal from "../components/AddFeedbackModal";
@@ -27,18 +27,32 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
     const [sortType, setSortType] = useState<FeedbackSortTypes | "">(FeedbackSortTypes.MostUpVotes);
     const [tagType, setTagType] = useState<Category | "">(Category.All);
 
+    const [planned, setPlanned] = useState(0);
+    const [inProgress, setInProgress] = useState(0);
+    const [live, setLive] = useState(0);
 
     useEffect(() => {
         api.get(`/boards/board/${boardId}`)
             .then((response) => {
                 console.log(response.data);
                 setBoard(response.data);
+
             })
             .catch(err => {
                 console.error(err)
             })
 
     }, [feedbackAdded, boardId, sortType])
+
+    useEffect(() => {
+        if (board)
+            setPlanned(board.feedbacks.filter((feedback => feedback.roadmap === Roadmaptype.PLANNED)).length);
+        if (board)
+            setInProgress(board.feedbacks.filter((feedback => feedback.roadmap === Roadmaptype.INPROGRESS)).length);
+        if (board)
+            setLive(board.feedbacks.filter((feedback => feedback.roadmap === Roadmaptype.LIVE)).length);
+       
+    }, [planned, board, inProgress, live])
 
     const handleFeedbackAdd = () => {
         setFeedbackAdded(true);
@@ -62,8 +76,8 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
 
                     <div className="flex flex-1 rounded-xl bg-primaryWhite w-full xl:w-72 h-44">
                         <div className="p-4 pt-8 flex flex-wrap gap-2">
-                            {Object.values(Category).map((category) => (
-                                <button className={`${tagType === category && "text-primaryWhite bg-primaryBlue"} bg-bgColor text-primaryBlue transition ease-in-out delay-150 duration-300 rounded-xl p-2 px-4 text-sm font-bold hover:text-primaryWhite hover:bg-primaryBlue`} onClick={() => {
+                            {Object.values(Category).map((category, index) => (
+                                <button key={index} className={`${tagType === category && "text-primaryWhite bg-primaryBlue"} bg-bgColor text-primaryBlue transition ease-in-out delay-150 duration-300 rounded-xl p-2 px-4 text-sm font-bold hover:text-primaryWhite hover:bg-primaryBlue`} onClick={() => {
                                     setTagType(category)
                                 }}>{category}</button>
                             ))}
@@ -71,14 +85,14 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                     </div>
                     <div className="flex flex-1 rounded-xl bg-primaryWhite w-full xl:w-72 h-44">
                         <div className="p-4 space-y-4 w-full">
-                            <Link to="#" className="text-primaryBlue font-bold text-sm hover:underline">View roadmap</Link>
+                            <Link to={`/roadmap/${board?.id}`} className="text-primaryBlue font-bold text-sm hover:underline">View roadmap</Link>
                             <div className="flex justify-between items-center w-full">
                                 <div className="flex items-center gap-2">
                                     <div className="h-2 w-2 bg-orange-500 rounded-full"></div>
                                     <p className="text-black text-sm">Planned</p>
                                 </div>
                                 <div>
-                                    <h4 className="text-black font-bold">2</h4>
+                                    <h4 className="text-black font-bold">{planned}</h4>
                                 </div>
 
                             </div>
@@ -88,7 +102,7 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                                     <p className="text-black text-sm">In progress</p>
                                 </div>
                                 <div>
-                                    <h4 className="text-black font-bold">3</h4>
+                                    <h4 className="text-black font-bold">{inProgress}</h4>
                                 </div>
 
                             </div>
@@ -98,7 +112,7 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                                     <p className="text-black text-sm">Live</p>
                                 </div>
                                 <div>
-                                    <h4 className="text-black font-bold">2</h4>
+                                    <h4 className="text-black font-bold">{live}</h4>
                                 </div>
 
                             </div>
@@ -145,10 +159,10 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                     </div>
 
                     <div className="block md:hidden px-2">
-                        <Link to="#" className="text-primaryBlue font-bold text-sm hover:underline">View roadmap</Link>
+                        <Link to={`/roadmap/${board?.id}`} className="text-primaryBlue font-bold text-sm hover:underline">View roadmap</Link>
                     </div>
                     <div className="container">
-                        <DisplayFeedbacksBasedOnConditions feedbacks={board?.feedbacks} sortType={sortType} tagType={tagType} />
+                        <DisplayFeedbacksBasedOnConditions feedbacks={board?.feedbacks} sortType={sortType} tagType={tagType} displayEditPlan={board?.username === loggedInUser?.username} />
                     </div>
 
 

@@ -48,6 +48,7 @@ export interface Feedback {
   username: string;
   profileUrl: string;
   upVoteCount: number;
+  roadmap: Roadmaptype;
 }
 
 export interface UpVote {
@@ -70,6 +71,13 @@ export enum FeedbackSortTypes {
   LeastUpVotes = "Least Upvotes",
   MostComments = "Most Comments",
   LeastComments = "Least Comments"
+}
+
+export enum Roadmaptype {
+  NONE = "NONE",
+  PLANNED = "PLANNED",
+  INPROGRESS = "INPROGRESS",
+  LIVE = "LIVE",
 }
 
 export interface Comment {

@@ -51,12 +51,12 @@ const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }
     }
 
     return (
-        <header className="sticky top-0 ">
-            <div className='bg-primaryWhite shadow-lg z-999'>
+        <header className="sticky top-0 z-50">
+            <div className='bg-primaryWhite shadow-lg '>
                 <nav className='p-2'>
                     <div className="flex items-center justify-between">
                         <div>
-                            <Link to="/">
+                            <Link to="/dashboard">
                                 <img
                                     src="../src/assets/logo.png"
                                     alt="logo"
@@ -65,7 +65,6 @@ const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }
                             </Link>
                         </div>
                         <div className="flex justify-between">
-                            {/* Search bar */}
 
                             <div>
                                 {!isLoggedIn ? <Link to="/sign-in" className="block text-sm font-small text-white rounded-md p-2 px-4 bg-primaryBlue hover:brightness-125 font-bold">Sign in</Link>

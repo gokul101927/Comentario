@@ -7,6 +7,7 @@ import MyProfile from '../pages/MyProfile'
 import { UserState } from '../interfaces/types'
 import Feedback from '../pages/Feedback'
 import Comment from '../pages/Comment'
+import Roadmap from '../pages/Roadmap'
 
 interface ModalProps {
     modalOpen: boolean;
@@ -33,6 +34,7 @@ const RoutesWithAnimation: React.FC<ModalProps> = ({handleLogout, isLoggedIn, op
                 <Route path="/my-profile" element={<MyProfile isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser} closeModal={closeModal}/>} />
                 <Route path="/board/:boardId" element={<Feedback isLoggedIn={isLoggedIn} handleLogout={handleLogout} modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} loggedInUser={loggedInUser}/>} />
                 <Route path="/feedback/:feedbackId" element={<Comment isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser}/>} />
+                <Route path="/roadmap/:boardId" element={<Roadmap isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser}/>} />
                 <Route path="*" element={<Navigate to="/dashboard" />}></Route>
             </Route>
         </Routes>
