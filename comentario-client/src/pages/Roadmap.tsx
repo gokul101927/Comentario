@@ -14,10 +14,9 @@ interface ModalProps {
 
 const Roadmap: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }) => {
 
+    const navigate = useNavigate();
     const params = useParams();
     const boardId = params.boardId;
-
-    const navigate = useNavigate();
 
     const [board, setBoard] = useState<Board>();
     const [plannedFeedbacks, setPlannedFeedbacks] = useState<Feedback[]>();
