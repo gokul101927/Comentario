@@ -1,6 +1,8 @@
 import AddBoardModal from "./AddBoardModal";
-import { UserState } from "../interfaces/types";
+import { Board, UserState } from "../interfaces/types";
 import DisplayBoard from "./DisplayBoard";
+import { useState } from "react";
+import EditBoardModal from "./EditBoardModal";
 
 interface ModalProps {
   modalOpen: boolean;
@@ -11,6 +13,15 @@ interface ModalProps {
 }
 
 const YourBoards: React.FC<ModalProps> = ({ modalOpen, openModal, closeModal, loggedInUser }) => {
+  const [isEditModal, setEditModal] = useState(false);
+  const [board, setBoard] = useState<Board>();
+  
+  const handleEditModal = (board: Board) => {
+    setEditModal(true);
+    setBoard(board);
+    openModal();
+  }
+
   return (
     <div>
       <div className='container mx-auto p-2 pt-8 flex flex-col'>
@@ -20,7 +31,7 @@ const YourBoards: React.FC<ModalProps> = ({ modalOpen, openModal, closeModal, lo
         </div>
         <div className="flex flex-wrap lg:grid lg:grid-cols-3 gap-4 py-4">
           {loggedInUser && loggedInUser.boards.length > 0 && loggedInUser.boards.map((board, index) =>
-            <DisplayBoard board={board} key={index} />)}
+            <DisplayBoard board={board} key={index} isYourBoard={true} handleEditModal={handleEditModal}/>)}
         </div>
         {loggedInUser && loggedInUser?.boards.length < 1 && 
         <div className='mt-4 py-4 rounded-lg border border-2 border-dashed border-black w-full'>
@@ -28,7 +39,8 @@ const YourBoards: React.FC<ModalProps> = ({ modalOpen, openModal, closeModal, lo
         </div>}
       </div>
       
-      {modalOpen && <AddBoardModal closeModal={closeModal} username={loggedInUser?.username} />}
+      {modalOpen && !isEditModal && <AddBoardModal closeModal={closeModal} username={loggedInUser?.username} />}
+      {modalOpen && isEditModal && <EditBoardModal closeModal={closeModal} board={board} />}
     </div>
   )
 }

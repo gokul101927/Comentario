@@ -46,6 +46,12 @@ public class BoardController {
         return new ResponseEntity<>(boardService.addBoard(newBoard, file), HttpStatus.OK);
     }
 
+    @PutMapping(value = "/update/{boardId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Board> updateBoard(@PathVariable String boardId, @RequestParam("file") MultipartFile file, @RequestParam("data") String board) throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+        BoardDto boardDto = objectMapper.readValue(board, BoardDto.class);
+        return new ResponseEntity<>(boardService.updateBoard(boardDto, boardId, file), HttpStatus.OK);
+    }
+
     @GetMapping("/board/{boardId}")
     public ResponseEntity<Board> getBoard(@PathVariable String boardId) {
         return new ResponseEntity<>(boardService.getBoard(boardId), HttpStatus.OK);

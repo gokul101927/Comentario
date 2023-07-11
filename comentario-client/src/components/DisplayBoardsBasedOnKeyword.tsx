@@ -21,7 +21,7 @@ const DisplayBoardsBasedOnKeyword: React.FC<Props> = ({ boards, keyword }) => {
         <div>
             <div className="flex flex-wrap lg:grid lg:grid-cols-3 gap-4">
                 {boardList && boardList.map((board, index) =>
-                    <DisplayBoard key={index} board={board} />)
+                    <DisplayBoard key={index} board={board} isYourBoard={false} handleEditModal={() => undefined}/>)
                 }
             </div>
             {boardList?.length === 0 && <NoBoard />}

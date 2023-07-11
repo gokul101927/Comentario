@@ -1,5 +1,6 @@
 package com.app.comentarioserver.service;
 
+import com.app.comentarioserver.dto.BoardDto;
 import com.app.comentarioserver.entity.Board;
 import com.app.comentarioserver.entity.Feedback;
 import com.app.comentarioserver.entity.User;
@@ -38,6 +39,14 @@ public class BoardService {
         Board newBoard = boardRepository.save(board);
         userService.addBoardToTheUser(newBoard, board.getUsername());
         return newBoard;
+    }
+
+    public Board updateBoard(BoardDto boardDto, String boardId, MultipartFile file) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
+        Board board = getBoard(boardId);
+        board.setTitle(boardDto.title());
+        board.setDescription(boardDto.description());
+        board.setCoverImageUrl(uploadCoverImage(file));
+        return boardRepository.save(board);
     }
 
     public Board getBoard(String boardId) {

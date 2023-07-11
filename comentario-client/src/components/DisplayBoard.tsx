@@ -3,18 +3,24 @@ import { Link, useNavigate } from "react-router-dom"
 
 interface Props {
     board: Board
+    isYourBoard: boolean;
+    handleEditModal: (board: Board) => void | undefined;
 }
 
-const DisplayBoard: React.FC<Props> = ({ board }) => {
+const DisplayBoard: React.FC<Props> = ({ board, isYourBoard, handleEditModal }) => {
 
     const navigate = useNavigate();
+
+    const IsEditModal = () => {
+        handleEditModal(board);
+    }
 
     if (!board) return;
 
     return (
         <div className="bg-primaryWhite w-full p-6 rounded-md shadow flex flex-col justify-between space-y-3">
             <div>
-                <Link target="_blank" rel="noopener noreferrer" to={board.url}>
+                <Link target="_blank" rel="noopener noreferrer" to={!isYourBoard ? board.url : `/board/${board.id}`}>
                     <img
                         src={board.coverImageUrl}
                         alt="image"
@@ -46,7 +52,10 @@ const DisplayBoard: React.FC<Props> = ({ board }) => {
                     <p className="text-black break-words">{board.description}</p>
                 </div>
             </div>
-            <div className="flex justify-between">
+            {isYourBoard && <div>
+                <button className="text-sm font-small text-white bg-primaryBlue rounded-md p-2 hover:brightness-125" onClick={IsEditModal}>Edit board</button>
+                </div>}
+            {!isYourBoard && <div className="flex justify-between">
                 <button className="text-sm font-small text-white bg-primaryBlue rounded-md p-2 hover:brightness-125" onClick={() => navigate(`/board/${board.id}`)}>Provide feedback</button>
                 <div className="flex gap-2 items-center">
                     <img
@@ -56,7 +65,7 @@ const DisplayBoard: React.FC<Props> = ({ board }) => {
                     />
                     <span className="text-black">{board.feedbacks === null ? 0 : board.feedbacks.length}</span>
                 </div>
-            </div>
+            </div>}
         </div>
     )
 }
