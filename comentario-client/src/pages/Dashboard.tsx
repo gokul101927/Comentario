@@ -29,13 +29,13 @@ const Dashboard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, openModal, 
         <button
           type="button"
           onClick={() => setPublicBoard(false)}
-          className={`p-4 bg-transparent font-bold text-gray-600 opacity-50 w-full ${!publicBoard && "opacity-100 border-b-4 border-primaryBlue"}`}>
+          className={`p-4 bg-transparent font-bold text-gray-600 w-full ${!publicBoard ? "opacity-100 border-b-4 border-primaryBlue" : "opacity-50"}`}>
           You boards
         </button>
         <button
           type="button"
           onClick={() => setPublicBoard(true)}
-          className={`p-4 bg-transparent font-bold text-gray-600 opacity-50 w-full ${publicBoard && "opacity-100 border-b-4 border-primaryBlue"}`}>
+          className={`p-4 bg-transparent font-bold text-gray-600 w-full ${publicBoard ? "opacity-100 border-b-4 border-primaryBlue" : "opacity-50"}`}>
           Public boards
         </button>
       </div>}

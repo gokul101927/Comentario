@@ -3,12 +3,15 @@ package com.app.comentarioserver.service;
 import com.app.comentarioserver.dto.AuthRequest;
 import com.app.comentarioserver.dto.UserRequest;
 import com.app.comentarioserver.entity.Board;
+import com.app.comentarioserver.entity.Feedback;
 import com.app.comentarioserver.entity.Token;
 import com.app.comentarioserver.entity.User;
 import com.app.comentarioserver.exception.InvalidTokenException;
 import com.app.comentarioserver.exception.UserAlreadyExistsException;
 import com.app.comentarioserver.exception.UserNotEnabledException;
 import com.app.comentarioserver.jwt.JwtTokenProvider;
+import com.app.comentarioserver.repository.BoardRepository;
+import com.app.comentarioserver.repository.FeedbackRepository;
 import com.app.comentarioserver.repository.UserRepository;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.exceptions.*;
@@ -40,6 +43,9 @@ import static com.app.comentarioserver.jwt.JwtTokenFilter.HEADER_PREFIX;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+
+    private final BoardRepository boardRepository;
+    private final FeedbackRepository feedbackRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -228,18 +234,60 @@ public class UserService implements UserDetailsService {
     }
 
     public User updateUser(String username, UserRequest userRequest) {
+        if (checkIfMailIdExists(userRequest.getMailId())) {
+            throw new UserAlreadyExistsException("User already exists with this Email");
+        }
+
+        if (checkIfUsernameExists(userRequest.getUsername())) {
+            throw new UserAlreadyExistsException("User already exists with Username");
+        }
+
         User user = loadByIdentifier(username);
         user.setFullName(userRequest.getFullName());
         user.setUsername(userRequest.getUsername());
         user.setMailId(userRequest.getMailId());
         user.setPassword(userRequest.getPassword());
+        updateBoardUsername(username, userRequest.getUsername());
+        updateFeedbackUsername(username, userRequest.getUsername());
         return userRepository.save(user);
+    }
+
+    public void updateBoardUsername(String username, String newUsername) {
+        Board board = boardRepository.findByUsername(username).orElseThrow();
+        board.setUsername(newUsername);
+        boardRepository.save(board);
     }
 
     public User updateProfileImage(String username, MultipartFile file) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
         User user = loadByIdentifier(username);
-        user.setProfileImageUrl(uploadImage(file));
+        String profileUrl = uploadImage(file);
+        user.setProfileImageUrl(profileUrl);
+        updateFeedbackUserProfile(username, profileUrl);
         return userRepository.save(user);
+    }
+
+    public void updateFeedbackUsername(String username, String newUsername) {
+        Feedback feedback = feedbackRepository.findByUsername(username).orElseThrow();
+        feedback.setUsername(newUsername);
+        feedback.getComments().forEach(comment -> {
+            if (comment.getUsername().equals(username)) {
+                comment.setUsername(newUsername);
+            }
+        });
+
+        feedbackRepository.save(feedback);
+    }
+
+    public void updateFeedbackUserProfile(String username, String profileUrl) {
+        Feedback feedback = feedbackRepository.findByUsername(username).orElseThrow();
+        feedback.setProfileUrl(profileUrl);
+        feedback.getComments().forEach(comment -> {
+            if (comment.getUsername().equals(username)) {
+                comment.setProfileUrl(profileUrl);
+            }
+        });
+
+        feedbackRepository.save(feedback);
     }
 
     public String uploadImage(MultipartFile image) throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {

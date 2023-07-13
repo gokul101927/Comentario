@@ -46,6 +46,17 @@ public class BoardService {
         board.setTitle(boardDto.title());
         board.setDescription(boardDto.description());
         board.setCoverImageUrl(uploadCoverImage(file));
+        board.setSelf(boardDto.isSelf());
+        board.setUrl(boardDto.url());
+        return boardRepository.save(board);
+    }
+
+    public Board updateBoard(BoardDto boardDto, String boardId) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
+        Board board = getBoard(boardId);
+        board.setTitle(boardDto.title());
+        board.setDescription(boardDto.description());
+        board.setSelf(boardDto.isSelf());
+        board.setUrl(boardDto.url());
         return boardRepository.save(board);
     }
 
@@ -69,4 +80,5 @@ public class BoardService {
         board.setFeedbacks(feedback);
         boardRepository.save(board);
     }
+
 }

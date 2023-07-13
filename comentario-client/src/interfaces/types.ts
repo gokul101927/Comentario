@@ -73,6 +73,13 @@ export enum FeedbackSortTypes {
   LeastComments = "Least Comments"
 }
 
+export enum DashboardSortTypes {
+  Latest = "Latest",
+  Oldest = "Oldest",
+  MostFeedbacks = "Most Feedbacks",
+  LeastFeedbacks= "Least Feedbacks"
+}
+
 export enum Roadmaptype {
   NONE = "NONE",
   PLANNED = "PLANNED",

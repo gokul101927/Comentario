@@ -129,8 +129,7 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                             />
                             <h1 className="text-black font-bold text-base md:text-xl" >{board?.feedbacks.length} Feedbacks</h1>
                         </div>
-
-                        <div className="flex flex-col md:flex-row">
+                        <div className="flex flex-col lg:items-center md:flex-row">
                             <label htmlFor="sort" className=" text-black text-sm">Sort by: </label>
                             <select onChange={(e) => setSortType(e.target.value as FeedbackSortTypes)} id="sort" className="font-bold cursor-pointer text-black bg-transparent border-0 border-gray-200 appearance-none focus:outline-none focus:ring-0 peer">
                                 {Object.values(FeedbackSortTypes).map((type) => (
@@ -155,17 +154,13 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                                 + Add feedback
                             </button>
                         </div>
-
                     </div>
-
                     <div className="block md:hidden px-2">
                         <Link to={`/roadmap/${board?.id}`} className="text-primaryBlue font-bold text-sm hover:underline">View roadmap</Link>
                     </div>
                     <div className="container">
                         <DisplayFeedbacksBasedOnConditions feedbacks={board?.feedbacks} sortType={sortType} tagType={tagType} displayEditPlan={board?.username === loggedInUser?.username} />
                     </div>
-
-
                 </div>
                 {modalOpen && <AddFeedbackModal closeModal={closeModal} boardId={board?.id} username={loggedInUser?.username} profileUrl={loggedInUser?.profileImageUrl} handleFeedbackAdd={handleFeedbackAdd} />}
             </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import api from "../api/apiConfig"
-import { Board } from "../interfaces/types"
+import { Board, DashboardSortTypes } from "../interfaces/types"
 import DisplayBoardsBasedOnKeyword from "./DisplayBoardsBasedOnKeyword"
 
 
@@ -28,13 +28,13 @@ const PublicBoards = () => {
                         placeholder="Search title"
                         value={searchKeyword}
                         onChange={(e) => setSearchKeyword(e.target.value)}
-                        className={`bg-gray-100 p-2 w-52 md:w-80 rounded-xl text-black border-2 border-primaryBlue focus:border-gray-100 focus:outline-none focus:shadow-xl focus:bg-primaryWhite}`}
+                        className={`bg-gray-100 p-2 w-52 md:w-80 rounded-xl text-black border-2 border-gray-200 focus:border-gray-100 focus:outline-none focus:shadow-xl focus:bg-primaryWhite}`}
                     ></input>
                 </div>
             </div>
 
             <div >
-                <DisplayBoardsBasedOnKeyword boards={allBoards} keyword={searchKeyword} />
+                <DisplayBoardsBasedOnKeyword boards={allBoards} keyword={searchKeyword} sortType={DashboardSortTypes.Latest} isYourDashboard={false}/>
             </div>
         </div>
     )

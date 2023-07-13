@@ -24,11 +24,9 @@ const EditBoardModal: React.FC<ModalProps> = ({ closeModal, board }) => {
     const [urlError, setUrlError] = useState("");
 
     const [loading, setLoading] = useState(false);
-    const [disabled, setDisabled] = useState(true);
 
     const handleFile = (file: File | null): void => {
         setSelectedFile(file);
-        setDisabled(false);
     }
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -56,12 +54,6 @@ const EditBoardModal: React.FC<ModalProps> = ({ closeModal, board }) => {
 
         setLoading(true);
         const token = localStorage.getItem('jwt');
-        const config = {
-            headers: {
-                Authorization: token,
-                'Content-Type': `multipart/form-data`
-            }
-        };
 
         const requestBody = {
             title: title,
@@ -75,9 +67,14 @@ const EditBoardModal: React.FC<ModalProps> = ({ closeModal, board }) => {
         if (selectedFile) {
             formData.append('file', selectedFile);
             formData.append('data', JSON.stringify(requestBody));
-        }
+            const config = {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': `multipart/form-data`
+                }
+            };
 
-        api.put("/boards/update", formData, config)
+            api.put(`/boards/update/${board?.id}`, formData, config)
             .then(response => {
                 console.log(response)
                 setLoading(false);
@@ -87,6 +84,23 @@ const EditBoardModal: React.FC<ModalProps> = ({ closeModal, board }) => {
                 console.error(error)
                 setLoading(false);
             })
+        } else {
+            const config = {
+                headers: {
+                    Authorization: token,
+                }
+            };
+            api.put(`/boards/update/data/${board?.id}`, requestBody, config)
+            .then(response => {
+                console.log(response)
+                setLoading(false);
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error(error)
+                setLoading(false);
+            })
+        }
     };
 
     return (
@@ -149,7 +163,7 @@ const EditBoardModal: React.FC<ModalProps> = ({ closeModal, board }) => {
                     </div>
                 </div>
                 <div className="flex justify-end">
-                    <button disabled={disabled} className="text-sm font-small text-white rounded-md p-2 font-bold bg-primaryBlue hover:brightness-125" type="submit">+ Create</button>
+                    <button className="text-sm font-small text-white rounded-md p-2 font-bold bg-primaryBlue hover:brightness-125" type="submit">Update</button>
                 </div>
             </form>
             {loading && <LoadingSpinnerModal closeModal={closeModal} />}

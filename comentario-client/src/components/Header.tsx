@@ -82,11 +82,19 @@ const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }
                                             <ul className="py-2 z-20 text-sm text-gray-700 divide-y divide-solid divide-gray-200">
                                                 <li>
                                                     
-                                                    <Link to="/my-profile" className="flex z-20 items-center gap-2 px-4 py-2 hover:bg-gray-300 font-bold">
-                                                    <img src="../src/assets/profile-icon.png"
+                                                    <Link to="/my-profile" className="flex z-20 items-center gap-2 px-4 py-2 hover:bg-primaryBlue hover:text-white font-bold">
+                                                    <img src="../src/assets/user.png"
                                                         alt="logo"
                                                         className="profile-icon h-4">
                                                     </img>My profile</Link>
+                                                </li>
+                                                <li>
+                                                    
+                                                    <Link to="/my-dashboard" className="flex z-20 items-center gap-2 px-4 py-2 hover:bg-primaryBlue hover:text-white font-bold">
+                                                    <img src="../src/assets/dashboard-white.png"
+                                                        alt="logo"
+                                                        className="profile-icon h-4">
+                                                    </img>My Dashboard</Link>
                                                 </li>
                                                 <li >
                                                    

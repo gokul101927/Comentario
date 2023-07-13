@@ -31,7 +31,7 @@ const YourBoards: React.FC<ModalProps> = ({ modalOpen, openModal, closeModal, lo
         </div>
         <div className="flex flex-wrap lg:grid lg:grid-cols-3 gap-4 py-4">
           {loggedInUser && loggedInUser.boards.length > 0 && loggedInUser.boards.map((board, index) =>
-            <DisplayBoard board={board} key={index} isYourBoard={true} handleEditModal={handleEditModal}/>)}
+            <DisplayBoard board={board} key={index} isYourBoard={true} isYourDashboard={false} handleEditModal={handleEditModal}/>)}
         </div>
         {loggedInUser && loggedInUser?.boards.length < 1 && 
         <div className='mt-4 py-4 rounded-lg border border-2 border-dashed border-black w-full'>

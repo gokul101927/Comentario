@@ -7,6 +7,7 @@ import LocationProvider from './components/LocationProvider';
 import RoutesWithAnimation from './components/RoutesWithAnimation';
 
 import { UserState } from './interfaces/types';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
 
@@ -72,6 +73,7 @@ function App() {
   return (
     <main className='text-sm lg:text-base'>
       <BrowserRouter >
+        <ScrollToTop/>
         <LocationProvider>
           <RoutesWithAnimation modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} isLoggedIn={isLoggedIn} handleLogout={handleLogout} handleLogin={handleLogin} loggedInUser={loggedInUser} />
         </LocationProvider>

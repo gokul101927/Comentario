@@ -76,19 +76,19 @@ const Roadmap: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
                     <button
                         type="button"
                         onClick={() => setMobileRoadmapMenu(Roadmaptype.PLANNED)}
-                        className={`p-4 bg-transparent font-bold text-gray-600 opacity-50 w-full ${mobileRoadmapMenu === Roadmaptype.PLANNED && "opacity-100 border-b-4 border-pink-500"}`}>
+                        className={`p-4 bg-transparent font-bold text-gray-600 w-full ${mobileRoadmapMenu === Roadmaptype.PLANNED ? "opacity-100 border-b-4 border-pink-500" : "opacity-50"}`}>
                         Planned
                     </button>
                     <button
                         type="button"
                         onClick={() => setMobileRoadmapMenu(Roadmaptype.INPROGRESS)}
-                        className={`p-4 bg-transparent font-bold text-gray-600 opacity-50 w-full ${mobileRoadmapMenu === Roadmaptype.INPROGRESS && "opacity-100 border-b-4 border-orange-500"}`}>
+                        className={`p-4 bg-transparent font-bold text-gray-600  w-full ${mobileRoadmapMenu === Roadmaptype.INPROGRESS ? "opacity-100 border-b-4 border-orange-500 " : "opacity-50"}`}>
                         In Progress
                     </button>
                     <button
                         type="button"
                         onClick={() => setMobileRoadmapMenu(Roadmaptype.LIVE)}
-                        className={`p-4 bg-transparent font-bold text-gray-600 opacity-50 w-full ${mobileRoadmapMenu === Roadmaptype.LIVE && "opacity-100 border-b-4 border-green-500"}`}>
+                        className={`p-4 bg-transparent font-bold text-gray-600 w-full ${mobileRoadmapMenu === Roadmaptype.LIVE ? "opacity-100 border-b-4 border-green-500" : "opacity-50"}`}>
                         Live
                     </button>
                 </div>

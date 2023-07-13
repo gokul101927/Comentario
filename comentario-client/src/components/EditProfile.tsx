@@ -21,6 +21,7 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
   const [usernameEdit, setUsernameEdit] = useState(false);
   const [emailEdit, setEmailEdit] = useState(false);
   const [passwordEdit, setPasswordEdit] = useState(false);
+  const [disableButton, setDisableButton] = useState(true);
 
   const [fullNameError, setFullNameError] = useState("");
   const [usernameError, setUsernameError] = useState("");
@@ -33,18 +34,22 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
 
   const handleFullnameEdit = () => {
     setFullNameEdit(true)
+    setDisableButton(false)
   }
 
   const handleUsernameEdit = () => {
     setUsernameEdit(true)
+    setDisableButton(false)
   }
 
   const handleEmailEdit = () => {
     setEmailEdit(true)
+    setDisableButton(false)
   }
 
   const handlePasswordEdit = () => {
     setPasswordEdit(true)
+    setDisableButton(false)
   }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -243,6 +248,7 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
             <div>
               <button
                 type="submit"
+                disabled={disableButton}
                 className="font-bold text-white bg-primaryBlue rounded-md p-2 hover:brightness-125"
               >
                 Update your profile

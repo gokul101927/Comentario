@@ -1,5 +1,6 @@
 package com.app.comentarioserver.service;
 
+import com.app.comentarioserver.entity.Board;
 import com.app.comentarioserver.entity.Comment;
 import com.app.comentarioserver.entity.Feedback;
 import com.app.comentarioserver.entity.Roadmap;
@@ -48,4 +49,6 @@ public class FeedbackService {
         feedback.setRoadmap(roadmap);
         return feedbackRepository.save(feedback);
     }
+
+
 }
