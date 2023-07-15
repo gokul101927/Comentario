@@ -44,7 +44,7 @@ const Roadmap: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
             setInProgressFeedbacks(board.feedbacks.filter((feedback => feedback.roadmap === Roadmaptype.INPROGRESS)));
             setLiveFeedbacks(board.feedbacks.filter((feedback => feedback.roadmap === Roadmaptype.LIVE)));
         }
-    }, [plannedFeedbacks, inProgressFeedbacks, liveFeedbacks, board])
+    }, [board])
 
     return (
         <motion.div
@@ -99,8 +99,8 @@ const Roadmap: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
                         {plannedFeedbacks && plannedFeedbacks.map((feedback, index) =>
                             <div key={index} className='bg-primaryWhite border-t-4 border-pink-500 rounded-lg'>
                                 <div className="flex md:gap-8">
-                                    <div>
-                                        <div className="mt-1">
+                                    <div className='p-4'>
+                                        <div>
                                             <div className="flex items-center gap-2">
                                                 <h1 className="text-black font-bold">{feedback?.title}</h1>
                                                 <span className="bg-bgColor rounded-xl text-primaryBlue p-2 text-sm shadow-xl font-bold">{feedback?.category}</span>
@@ -115,11 +115,11 @@ const Roadmap: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
                     <div className={`${mobileRoadmapMenu === Roadmaptype.INPROGRESS ? "flex" : "hidden"} lg:flex flex-col gap-2 w-full`}>
                         <h1 className='text-black font-bold'>In Progress ({inProgressFeedbacks?.length})</h1>
                         <p className='text-gray-500 text-sm'>Currently being developed</p>
-                        {plannedFeedbacks && plannedFeedbacks.map((feedback, index) =>
-                            <div key={index} className='bg-primaryWhite border-t-4 border-orange-500rounded-lg'>
+                        {inProgressFeedbacks && inProgressFeedbacks.map((feedback, index) =>
+                            <div key={index} className='bg-primaryWhite border-t-4 border-orange-500 rounded-lg'>
                                 <div className="flex md:gap-8">
-                                    <div>
-                                        <div className="mt-1">
+                                    <div className='p-4'>
+                                        <div>
                                             <div className="flex items-center gap-2">
                                                 <h1 className="text-black font-bold">{feedback?.title}</h1>
                                                 <span className="bg-bgColor rounded-xl text-primaryBlue p-2 text-sm shadow-xl font-bold">{feedback?.category}</span>
@@ -137,8 +137,8 @@ const Roadmap: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
                         {liveFeedbacks && liveFeedbacks.map((feedback, index) =>
                             <div key={index} className='bg-primaryWhite border-t-4 border-green-500 rounded-lg'>
                                 <div className="flex md:gap-8 p-4">
-                                    <div>
-                                        <div className="mt-1">
+                                    <div className='p-4'>
+                                        <div>
                                             <div className="flex items-center gap-2">
                                                 <h1 className="text-black font-bold">{feedback?.title}</h1>
                                                 <span className="bg-bgColor rounded-xl text-primaryBlue p-2 text-sm shadow-xl font-bold">{feedback?.category}</span>

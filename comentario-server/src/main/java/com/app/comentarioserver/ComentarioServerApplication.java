@@ -8,5 +8,4 @@ public class ComentarioServerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ComentarioServerApplication.class, args);
 	}
-
 }

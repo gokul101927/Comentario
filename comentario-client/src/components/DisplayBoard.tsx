@@ -68,7 +68,7 @@ const DisplayBoard: React.FC<Props> = ({ board, isYourBoard, handleEditModal, is
                 </div>
             </div>}
             {isYourDashboard && <div className="flex justify-between">
-            <button className="text-sm font-small font-bold text-white bg-primaryBlue rounded-md p-2 hover:brightness-125" onClick={() => undefined}>View analysis</button>
+            <button className="text-sm font-small font-bold text-white bg-primaryBlue rounded-md p-2 hover:brightness-125" onClick={() => navigate(`/my-board/${board.id}`)}>View analysis</button>
                 <div className="flex gap-2 items-center">
                     <img
                         src="../src/assets/feedback-icon.png"
