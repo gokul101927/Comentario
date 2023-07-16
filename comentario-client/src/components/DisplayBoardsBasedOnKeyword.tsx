@@ -6,7 +6,7 @@ import NoBoard from './NoBoard';
 interface Props {
     boards: Board[] | undefined;
     keyword: string;
-    sortType: DashboardSortTypes | undefined;
+    sortType: DashboardSortTypes;
     isYourDashboard: boolean;
 }
 
@@ -30,6 +30,7 @@ const DisplayBoardsBasedOnKeyword: React.FC<Props> = ({ boards, keyword, sortTyp
             const reverseSortedByComments = boards?.sort((a, b) => a.feedbacks.length - b.feedbacks.length);
             setboardList(reverseSortedByComments);
         } else if (sortType === DashboardSortTypes.Latest) {
+
             setboardList(boards);
         } else {
             setboardList(boards);

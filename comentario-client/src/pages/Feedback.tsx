@@ -13,7 +13,7 @@ interface ModalProps {
     openModal: () => void;
     closeModal: () => void;
     handleLogout: () => void;
-    loggedInUser: UserState | null;
+    loggedInUser: UserState | undefined;
 }
 
 const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser, modalOpen, closeModal, openModal }) => {
@@ -24,8 +24,8 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
     const [board, setBoard] = useState<Board>();
     const [feedbackAdded, setFeedbackAdded] = useState(false);
 
-    const [sortType, setSortType] = useState<FeedbackSortTypes | "">(FeedbackSortTypes.MostUpVotes);
-    const [tagType, setTagType] = useState<Category | "">(Category.All);
+    const [sortType, setSortType] = useState<FeedbackSortTypes>(FeedbackSortTypes.MostUpVotes);
+    const [tagType, setTagType] = useState<Category>(Category.All);
 
     const [planned, setPlanned] = useState(0);
     const [inProgress, setInProgress] = useState(0);
@@ -131,7 +131,11 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                         </div>
                         <div className="flex flex-col lg:items-center md:flex-row">
                             <label htmlFor="sort" className=" text-black text-sm">Sort by: </label>
-                            <select onChange={(e) => setSortType(e.target.value as FeedbackSortTypes)} id="sort" className="font-bold cursor-pointer text-black bg-transparent border-0 border-gray-200 appearance-none focus:outline-none focus:ring-0 peer">
+                            <select onChange={(e) =>{
+
+                             setSortType(e.target.value as FeedbackSortTypes)
+                             console.log(sortType)
+                             }} id="sort" className="font-bold cursor-pointer text-black bg-transparent border-0 border-gray-200 appearance-none focus:outline-none focus:ring-0 peer">
                                 {Object.values(FeedbackSortTypes).map((type) => (
                                     <option key={type} value={type} >{type}</option>
                                 ))}

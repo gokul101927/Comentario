@@ -10,7 +10,7 @@ import { UserState } from '../interfaces/types';
 interface ModalProps {
     isLoggedIn: boolean;
     handleLogout: () => void;
-    loggedInUser: UserState | null;
+    loggedInUser: UserState | undefined;
     closeModal: () => void;
 }
 
@@ -32,7 +32,7 @@ const MyProfile: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUse
         >
             <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser} />
             <div className='container mx-auto p-2 pt-8 flex flex-col gap-4 lg:flex-row'>
-                <ProfileCard profileImageUrl={loggedInUser?.profileImageUrl} closeModal={closeModal}/>
+                <ProfileCard loggedInUser={loggedInUser} profileImageUrl={loggedInUser?.profileImageUrl} closeModal={closeModal}/>
                 <EditProfile loggedInUser={loggedInUser} closeModal={closeModal}/>
             </div>
         </motion.div>

@@ -10,14 +10,14 @@ import DisplayBoardsBasedOnKeyword from '../components/DisplayBoardsBasedOnKeywo
 interface ModalProps {
     isLoggedIn: boolean;
     handleLogout: () => void;
-    loggedInUser: UserState | null;
+    loggedInUser: UserState | undefined;
     closeModal: () => void;
 }
 
 const MyDashboard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }) => {
 
     const navigate = useNavigate();
-    const [sortType, setSortType] = useState<DashboardSortTypes>();
+    const [sortType, setSortType] = useState<DashboardSortTypes>(DashboardSortTypes.Latest);
     const [searchKeyword, setSearchKeyword] = useState("");
 
     useEffect(() => {

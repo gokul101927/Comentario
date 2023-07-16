@@ -5,8 +5,8 @@ import NoFeedback from "./NoFeedback";
 
 interface Props {
     feedbacks: Feedback[] | undefined;
-    sortType: FeedbackSortTypes | "";
-    tagType: Category | "";
+    sortType: FeedbackSortTypes;
+    tagType: Category;
     displayEditPlan: boolean;
 }
 

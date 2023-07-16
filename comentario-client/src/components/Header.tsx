@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 interface ModalProps {
     isLoggedIn: boolean;
     handleLogout: () => void;
-    loggedInUser: UserState | null;
+    loggedInUser: UserState | undefined;
 }
 
 interface User {

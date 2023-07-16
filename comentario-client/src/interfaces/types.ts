@@ -93,4 +93,4 @@ export interface Comment {
   commentTitle: string;
 }
   
-export type UserState = Omit<User, 'password' | 'verificationToken'>;
+export type UserState = Omit<User, 'verificationToken'>;

@@ -3,13 +3,15 @@ import { useState } from "react";
 import ProfileImageUpload from "./ProfileImageUpload"
 import api from "../api/apiConfig";
 import LoadingSpinnerModal from "./LoadingSpinnerModal";
+import { UserState } from "../interfaces/types";
 
 interface Props {
     profileImageUrl: string | undefined;
     closeModal: () => void;
+    loggedInUser: UserState | undefined;
 }
 
-const ProfileCard: React.FC<Props> = ({profileImageUrl, closeModal}) => {
+const ProfileCard: React.FC<Props> = ({profileImageUrl, closeModal, loggedInUser}) => {
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
@@ -48,8 +50,8 @@ const ProfileCard: React.FC<Props> = ({profileImageUrl, closeModal}) => {
 
     return (
         <div className="bg-primaryWhite shadow flex flex-col items-center space-y-2 w-full lg:w-2/6 rounded-md py-4 h-72">
-            <h1 className="text-black font-bold">Gokul L</h1>
-            <h3 className="text-gray-400">@iamgokul</h3>
+            <h1 className="text-black font-bold">{loggedInUser?.fullName}</h1>
+            <h3 className="text-gray-400">{loggedInUser?.username}</h3>
             <ProfileImageUpload profileImageUrl={profileImageUrl} selectedFile={selectedFile} handleFile={handleFile}/>
             <div>
                 <button

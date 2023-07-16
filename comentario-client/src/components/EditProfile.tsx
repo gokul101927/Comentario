@@ -6,7 +6,7 @@ import LoadingSpinnerModal from "./LoadingSpinnerModal";
 import { UserState } from "../interfaces/types"
 
 interface Props {
-  loggedInUser: UserState | null;
+  loggedInUser: UserState | undefined;
   closeModal: () => void;
 }
 
@@ -85,6 +85,12 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
 
     console.log("submitted");
     setLoading(true);
+    const token = localStorage.getItem('jwt');
+        const config = {
+            headers: {
+                Authorization: token,
+            }
+        };
     // Login the user
     const requestBody = {
       fullName: fullName,
@@ -93,7 +99,7 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
       password: password
     };
 
-    api.post('/users/update', requestBody)
+    api.put('/users/user/update', requestBody, config)
       .then(response => {
         console.log(response.data);
         navigate("/sign-in");
@@ -229,13 +235,13 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
                 <input
                   type="password"
                   name="password"
-                  id="emapasswordil"
+                  id="password"
                   placeholder="Your password"
                   className={`bg-gray-100 p-2 rounded-md text-black w-full focus:outline-none focus:border-none focus:shadow-xl focus:bg-primaryWhite ${passwordError && "border-2 border-red-500"
                     }`}
                   value={password}
-                  min={8}
-                  max={15}
+                  minLength={8}
+                  maxLength={15}
                   disabled={!passwordEdit}
                   onChange={(e) => setPassword(e.target.value)}
                 ></input>

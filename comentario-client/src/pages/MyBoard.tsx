@@ -5,11 +5,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import api from '../api/apiConfig';
+import AllFeedbackChart from '../components/AllFeedbackChart';
 
 interface ModalProps {
     isLoggedIn: boolean;
     handleLogout: () => void;
-    loggedInUser: UserState | null;
+    loggedInUser: UserState | undefined;
 }
 
 const MyBoard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }) => {
@@ -45,32 +46,20 @@ const MyBoard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
             transition={{ duration: 1 }}
         >
             <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser} />
-            
-            <div className='container mx-auto p-2 pt-8 flex flex-col gap-4 lg:flex-row'>
-            <div className="bg-primaryWhite shadow flex flex-col items-center space-y-2 w-full lg:w-2/6 p-4 rounded-md">
-                    <div className=''>
-                        <img
-                            src={board?.coverImageUrl}
-                            alt="image"
-                            className="rounded-md object-center object-cover h-44 w-full"
-                        />
-                        <div className="flex flex-col justify-between mt-4">
-                            <div className="flex justify-between items-center">
-                                <div className="flex gap-1 items-center">
-                                    <h3 className="text-black font-bold py-2">{board?.title}</h3>
-                                    {board?.self &&
-                                        <img
-                                            src="../src/assets/self.png"
-                                            alt="self icon"
-                                            className=" h-4"
-                                        />}
-                                </div>
-                            </div>
-                            <p className="text-black break-words">{board?.description}</p>
-                        </div>
+
+            <div className='container mx-auto p-2 pt-8 flex flex-col gap-4'>
+                <div>
+                    <h1 className='text-black font-bold underline'>{board?.title}</h1>
+                </div>
+                <div>
+                <div className='w-full text-black font-bold bg-primaryWhite shadow p-4 rounded-md'>
+                    <div>
+                        <h1 className='text-gray-400 font-bold'>Feedbacks received</h1>
+                        <AllFeedbackChart feedbacks={board?.feedbacks}/>
                     </div>
                 </div>
-                <div className='w-full text-black font-bold bg-primaryWhite shadow h-full p-4 rounded-md'>You have total {board?.feedbacks.length} feedbacks.</div>
+                </div>
+                
             </div>
         </motion.div>
     )
