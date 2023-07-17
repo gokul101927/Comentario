@@ -50,6 +50,7 @@ export interface Feedback {
   profileUrl: string;
   upVoteCount: number;
   roadmap: Roadmaptype;
+  sentiment: SentimentType;
 }
 
 export interface UpVote {
@@ -88,10 +89,19 @@ export enum Roadmaptype {
   LIVE = "LIVE",
 }
 
+export enum SentimentType {
+  VERY_POSITIVE = "VERY_POSITIVE",
+  POSITIVE = "POSITIVE",
+  NEUTRAL = "NEUTRAL",
+  NEGATIVE = "NEGATIVE",
+  VERY_NEGATIVE = "VERY_NEGATIVE",
+}
+
 export interface Comment {
   profileUrl: string;
   username: string;
   commentTitle: string;
+  sentiment: SentimentType;
 }
   
 export type UserState = Omit<User, 'verificationToken'>;
