@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Board, DashboardSortTypes } from '../interfaces/types';
+import { Board, DashboardSortTypes, UserState } from '../interfaces/types';
 import DisplayBoard from './DisplayBoard';
 import NoBoard from './NoBoard';
 
@@ -8,9 +8,10 @@ interface Props {
     keyword: string;
     sortType: DashboardSortTypes;
     isYourDashboard: boolean;
+    loggedInUser: UserState | undefined;
 }
 
-const DisplayBoardsBasedOnKeyword: React.FC<Props> = ({ boards, keyword, sortType, isYourDashboard }) => {
+const DisplayBoardsBasedOnKeyword: React.FC<Props> = ({ boards, keyword, sortType, isYourDashboard, loggedInUser }) => {
 
     const [boardList, setboardList] = useState<Board[] | undefined>(boards);
 
@@ -41,7 +42,7 @@ const DisplayBoardsBasedOnKeyword: React.FC<Props> = ({ boards, keyword, sortTyp
         <div>
             <div className="flex flex-wrap lg:grid lg:grid-cols-3 gap-4">
                 {boardList && boardList.map((board, index) =>
-                    <DisplayBoard key={index} board={board} isYourBoard={false} isYourDashboard={isYourDashboard} handleEditModal={() => undefined}/>)
+                    <DisplayBoard loggedInUser={loggedInUser} key={index} board={board} isYourBoard={false} isYourDashboard={isYourDashboard} handleEditModal={() => undefined}/>)
                 }
             </div>
             {boardList?.length === 0 && <NoBoard />}

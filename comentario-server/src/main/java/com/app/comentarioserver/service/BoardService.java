@@ -60,6 +60,12 @@ public class BoardService {
         return boardRepository.save(board);
     }
 
+    public Board updateClickCount(String boardId) {
+        Board board = getBoard(boardId);
+        board.setUrlClick();
+        return boardRepository.save(board);
+    }
+
     public Board getBoard(String boardId) {
         return boardRepository.findById(boardId).orElseThrow();
     }

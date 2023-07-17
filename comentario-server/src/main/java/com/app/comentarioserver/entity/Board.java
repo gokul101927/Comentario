@@ -41,8 +41,14 @@ public class Board {
     @DBRef
     private List<Feedback> feedbacks;
 
+    private int urlClickCount;
+
     public void setFeedbacks(Feedback feedback) {
         this.feedbacks.add(feedback);
+    }
+
+    public void setUrlClick() {
+       this.urlClickCount = urlClickCount + 1;
     }
 
     public Board(BoardDto boardDto) {
@@ -53,6 +59,7 @@ public class Board {
         this.isSelf = boardDto.isSelf();
         this.username = boardDto.username();
         this.feedbacks = new LinkedList<>();
+        this.urlClickCount = 0;
     }
 
 }

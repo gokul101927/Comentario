@@ -35,6 +35,7 @@ export interface Board {
     username: string;
     feedbacks: Feedback[];
     self: boolean;
+    urlClickCount: number;
   }
   
 export interface Feedback {

@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 interface ModalProps {
     isLoggedIn: boolean;
     handleLogout: () => void;
-    loggedInUser: UserState | null;
+    loggedInUser: UserState | undefined;
 }
 
 const Comment: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }) => {

@@ -68,7 +68,7 @@ const MyDashboard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInU
                     </div>
                     
                 </div>
-                <DisplayBoardsBasedOnKeyword boards={loggedInUser?.boards} keyword={searchKeyword} sortType={sortType} isYourDashboard={true}/>
+                <DisplayBoardsBasedOnKeyword loggedInUser={loggedInUser} boards={loggedInUser?.boards} keyword={searchKeyword} sortType={sortType} isYourDashboard={true}/>
             </div>
             
         </motion.div>

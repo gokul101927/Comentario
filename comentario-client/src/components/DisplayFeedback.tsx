@@ -8,7 +8,6 @@ interface Props {
     displayEditPlan: boolean;
 }
 
-
 const DisplayFeedback: React.FC<Props> = ({ feedback, displayEditPlan }) => {
     const [upVote, setUpVote] = useState(false);
     const [upVoteCount, setUpVoteCount] = useState(0);

@@ -53,15 +53,16 @@ const AllFeedbackChart: React.FC<Props> = ({ feedbacks }) => {
     const chartData = processChartData(feedbacks);
     const colorMap = assignColors(chartData.labels);
 
-
+    const hasData = chartData.labels.length > 0 && chartData.data.length > 0;
 
     const data = {
         labels: chartData.labels,
         datasets: [
             {
                 data: chartData.data,
-                backgroundColor: chartData.labels.map((label) => colorMap[label]),
-                borderWith: 1
+                backgroundColor: hasData ? chartData.labels.map((label) => colorMap[label]) : 'transparent',
+                borderWith: hasData ? 1 : 2,
+                borderColor: hasData ? chartData.labels.map((label) => colorMap[label]) : 'transparent',
             }
         ]
     }
@@ -77,9 +78,10 @@ const AllFeedbackChart: React.FC<Props> = ({ feedbacks }) => {
     }
 
     return (
-        <div className='w-48 h-48 flex items-center gap-4'>
-            <Doughnut data={data} options={options} />
-            <div className='flex flex-col max-w-xs items-center'>
+        <div className='w-full h-48 flex items-center gap-4 mt-4'>
+            {hasData ? <Doughnut data={data} options={options} /> :
+            <div className='w-full h-44 flex justify-center items-center border-8 border-solid border-gray-300 rounded-full'></div>}
+            <div className='grid grid-cols-2 w-full items-end flex-col'>
                 <div className='flex flex-col items-center'>
                     <div className='flex items-center gap-1'>
                         <div className='bg-primaryBlue w-2 h-2 rounded-full'></div>

@@ -61,4 +61,10 @@ public class BoardController {
     public ResponseEntity<Board> getBoard(@PathVariable String boardId) {
         return new ResponseEntity<>(boardService.getBoard(boardId), HttpStatus.OK);
     }
+
+    @PutMapping(value = "/update/url-click/{boardId}")
+    public ResponseEntity<Board> urlClicked(@PathVariable String boardId) throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+        return new ResponseEntity<>(boardService.updateClickCount(boardId), HttpStatus.OK);
+    }
+
 }

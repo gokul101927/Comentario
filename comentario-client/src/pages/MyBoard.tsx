@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 
 import api from '../api/apiConfig';
 import AllFeedbackChart from '../components/AllFeedbackChart';
+import SentimentAnalysisBoard from '../components/SentimentAnalysisBoard';
 
 interface ModalProps {
     isLoggedIn: boolean;
@@ -20,6 +21,8 @@ const MyBoard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
     const boardId = params.boardId;
 
     const [board, setBoard] = useState<Board>();
+    const [commentCount, setCommentCount] = useState(0);
+    const [upvoteCount, setUpvoteCount] = useState(0);
 
     useEffect(() => {
         if (!isLoggedIn) {
@@ -32,12 +35,21 @@ const MyBoard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
             .then((response) => {
                 console.log(response.data);
                 setBoard(response.data);
+                let overallCommentCount = 0
+                let overallUpvoteCount = 0
+                board?.feedbacks.forEach((feedback) => {
+                    overallCommentCount += feedback.comments.length
+                    overallUpvoteCount += feedback.upVoteCount;
+                })
+                setCommentCount(overallCommentCount);
+                setUpvoteCount(overallUpvoteCount);
             })
             .catch(err => {
                 console.error(err)
             })
 
-    }, [boardId])
+
+    }, [boardId, board])
 
     return (
         <motion.div
@@ -49,17 +61,33 @@ const MyBoard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
 
             <div className='container mx-auto p-2 pt-8 flex flex-col gap-4'>
                 <div>
-                    <h1 className='text-black font-bold underline'>{board?.title}</h1>
+                    <h1 className='text-black font-bold text-xl py-1'>{board?.title}</h1>
+                    <h4 className='text-gray-400 font-bold text-md '>{board?.description}</h4>
+                </div>
+                <div className='flex flex-col lg:grid lg:grid-cols-3 gap-4'>
+                    <div className='text-black font-bold bg-primaryWhite shadow p-4 rounded-md'>
+                        <div className='w-full'>
+                            <h1 className='text-gray-500 font-bold'>Feedbacks received</h1>
+                            <AllFeedbackChart feedbacks={board?.feedbacks} />
+                        </div>
+                    </div>
+                    <div className='text-black font-bold bg-primaryWhite shadow p-4 rounded-md'>
+                        <div>
+                            <h1 className='text-gray-500 font-bold'>No. of times users viewed your webpage from here.</h1>
+                            <h1 className='text-[42px] font-bold text-primaryBlue opacity-70 py-16 text-center'>{board?.urlClickCount} times</h1>
+                        </div>
+                    </div>
+                    <div className='text-black font-bold bg-primaryWhite shadow p-4 rounded-md'>
+                        <div>
+                            <h1 className='text-gray-500 font-bold'>Your board received.</h1>
+                            <h1 className='text-[28px] leading-10 font-bold text-primaryBlue opacity-70  py-12 text-center'>{upvoteCount} upvotes and {commentCount} comments from 6 feedbacks.</h1>
+                        </div>
+                    </div>
+
                 </div>
                 <div>
-                <div className='w-full text-black font-bold bg-primaryWhite shadow p-4 rounded-md'>
-                    <div>
-                        <h1 className='text-gray-400 font-bold'>Feedbacks received</h1>
-                        <AllFeedbackChart feedbacks={board?.feedbacks}/>
-                    </div>
+                    <SentimentAnalysisBoard/>
                 </div>
-                </div>
-                
             </div>
         </motion.div>
     )

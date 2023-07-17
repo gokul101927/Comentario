@@ -1,4 +1,5 @@
-import { Board } from "../interfaces/types"
+import api from "../api/apiConfig";
+import { Board, UserState } from "../interfaces/types"
 import { Link, useNavigate } from "react-router-dom"
 
 interface Props {
@@ -6,22 +7,37 @@ interface Props {
     isYourBoard: boolean;
     isYourDashboard: boolean;
     handleEditModal: (board: Board) => void | undefined;
+    loggedInUser: UserState | undefined;
 }
 
-const DisplayBoard: React.FC<Props> = ({ board, isYourBoard, handleEditModal, isYourDashboard }) => {
+const DisplayBoard: React.FC<Props> = ({ board, isYourBoard, handleEditModal, isYourDashboard, loggedInUser }) => {
 
     const navigate = useNavigate();
+
+    if (!board) return;
 
     const IsEditModal = () => {
         handleEditModal(board);
     }
 
-    if (!board) return;
+    const handleUrlClick = () => {
+        if (!isYourBoard && !isYourDashboard && loggedInUser?.username !== board.username) {
+            const token = localStorage.getItem('jwt');
+            const config = {
+                headers: {
+                    Authorization: token,
+                }
+            };
+            api.put(`/boards/update/url-click/${board.id}`, null, config)
+            .then((response) => console.log(response.data))
+            .catch((error) => console.error(error))
+        }
+    }
 
     return (
         <div className="bg-primaryWhite w-full p-6 rounded-md shadow flex flex-col justify-between space-y-3">
             <div>
-                <Link target="_blank" rel="noopener noreferrer" to={!isYourBoard && !isYourDashboard ? board.url : `/board/${board.id}`}>
+                <Link onClick={handleUrlClick} target="_blank" rel="noopener noreferrer" to={!isYourBoard && !isYourDashboard ? board.url : `/board/${board.id}`}>
                     <img
                         src={board.coverImageUrl}
                         alt="image"
@@ -31,7 +47,7 @@ const DisplayBoard: React.FC<Props> = ({ board, isYourBoard, handleEditModal, is
                 <div className="flex flex-col justify-between mt-4">
                     <div className="flex justify-between items-center">
                         <div className="flex gap-1 items-center">
-                            <h3 className="text-black font-bold py-2">{board.title}</h3>
+                            <Link onClick={handleUrlClick} target="_blank" rel="noopener noreferrer" to={!isYourBoard && !isYourDashboard ? board.url : `/board/${board.id}`} className="text-black font-bold py-2">{board.title}</Link>
                             {board.self &&
                                 <img
                                     src="../src/assets/self.png"

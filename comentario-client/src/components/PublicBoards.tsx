@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import api from "../api/apiConfig"
-import { Board, DashboardSortTypes } from "../interfaces/types"
+import { Board, DashboardSortTypes, UserState } from "../interfaces/types"
 import DisplayBoardsBasedOnKeyword from "./DisplayBoardsBasedOnKeyword"
 
+interface Props {
+    loggedInUser: UserState | undefined
+}
 
-const PublicBoards = () => {
+const PublicBoards:React.FC<Props> = ({loggedInUser}) => {
 
     const [allBoards, setAllBoards] = useState<Board[]>([]);
     const [searchKeyword, setSearchKeyword] = useState("");
@@ -34,7 +37,7 @@ const PublicBoards = () => {
             </div>
 
             <div >
-                <DisplayBoardsBasedOnKeyword boards={allBoards} keyword={searchKeyword} sortType={DashboardSortTypes.Latest} isYourDashboard={false}/>
+                <DisplayBoardsBasedOnKeyword loggedInUser={loggedInUser} boards={allBoards} keyword={searchKeyword} sortType={DashboardSortTypes.Latest} isYourDashboard={false}/>
             </div>
         </div>
     )

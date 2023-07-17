@@ -129,4 +129,6 @@ public class UserController {
         return new ResponseEntity<>(userService.updateProfileImage(user.getMailId(), file), HttpStatus.OK);
     }
 
+
+
 }

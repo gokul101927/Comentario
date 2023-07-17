@@ -11,7 +11,7 @@ interface ModalProps {
   openModal: () => void;
   closeModal: () => void;
   handleLogout: () => void;
-  loggedInUser: UserState | null;
+  loggedInUser: UserState | undefined;
 }
 
 const Dashboard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, openModal, closeModal, modalOpen, loggedInUser }) => {
@@ -41,11 +41,11 @@ const Dashboard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, openModal, 
       </div>}
       <div className='block md:hidden'>
         {!publicBoard ? isLoggedIn && <YourBoards modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} isLoggedIn={isLoggedIn} loggedInUser={loggedInUser} />
-          : <PublicBoards />}
+          : <PublicBoards loggedInUser={loggedInUser}/>}
       </div>
       <div className='hidden md:block'>
         {isLoggedIn && <YourBoards modalOpen={modalOpen} openModal={openModal} closeModal={closeModal} isLoggedIn={isLoggedIn} loggedInUser={loggedInUser} />}
-        <PublicBoards />
+        <PublicBoards loggedInUser={loggedInUser}/>
       </div>
 
     </motion.div>
