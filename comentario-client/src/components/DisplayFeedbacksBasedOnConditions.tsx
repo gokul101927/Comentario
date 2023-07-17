@@ -5,61 +5,52 @@ import NoFeedback from "./NoFeedback";
 
 interface Props {
     feedbacks: Feedback[] | undefined;
-    sortType: FeedbackSortTypes;
-    tagType: Category;
+    sortType: FeedbackSortTypes | undefined;
+    tagType: Category | undefined;
     displayEditPlan: boolean;
+    isSentimentBoard: boolean;
 }
 
-const DisplayFeedbacksBasedOnConditions: React.FC<Props> = ({ feedbacks, sortType, tagType, displayEditPlan }) => {
+const DisplayFeedbacksBasedOnConditions: React.FC<Props> = ({ feedbacks, sortType, tagType, displayEditPlan, isSentimentBoard }) => {
 
     const [feedbackList, setFeedbackList] = useState<Feedback[] | undefined>();
 
     useEffect(() => {
+        if (!feedbacks) return;
+
+        let sortedFeedbacks = [...feedbacks];
+
         if (sortType === FeedbackSortTypes.MostUpVotes) {
-            const sortedByUpVotes = feedbacks?.sort((a, b) => b.upVoteCount - a.upVoteCount);
-            setFeedbackList(sortedByUpVotes);
+            sortedFeedbacks = sortedFeedbacks.sort((a, b) => b.upVoteCount - a.upVoteCount);
         } else if (sortType === FeedbackSortTypes.LeastUpVotes) {
-            const reverseSortedByUpVotes = feedbacks?.sort((a, b) => a.upVoteCount - b.upVoteCount);
-            setFeedbackList(reverseSortedByUpVotes);
+            sortedFeedbacks = sortedFeedbacks.sort((a, b) => a.upVoteCount - b.upVoteCount);
         } else if (sortType === FeedbackSortTypes.MostComments) {
-            const sortedByComments = feedbacks?.sort((a, b) => b.comments.length - a.comments.length);
-            setFeedbackList(sortedByComments);
+            sortedFeedbacks = sortedFeedbacks.sort((a, b) => b.comments.length - a.comments.length);
         } else if (sortType === FeedbackSortTypes.LeastComments) {
-            const reverseSortedByComments = feedbacks?.sort((a, b) => a.comments.length - b.comments.length);
-            setFeedbackList(reverseSortedByComments);
-        } else {
-            setFeedbackList(feedbacks);
+            sortedFeedbacks = sortedFeedbacks.sort((a, b) => a.comments.length - b.comments.length);
         }
-    }, [sortType, feedbacks])
 
-    useEffect(() => {
+        let filteredFeedbacks = sortedFeedbacks;
+
         if (tagType === Category.UI) {
-            const uiFeedbacks = feedbacks?.filter((feedback) => feedback.category.includes(Category.UI));
-            setFeedbackList(uiFeedbacks);
+            filteredFeedbacks = sortedFeedbacks.filter((feedback) => feedback.category.includes(Category.UI));
         } else if (tagType === Category.UX) {
-            const uxFeedbacks = feedbacks?.filter((feedback) => feedback.category.includes(Category.UX));
-            setFeedbackList(uxFeedbacks);
+            filteredFeedbacks = sortedFeedbacks.filter((feedback) => feedback.category.includes(Category.UX));
         } else if (tagType === Category.Feature) {
-            const featureFeedbacks = feedbacks?.filter((feedback) => feedback.category.includes(Category.Feature));
-            setFeedbackList(featureFeedbacks);
+            filteredFeedbacks = sortedFeedbacks.filter((feedback) => feedback.category.includes(Category.Feature));
         } else if (tagType === Category.Enhancement) {
-            const enhancementFeedbacks = feedbacks?.filter((feedback) => feedback.category.includes(Category.Enhancement));
-            setFeedbackList(enhancementFeedbacks);
+            filteredFeedbacks = sortedFeedbacks.filter((feedback) => feedback.category.includes(Category.Enhancement));
         } else if (tagType === Category.Bug) {
-            const bugFeedbacks = feedbacks?.filter((feedback) => feedback.category.includes(Category.Bug));
-            setFeedbackList(bugFeedbacks);
-        } else if (tagType === Category.All) {
-            setFeedbackList(feedbacks);
-        } else {
-            setFeedbackList(feedbacks);
+            filteredFeedbacks = sortedFeedbacks.filter((feedback) => feedback.category.includes(Category.Bug));
         }
 
-    }, [tagType, feedbacks])
+        setFeedbackList(filteredFeedbacks);
+    }, [feedbacks, sortType, tagType]);
 
     return (
         <div className="flex flex-col gap-4">
             {feedbackList && feedbackList.map((feedback, index) =>
-                <DisplayFeedback key={index} feedback={feedback} displayEditPlan={displayEditPlan}/>)
+                <DisplayFeedback key={index} feedback={feedback} displayEditPlan={displayEditPlan} isSentimentBoard={isSentimentBoard}/>)
                 }
             {feedbackList?.length === 0 && <NoFeedback />}
         </div>

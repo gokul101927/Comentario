@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react"
 import { Feedback, Roadmaptype } from "../interfaces/types"
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../api/apiConfig";
+import SentimentAnalysisBoard from "./SentimentAnalysisBoard";
 
 interface Props {
     feedback: Feedback | undefined;
     displayEditPlan: boolean;
+    isSentimentBoard: boolean;
 }
 
-const DisplayFeedback: React.FC<Props> = ({ feedback, displayEditPlan }) => {
+const DisplayFeedback: React.FC<Props> = ({ feedback, displayEditPlan, isSentimentBoard }) => {
+    const navigate = useNavigate();
     const [upVote, setUpVote] = useState(false);
     const [upVoteCount, setUpVoteCount] = useState(0);
+
+    const [displayCommentsSentiment, setDisplayCommentsSentiment] = useState(false)
 
     useEffect(() => {
         const token = localStorage.getItem('jwt');
@@ -101,7 +106,16 @@ const DisplayFeedback: React.FC<Props> = ({ feedback, displayEditPlan }) => {
         }
     }
 
+    const handlefeedbackClick = () => {
+        if (isSentimentBoard) {
+            setDisplayCommentsSentiment(true);
+        } else {
+            navigate(`/feedback/${feedback?.id}`)
+        }
+    }
+
     return (
+        <div>
         <div className='container relative flex z-0 flex-row bg-primaryWhite rounded-md p-8 justify-between'>
             {displayEditPlan && feedback?.roadmap !== Roadmaptype.LIVE &&
             <div className="absolute top-5 text-gray-600 right-5 flex items-center justify-center cursor-pointer bg-bgColor hover:bg-primaryBlue hover:text-primaryWhite rounded-full p-2">
@@ -122,9 +136,9 @@ const DisplayFeedback: React.FC<Props> = ({ feedback, displayEditPlan }) => {
                     <h4 className="text-primaryBlue font-bold text-sm">@{feedback?.username}</h4>
                     <div className="mt-1">
                         <div className="flex items-center gap-2">
-                            <Link to={`/feedback/${feedback?.id}`}>
-                                <h1 className="text-black font-bold">{feedback?.title}</h1>
-                            </Link>
+                            <div onClick={handlefeedbackClick}>
+                                <h1 className="text-black font-bold cursor-pointer">{feedback?.title}</h1>
+                            </div>
 
                             <span className="bg-bgColor rounded-xl text-primaryBlue p-2 text-sm shadow-xl font-bold">{feedback?.category}</span>
                         </div>
@@ -149,6 +163,8 @@ const DisplayFeedback: React.FC<Props> = ({ feedback, displayEditPlan }) => {
                 </img>
                 <p className="text-black font-bold">{feedback?.comments?.length}</p>
             </div>
+        </div>
+        {displayCommentsSentiment && <SentimentAnalysisBoard comments={feedback?.comments} feedbacks={undefined}/>}
         </div>
     )
 }

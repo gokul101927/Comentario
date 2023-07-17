@@ -87,7 +87,7 @@ const AllFeedbackChart: React.FC<Props> = ({ feedbacks }) => {
                         <div className='bg-primaryBlue w-2 h-2 rounded-full'></div>
                         <div className='text-gray-400 text-xs'>ALL</div>
                     </div>
-                    <div className='text-black text-sx font-bold'>{feedbacks?.length}</div>
+                    <div className='text-black text-xs font-bold'>{feedbacks?.length}</div>
                 </div>
 
                 {chartData.labels.map((label, index) => (
@@ -99,7 +99,7 @@ const AllFeedbackChart: React.FC<Props> = ({ feedbacks }) => {
                             ></div>
                             <div className="text-gray-400 text-xs">{label}</div>
                         </div>
-                        <div className="text-black text-sx font-bold">{dataMapping[label]}</div>
+                        <div className="text-black text-xs font-bold">{dataMapping[label]}</div>
                     </div>
                 ))}
             </div>

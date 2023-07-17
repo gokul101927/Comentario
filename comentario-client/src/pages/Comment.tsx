@@ -77,7 +77,7 @@ const Comment: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
                     Go back</div>
                 <div className='w-full md:w-10/12 mx-auto flex flex-col gap-4'>
                     <div className='shadow-xl '>
-                        <DisplayFeedback feedback={feedback} displayEditPlan={false}/>
+                        <DisplayFeedback feedback={feedback} displayEditPlan={false} isSentimentBoard={false}/>
                     </div>
                     <div className='container bg-primaryWhite rounded-md p-8 justify-between'>
                         <h1 className='text-black font-bold'>{feedback?.comments.length} Comments</h1>

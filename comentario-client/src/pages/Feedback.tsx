@@ -163,7 +163,7 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                         <Link to={`/roadmap/${board?.id}`} className="text-primaryBlue font-bold text-sm hover:underline">View roadmap</Link>
                     </div>
                     <div className="container">
-                        <DisplayFeedbacksBasedOnConditions feedbacks={board?.feedbacks} sortType={sortType} tagType={tagType} displayEditPlan={board?.username === loggedInUser?.username} />
+                        <DisplayFeedbacksBasedOnConditions feedbacks={board?.feedbacks} sortType={sortType} tagType={tagType} displayEditPlan={board?.username === loggedInUser?.username} isSentimentBoard={false}/>
                     </div>
                 </div>
                 {modalOpen && <AddFeedbackModal closeModal={closeModal} boardId={board?.id} username={loggedInUser?.username} profileUrl={loggedInUser?.profileImageUrl} handleFeedbackAdd={handleFeedbackAdd} />}

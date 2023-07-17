@@ -35,21 +35,25 @@ const MyBoard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
             .then((response) => {
                 console.log(response.data);
                 setBoard(response.data);
-                let overallCommentCount = 0
-                let overallUpvoteCount = 0
-                board?.feedbacks.forEach((feedback) => {
-                    overallCommentCount += feedback.comments.length
-                    overallUpvoteCount += feedback.upVoteCount;
-                })
-                setCommentCount(overallCommentCount);
-                setUpvoteCount(overallUpvoteCount);
+                
             })
             .catch(err => {
                 console.error(err)
             })
 
 
-    }, [boardId, board])
+    }, [boardId])
+
+    useEffect(() => {
+        let overallCommentCount = 0
+        let overallUpvoteCount = 0
+        board?.feedbacks.forEach((feedback) => {
+            overallCommentCount += feedback.comments.length
+            overallUpvoteCount += feedback.upVoteCount;
+        })
+        setCommentCount(overallCommentCount);
+        setUpvoteCount(overallUpvoteCount);
+    }, [board])
 
     return (
         <motion.div
@@ -86,7 +90,7 @@ const MyBoard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
 
                 </div>
                 <div>
-                    <SentimentAnalysisBoard/>
+                    <SentimentAnalysisBoard feedbacks={board?.feedbacks} comments={undefined}/>
                 </div>
             </div>
         </motion.div>
