@@ -246,9 +246,10 @@ public class UserService implements UserDetailsService {
             throw new UserAlreadyExistsException("User already exists with Username");
         }
         user.setFullName(newUsername);
-        updateBoardUsername(username, newUsername);
-        updateFeedbackUsername(username, newUsername);
-        return userRepository.save(user);
+        User updatedUser = userRepository.save(user);
+        updateBoardUsername(username, updatedUser.getUsername());
+        updateFeedbackUsername(username, updatedUser.getUsername());
+        return updatedUser;
     }
 
     public User updateMailId(String username, String mailId) {
@@ -268,7 +269,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateBoardUsername(String username, String newUsername) {
-        Board board = boardRepository.findByUsername(username).orElseThrow(new UsernameNotFoundException("Board not exists with this user"));
+        Board board = boardRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Board not exists with this user"));
         board.setUsername(newUsername);
         boardRepository.save(board);
     }
