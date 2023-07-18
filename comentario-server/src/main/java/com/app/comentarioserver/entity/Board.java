@@ -1,6 +1,7 @@
 package com.app.comentarioserver.entity;
 
 import com.app.comentarioserver.dto.BoardDto;
+import com.app.comentarioserver.pojo.ImageData;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ public class Board {
     private String id;
 
     @NotNull
-    private String coverImageUrl;
+    private ImageData imageData;
 
     @NotNull
     private String title;
@@ -52,7 +53,6 @@ public class Board {
     }
 
     public Board(BoardDto boardDto) {
-        this.coverImageUrl = boardDto.coverImageUrl();
         this.title = boardDto.title();
         this.description = boardDto.description();
         this.url = boardDto.url();

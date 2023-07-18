@@ -87,7 +87,7 @@ const Signin: React.FC<ModalProps> = ({ openModal, modalOpen, closeModal, handle
               <img
                 src="../src/assets/logo.png"
                 alt="logo"
-                className="logo-image h-8"
+                className="logo-image h-12"
               />
             </Link>
 

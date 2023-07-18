@@ -13,7 +13,7 @@ interface User{
       roles: Array<{
         authority: string;
       }>;
-      profileImageUrl: string;
+      imageData: ImageData;
       boards: Board[];
       enabled: boolean;
       verified: boolean;
@@ -26,9 +26,14 @@ interface User{
       }>;
 }
 
+export interface ImageData {
+  imageUrl: string;
+  imageId: string;
+}
+
 export interface Board {
     id: string;
-    coverImageUrl: string;
+    imageData: ImageData;
     title: string;
     description: string;
     url: string;

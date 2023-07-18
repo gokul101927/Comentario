@@ -1,7 +1,6 @@
-package com.app.comentarioserver.entity;
+package com.app.comentarioserver.pojo;
 
-import com.app.comentarioserver.sentiment.analysis.AnalyzeSentiments;
-
+import com.app.comentarioserver.types.Sentiment;
 import lombok.Data;
 
 @Data

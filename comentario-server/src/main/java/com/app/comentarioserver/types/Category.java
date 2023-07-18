@@ -1,4 +1,4 @@
-package com.app.comentarioserver.entity;
+package com.app.comentarioserver.types;
 
 public enum Category {
     All,

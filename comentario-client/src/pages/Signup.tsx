@@ -115,7 +115,7 @@ const Signup: React.FC<ModalProps> = ({ closeModal }) => {
                         <img
                             src="../src/assets/logo.png"
                             alt="logo"
-                            className="logo-image h-8"
+                            className="logo-image h-12"
                         />
                     </Link>
 

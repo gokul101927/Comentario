@@ -174,7 +174,7 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                         <DisplayFeedbacksBasedOnConditions feedbacks={board?.feedbacks} sortType={sortType} tagType={tagType} sentimentType={undefined} displayEditPlan={board?.username === loggedInUser?.username} isSentimentBoard={false}/>
                     </div>
                 </div>
-                {modalOpen && <AddFeedbackModal closeModal={closeModal} boardId={board?.id} username={loggedInUser?.username} profileUrl={loggedInUser?.profileImageUrl} handleFeedbackAdd={handleFeedbackAdd} />}
+                {modalOpen && <AddFeedbackModal closeModal={closeModal} boardId={board?.id} username={loggedInUser?.username} profileUrl={loggedInUser?.imageData.imageUrl} handleFeedbackAdd={handleFeedbackAdd} />}
             </div>
 
         </motion.div>

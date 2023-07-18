@@ -53,7 +53,7 @@ public class BoardController {
     }
 
     @PutMapping(value = "/update/data/{boardId}")
-    public ResponseEntity<Board> updateBoard(@PathVariable String boardId, @RequestBody BoardDto boardDto) throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+    public ResponseEntity<Board> updateBoard(@PathVariable String boardId, @RequestBody BoardDto boardDto) {
         return new ResponseEntity<>(boardService.updateBoard(boardDto, boardId), HttpStatus.OK);
     }
 

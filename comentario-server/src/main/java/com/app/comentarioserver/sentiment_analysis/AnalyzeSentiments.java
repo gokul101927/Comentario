@@ -1,4 +1,4 @@
-package com.app.comentarioserver.sentiment.analysis;
+package com.app.comentarioserver.sentiment_analysis;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -12,11 +12,7 @@ import java.util.List;
 @Slf4j
 public class AnalyzeSentiments {
 
-    public String text;
-
-    public int sentimentScore;
-
-    private SentiStrength sentiStrength;
+    private final SentiStrength sentiStrength;
 
     private static final String RESOURCE_FOLDER = "SentiStrength_Data/";
 
@@ -25,13 +21,10 @@ public class AnalyzeSentiments {
         // Get the resource URL for the folder
         URL folderUrl = classLoader.getResource(RESOURCE_FOLDER);
         // Convert the URL to a path and return it as a string
+        assert folderUrl != null;
         return folderUrl.getPath();
     }
 
-    public AnalyzeSentiments(String text) {
-        this();
-        this.sentimentScore = getSentimentScore(text);
-    }
 
     public AnalyzeSentiments() {
         log.info(getSentiStrengthDataFolderPath());

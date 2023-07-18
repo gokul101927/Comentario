@@ -45,7 +45,7 @@ const Comment: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
         };
 
         const requestBody = {
-            profileUrl: loggedInUser?.profileImageUrl,
+            profileUrl: loggedInUser?.imageData.imageUrl,
             username: loggedInUser?.username,
             commentTitle: comment
         }

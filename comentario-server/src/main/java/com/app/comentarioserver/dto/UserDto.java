@@ -1,7 +1,7 @@
 package com.app.comentarioserver.dto;
 
 import com.app.comentarioserver.entity.Board;
-import com.app.comentarioserver.entity.Token;
+import com.app.comentarioserver.pojo.Token;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;

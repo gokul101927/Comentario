@@ -3,14 +3,13 @@ package com.app.comentarioserver.service;
 import com.app.comentarioserver.dto.BoardDto;
 import com.app.comentarioserver.entity.Board;
 import com.app.comentarioserver.entity.Feedback;
-import com.app.comentarioserver.entity.User;
+import com.app.comentarioserver.imagekit_upload.ImageUpload;
 import com.app.comentarioserver.repository.BoardRepository;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.exceptions.*;
 import io.imagekit.sdk.models.FileCreateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,12 +21,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardService {
 
-    private final String IMAGE_FOLDER = "Comentario/users/";
-
     private final BoardRepository boardRepository;
 
-    private final ImageKit imageKit;
-
+    private final ImageUpload imageUpload;
     private final UserService userService;
 
     public List<Board> allBoards() {
@@ -35,7 +31,7 @@ public class BoardService {
     }
 
     public Board addBoard(Board board, MultipartFile file) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
-        board.setCoverImageUrl(uploadCoverImage(file));
+        board.setImageData(imageUpload.uploadImage(file, "Board-cover/"));
         Board newBoard = boardRepository.save(board);
         userService.addBoardToTheUser(newBoard, board.getUsername());
         return newBoard;
@@ -45,13 +41,14 @@ public class BoardService {
         Board board = getBoard(boardId);
         board.setTitle(boardDto.title());
         board.setDescription(boardDto.description());
-        board.setCoverImageUrl(uploadCoverImage(file));
+        imageUpload.deleteImage(board.getImageData().getImageId());
+        board.setImageData(imageUpload.uploadImage(file, "Board-cover/"));
         board.setSelf(boardDto.isSelf());
         board.setUrl(boardDto.url());
         return boardRepository.save(board);
     }
 
-    public Board updateBoard(BoardDto boardDto, String boardId) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
+    public Board updateBoard(BoardDto boardDto, String boardId) {
         Board board = getBoard(boardId);
         board.setTitle(boardDto.title());
         board.setDescription(boardDto.description());
@@ -74,12 +71,6 @@ public class BoardService {
         boardRepository.deleteAll();
     }
 
-    public String uploadCoverImage(MultipartFile image) throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
-        byte[] imageBytes = image.getBytes();
-        FileCreateRequest fileCreateRequest = new FileCreateRequest(imageBytes, "filename");
-        fileCreateRequest.setFolder("Comentario/");
-        return imageKit.upload(fileCreateRequest).getUrl();
-    }
 
     public void addFeedbackToTheBoard(String id, Feedback feedback) {
         Board board = boardRepository.findById(id).orElseThrow();

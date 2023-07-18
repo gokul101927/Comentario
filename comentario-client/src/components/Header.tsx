@@ -1,40 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
+import { UserState } from '../interfaces/types';
 
 interface ModalProps {
     isLoggedIn: boolean;
     handleLogout: () => void;
     loggedInUser: UserState | undefined;
 }
-
-interface User {
-    id: {
-        timestamp: number;
-        date: string;
-    };
-    fullName: string;
-    mailId: string;
-    password: string;
-    verificationToken: {
-        userToken: string;
-        expiryDate: string;
-    };
-    roles: Array<{
-        authority: string;
-    }>;
-    profileImageUrl: string;
-    enabled: boolean;
-    verified: boolean;
-    accountNonExpired: boolean;
-    accountNonLocked: boolean;
-    credentialsNonExpired: boolean;
-    username: string;
-    authorities: Array<{
-        authority: string;
-    }>;
-}
-
-type UserState = Omit<User, 'password' | 'verificationToken'>;
 
 const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }) => {
 
@@ -60,7 +32,7 @@ const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }
                                 <img
                                     src="../src/assets/logo.png"
                                     alt="logo"
-                                    className="logo-image h-8"
+                                    className="logo-image h-12"
                                 />
                             </Link>
                         </div>
@@ -72,7 +44,7 @@ const Header: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }
                                     <div className='space-y-2'>
                                         <div onClick={toggleDropdownOpen} className='flex gap-2 items-center cursor-pointer rounded-lg p-2 hover:bg-gray-200 hover:shadow-xl'>
                                             <img
-                                                src={loggedInUser?.profileImageUrl}
+                                                src={loggedInUser?.imageData.imageUrl}
                                                 alt="logo"
                                                 className="rounded-full h-8 w-8 object-center object-cover"
                                             />

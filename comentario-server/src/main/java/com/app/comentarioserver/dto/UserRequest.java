@@ -1,12 +1,13 @@
 package com.app.comentarioserver.dto;
 
 
+import com.app.comentarioserver.pojo.ImageData;
 import lombok.Data;
 
 @Data
 public class UserRequest {
 
-    private String profileImageUrl;
+    private ImageData imageData;
 
     private String fullName;
 
@@ -17,7 +18,7 @@ public class UserRequest {
     private String password;
 
     public UserRequest(String fullName, String username, String mailId, String password) {
-        this.profileImageUrl = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+        this.imageData = new ImageData("https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y", "default");
         this.fullName = fullName;
         this.username = username;
         this.mailId = mailId;

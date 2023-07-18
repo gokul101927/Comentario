@@ -1,8 +1,11 @@
 package com.app.comentarioserver.service;
 
 import com.app.comentarioserver.entity.*;
+import com.app.comentarioserver.pojo.Comment;
 import com.app.comentarioserver.repository.FeedbackRepository;
-import com.app.comentarioserver.sentiment.analysis.AnalyzeSentiments;
+import com.app.comentarioserver.sentiment_analysis.AnalyzeSentiments;
+import com.app.comentarioserver.types.Roadmap;
+import com.app.comentarioserver.types.Sentiment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

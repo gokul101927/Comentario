@@ -33,9 +33,9 @@ const DisplayBoard: React.FC<Props> = ({ board, isYourBoard, handleEditModal, is
             <div>
                 <Link onClick={handleUrlClick} target="_blank" rel="noopener noreferrer" to={!isYourBoard && !isYourDashboard ? board.url : `/board/${board.id}`}>
                     <img
-                        src={board.coverImageUrl}
+                        src={board.imageData.imageUrl}
                         alt="image"
-                        className="rounded-md object-center object-cover h-44 w-full"
+                        className="rounded-md border border-solid border-black object-center object-cover h-44 w-full"
                     />
                 </Link>
                 <div className="flex flex-col justify-between mt-4">

@@ -12,8 +12,8 @@ import ScrollToTop from './components/ScrollToTop';
 function App() {
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [loggedInUser, setLoggedInUser] = useState<UserState | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState<UserState | undefined>();
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const openModal = () => {
     setModalOpen(true);
@@ -62,7 +62,7 @@ function App() {
         .catch(err => {
           console.error(err)
           setIsLoggedIn(false);
-          setLoggedInUser(null)
+          setLoggedInUser(undefined)
           localStorage.removeItem('jwt');
           console.log("logged out")
         })

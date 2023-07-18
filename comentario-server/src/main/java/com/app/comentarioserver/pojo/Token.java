@@ -1,4 +1,4 @@
-package com.app.comentarioserver.entity;
+package com.app.comentarioserver.pojo;
 
 import lombok.Data;
 
@@ -10,7 +10,6 @@ import java.util.UUID;
 @Data
 public class Token {
     private static final int TOKEN_EXPIRATION = 60 * 24;
-
     private String userToken;
 
     private Date expiryDate;

@@ -1,13 +1,14 @@
 package com.app.comentarioserver.entity;
 
 import com.app.comentarioserver.dto.FeedbackDto;
-import com.app.comentarioserver.sentiment.analysis.AnalyzeSentiments;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.app.comentarioserver.pojo.Comment;
+import com.app.comentarioserver.types.Category;
+import com.app.comentarioserver.types.Roadmap;
+import com.app.comentarioserver.types.Sentiment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.*;

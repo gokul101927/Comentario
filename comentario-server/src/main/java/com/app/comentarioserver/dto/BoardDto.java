@@ -1,6 +1,8 @@
 package com.app.comentarioserver.dto;
 
-public record BoardDto(String coverImageUrl, String title, String description, String url, boolean isSelf,
+import com.app.comentarioserver.pojo.ImageData;
+
+public record BoardDto(String title, String description, String url, boolean isSelf,
                        String username) {
 
 }

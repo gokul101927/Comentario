@@ -4,7 +4,9 @@ import com.app.comentarioserver.dto.AuthRequest;
 import com.app.comentarioserver.dto.UserRequest;
 import com.app.comentarioserver.entity.Board;
 import com.app.comentarioserver.entity.Feedback;
-import com.app.comentarioserver.entity.Token;
+import com.app.comentarioserver.imagekit_upload.ImageUpload;
+import com.app.comentarioserver.pojo.ImageData;
+import com.app.comentarioserver.pojo.Token;
 import com.app.comentarioserver.entity.User;
 import com.app.comentarioserver.exception.InvalidTokenException;
 import com.app.comentarioserver.exception.UserAlreadyExistsException;
@@ -51,7 +53,7 @@ public class UserService implements UserDetailsService {
 
     private final JavaMailSender mailSender;
 
-    private final ImageKit imageKit;
+    private final ImageUpload imageUpload;
 
     private final PasswordEncoder encoder;
 
@@ -74,7 +76,7 @@ public class UserService implements UserDetailsService {
             throw new UserAlreadyExistsException("User already exists with Username");
         }
 
-        User user = new User(userRequest.getFullName(), userRequest.getUsername(), userRequest.getMailId(), encoder.encode(userRequest.getPassword()), userRequest.getProfileImageUrl());
+        User user = new User(userRequest.getFullName(), userRequest.getUsername(), userRequest.getMailId(), encoder.encode(userRequest.getPassword()), userRequest.getImageData());
         user.setRoles(List.of(new SimpleGrantedAuthority("User")));
         user.setVerified(false);
         Token token = new Token();
@@ -280,9 +282,10 @@ public class UserService implements UserDetailsService {
 
     public User updateProfileImage(String username, MultipartFile file) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
         User user = loadByIdentifier(username);
-        String profileUrl = uploadImage(file);
-        user.setProfileImageUrl(profileUrl);
-        updateFeedbackUserProfile(username, profileUrl);
+        imageUpload.deleteImage(user.getImageData().getImageId());
+        ImageData imageData = imageUpload.uploadImage(file, "User-profile/");
+        user.setImageData(imageData);
+        updateFeedbackUserProfile(username, imageData.getImageUrl());
         return userRepository.save(user);
     }
 
@@ -309,13 +312,6 @@ public class UserService implements UserDetailsService {
         });
 
         feedbackRepository.save(feedback);
-    }
-
-    public String uploadImage(MultipartFile image) throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
-        byte[] imageBytes = image.getBytes();
-        FileCreateRequest fileCreateRequest = new FileCreateRequest(imageBytes, "filename");
-        fileCreateRequest.setFolder("Comentario/");
-        return imageKit.upload(fileCreateRequest).getUrl();
     }
 
     public User getByMailId(String mailId) {

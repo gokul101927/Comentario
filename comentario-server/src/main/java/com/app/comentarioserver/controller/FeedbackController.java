@@ -1,9 +1,9 @@
 package com.app.comentarioserver.controller;
 
 import com.app.comentarioserver.dto.FeedbackDto;
-import com.app.comentarioserver.entity.Comment;
+import com.app.comentarioserver.pojo.Comment;
 import com.app.comentarioserver.entity.Feedback;
-import com.app.comentarioserver.entity.Roadmap;
+import com.app.comentarioserver.types.Roadmap;
 import com.app.comentarioserver.service.FeedbackService;
 import com.app.comentarioserver.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Locale;
 
 @RestController
 @Slf4j

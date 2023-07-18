@@ -1,11 +1,12 @@
 package com.app.comentarioserver.entity;
 
 import com.app.comentarioserver.configuration.GrantedAuthorityDeserializer;
+import com.app.comentarioserver.pojo.ImageData;
+import com.app.comentarioserver.pojo.Token;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.*;
 import lombok.*;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -49,7 +50,7 @@ public class User implements UserDetails {
     private transient Token verificationToken;
 
     @NotNull
-    private String profileImageUrl;
+    private ImageData imageData;
 
     private boolean isVerified;
 
@@ -63,14 +64,14 @@ public class User implements UserDetails {
     @JsonDeserialize(using = GrantedAuthorityDeserializer.class)
     private Collection<? extends GrantedAuthority> roles;
 
-    public User(String fullName, String username, String mailId, String password, String profileImageUrl) {
+    public User(String fullName, String username, String mailId, String password, ImageData imageData) {
         this.fullName = fullName;
         this.username = username;
         this.mailId = mailId;
         this.password = password;
         this.roles = List.of(new SimpleGrantedAuthority("USER"));
         this.isVerified = false;
-        this.profileImageUrl = profileImageUrl;
+        this.imageData = imageData;
         this.boards = new LinkedList<>();
     }
 
@@ -114,7 +115,8 @@ public class User implements UserDetails {
         return true;
     }
 
-    @Override
+
+   @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
@@ -123,13 +125,12 @@ public class User implements UserDetails {
                 ", mailId='" + mailId + '\'' +
                 ", password='" + password + '\'' +
                 ", verificationToken=" + verificationToken +
-                ", profileImageUrl='" + profileImageUrl + '\'' +
+                ", profileImageUrl='" + imageData.getImageUrl() + '\'' +
                 ", isVerified=" + isVerified +
                 ", boards=" + boards +
                 ", roles=" + roles +
                 '}';
     }
-
     @Override
     public boolean isEnabled() {
         return this.isVerified;
