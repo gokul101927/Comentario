@@ -5,7 +5,6 @@ import { Chart, CategoryScale, LinearScale, BarController, BarElement } from 'ch
 
 Chart.register(CategoryScale, LinearScale, BarController, BarElement);
 
-
 interface Props {
     feedbacks: Feedback[] | undefined;
     comments: Comment[] | undefined;
@@ -63,7 +62,11 @@ const SentimentAnalysisBarChart: React.FC<Props> = ({ feedbacks, onBarClick, com
             {
                 label: "Sentiment Analysis",
                 data: [veryPositivePercentage, positivePercentage, neutralPercentage, negativePercentage, veryNegativePercentage],
-                backgroundColor: ["#2e80ec"],
+                backgroundColor: ["#2e80ec",
+                '#34D399',
+                '#F87171',
+                '#FBBF24',
+                '#A78BFA',],
                 borderWith: 1
             }
         ]

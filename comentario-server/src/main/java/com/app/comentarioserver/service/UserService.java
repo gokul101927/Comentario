@@ -233,27 +233,42 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public User updateUser(String username, UserRequest userRequest) {
-        if (checkIfMailIdExists(userRequest.getMailId())) {
-            throw new UserAlreadyExistsException("User already exists with this Email");
-        }
+    public User updateFullName(String username, String fullName) {
+        User user = loadByIdentifier(username);
+        user.setFullName(fullName.replace('"', ' ').trim());
+        return userRepository.save(user);
+    }
 
-        if (checkIfUsernameExists(userRequest.getUsername())) {
+    public User updateUsername(String username, String newUsername) {
+        User user = loadByIdentifier(username);
+        newUsername = newUsername.replace('"', ' ').trim();
+        if (checkIfUsernameExists(newUsername)) {
             throw new UserAlreadyExistsException("User already exists with Username");
         }
+        user.setFullName(newUsername);
+        updateBoardUsername(username, newUsername);
+        updateFeedbackUsername(username, newUsername);
+        return userRepository.save(user);
+    }
 
+    public User updateMailId(String username, String mailId) {
         User user = loadByIdentifier(username);
-        user.setFullName(userRequest.getFullName());
-        user.setUsername(userRequest.getUsername());
-        user.setMailId(userRequest.getMailId());
-        user.setPassword(userRequest.getPassword());
-        updateBoardUsername(username, userRequest.getUsername());
-        updateFeedbackUsername(username, userRequest.getUsername());
+        mailId = mailId.replace('"', ' ').trim();
+        if (checkIfMailIdExists(mailId)) {
+            throw new UserAlreadyExistsException("User already exists with this Email");
+        }
+        user.setMailId(mailId);
+        return userRepository.save(user);
+    }
+
+    public User updatePassword(String username, String password) {
+        User user = loadByIdentifier(username);
+        user.setPassword(encoder.encode(password.replace('"', ' ').trim()));
         return userRepository.save(user);
     }
 
     public void updateBoardUsername(String username, String newUsername) {
-        Board board = boardRepository.findByUsername(username).orElseThrow();
+        Board board = boardRepository.findByUsername(username).orElseThrow(new UsernameNotFoundException("Board not exists with this user"));
         board.setUsername(newUsername);
         boardRepository.save(board);
     }

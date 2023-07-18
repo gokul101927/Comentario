@@ -117,10 +117,28 @@ public class UserController {
         return new ResponseEntity<>(userService.loadUserByUsername(username), HttpStatus.OK);
     }
 
-    @PutMapping("/user/update")
-    public ResponseEntity<User> updateUser(Authentication authentication, @RequestBody UserRequest userRequest){
+    @PutMapping("/user/update-fullName")
+    public ResponseEntity<User> updatefullName(Authentication authentication, @RequestBody String fullName){
         User user = (User) authentication.getPrincipal();
-        return new ResponseEntity<>(userService.updateUser(user.getMailId(), userRequest), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateFullName(user.getMailId(), fullName), HttpStatus.OK);
+    }
+
+    @PutMapping("/user/update-username")
+    public ResponseEntity<User> updateUsername(Authentication authentication, @RequestBody String newUsername){
+        User user = (User) authentication.getPrincipal();
+        return new ResponseEntity<>(userService.updateUsername(user.getMailId(), newUsername), HttpStatus.OK);
+    }
+
+    @PutMapping("/user/update-mailId")
+    public ResponseEntity<User> updateMailId(Authentication authentication, @RequestBody String mailId){
+        User user = (User) authentication.getPrincipal();
+        return new ResponseEntity<>(userService.updateMailId(user.getMailId(), mailId), HttpStatus.OK);
+    }
+
+    @PutMapping("/user/update-password")
+    public ResponseEntity<User> updatePassword(Authentication authentication, @RequestBody String password) {
+        User user = (User) authentication.getPrincipal();
+        return new ResponseEntity<>(userService.updatePassword(user.getMailId(), password), HttpStatus.OK);
     }
 
     @PutMapping(value = "/user/update-profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -128,7 +146,4 @@ public class UserController {
         User user = (User) authentication.getPrincipal();
         return new ResponseEntity<>(userService.updateProfileImage(user.getMailId(), file), HttpStatus.OK);
     }
-
-
-
 }

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import api from "../api/apiConfig";
 import LoadingSpinnerModal from "./LoadingSpinnerModal";
@@ -8,10 +7,10 @@ import { UserState } from "../interfaces/types"
 interface Props {
   loggedInUser: UserState | undefined;
   closeModal: () => void;
+  handleLogout: () => void;
 }
 
 const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
-
   const [fullName, setFullName] = useState(loggedInUser?.fullName);
   const [username, setUsername] = useState(loggedInUser?.username);
   const [email, setEmail] = useState(loggedInUser?.mailId);
@@ -29,8 +28,6 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
   const [passwordError, setPasswordError] = useState("");
 
   const [loading, setLoading] = useState(false);
-
-  const navigate = useNavigate();
 
   const handleFullnameEdit = () => {
     setFullNameEdit(true)
@@ -55,70 +52,106 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!fullName) {
-      setFullNameError("Full name is required");
-      return;
-    } else {
-      setFullNameError("");
-    }
-
-    if (!username) {
-      setUsernameError("Username is required");
-      return;
-    } else {
-      setUsernameError("");
-    }
-
-    if (!email) {
-      setEmailError("Email is required");
-      return;
-    } else {
-      setEmailError("");
-    }
-
-    if (!password) {
-      setPasswordError("Password is required");
-      return;
-    } else {
-      setPasswordError("");
-    }
-
-    console.log("submitted");
-    setLoading(true);
     const token = localStorage.getItem('jwt');
-        const config = {
-            headers: {
-                Authorization: token,
-            }
-        };
-    // Login the user
-    const requestBody = {
-      fullName: fullName,
-      userName: username,
-      mailId: email,
-      password: password
+    const config = {
+      headers: {
+        Authorization: token,
+      }
     };
 
-    api.put('/users/user/update', requestBody, config)
-      .then(response => {
-        console.log(response.data);
-        navigate("/sign-in");
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error(error);
-        setLoading(false);
-        const errorMessage = error.response.data.message;
-        if (errorMessage.includes("Email")) {
-          setEmailError(errorMessage);
-        } else if (errorMessage.includes("Password")) {
-          setPasswordError(errorMessage);
-        } else if (errorMessage.includes("Username")) {
-          setUsernameError(errorMessage);
-        } else if (errorMessage.includes("Fullname")) {
-          setFullNameError(errorMessage);
-        }
-      });
+    if (fullNameEdit) {
+      if (!fullName) {
+        setFullNameError("Full name is required");
+        return;
+      } else {
+        setFullNameError("");
+        api.put('/users/user/update-fullName', fullName, config)
+          .then(response => {
+            console.log(response.data);
+            setLoading(false);
+          })
+          .catch(error => {
+            console.error(error);
+            setLoading(false);
+            const errorMessage = error.response.data.message;
+            if (errorMessage.includes("Email")) {
+              setEmailError(errorMessage);
+            } else if (errorMessage.includes("Username")) {
+              setUsernameError(errorMessage);
+            } else if (errorMessage.includes("Fullname")) {
+              setFullNameError(errorMessage);
+            }
+          });
+      }
+    }
+
+    if (usernameEdit) {
+      if (!username) {
+        setUsernameError("Username is required");
+        return;
+      } else {
+        setUsernameError("");
+
+        api.put('/users/user/update-username', username, config)
+          .then(response => {
+            console.log(response.data);
+            setLoading(false);
+          })
+          .catch(error => {
+            console.error(error);
+            setLoading(false);
+            const errorMessage = error.response.data.message;
+            if (errorMessage.includes("Username")) {
+              setUsernameError(errorMessage);
+            }
+          });
+      }
+    }
+    
+    if (emailEdit) {
+      if (!email) {
+        setEmailError("Email is required");
+        return;
+      } else {
+        setEmailError("");
+        api.put('/users/user/update-mailId', email, config)
+          .then(response => {
+            console.log(response.data);
+            setLoading(false);
+          })
+          .catch(error => {
+            console.error(error);
+            setLoading(false);
+            const errorMessage = error.response.data.message;
+            if (errorMessage.includes("Email")) {
+              setEmailError(errorMessage);
+            }
+          });
+      }
+    }
+    
+    if (passwordEdit) {
+      if (!password) {
+        setPasswordError("Password is required");
+        return;
+      } else {
+        setPasswordError("");
+        api.put('/users/user/update-password', password, config)
+          .then(response => {
+            console.log(response.data);
+            setLoading(false);
+          })
+          .catch(error => {
+            console.error(error);
+            setLoading(false);
+            const errorMessage = error.response.data.message;
+            if (errorMessage.includes("Password")) {
+              setPasswordError(errorMessage);
+            }
+          });
+      }
+    }
+    window.location.reload();
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
