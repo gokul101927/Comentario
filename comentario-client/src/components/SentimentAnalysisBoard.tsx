@@ -25,7 +25,7 @@ const SentimentAnalysisBoard: React.FC<Props> = ({ feedbacks, comments, isCommen
 
     return (
         <div className="bg-primaryWhite h-full shadow space-y-4 w-full rounded-md p-8 ">
-            {isCommentsSentiment ? <div className="px-8">
+            {isCommentsSentiment ? <div className="md:px-8">
                 <h1 className="text-gray-500 font-bold py-4">Overall sentiment analysis for Comments</h1>
                 <SentimentAnalysisBarChart feedbacks={undefined} comments={comments} onBarClick={onBarClick} />
                 {sentimentType && <div className="flex flex-col gap-4 mt-4">
