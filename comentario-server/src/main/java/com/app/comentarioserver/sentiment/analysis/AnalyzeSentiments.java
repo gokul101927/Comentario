@@ -1,6 +1,5 @@
 package com.app.comentarioserver.sentiment.analysis;
 
-import com.app.comentarioserver.entity.Sentiment;
 import uk.ac.wlv.sentistrength.SentiStrength;
 
 import java.util.List;

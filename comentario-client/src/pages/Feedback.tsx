@@ -74,7 +74,7 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
         >
             <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser} />
             <div className="container h-screen mx-auto p-2 pt-8 flex flex-col gap-4 xl:flex-row">
-                <div className="hidden md:grid md:grid-cols-3 xl:flex xl:flex-row justify-between xl:justify-start gap-4 xl:flex-col xl:w-auto">
+                <div className="hidden h-2/3 md:grid md:grid-cols-3 xl:flex xl:flex-row justify-between xl:justify-start gap-4 xl:flex-col xl:w-auto">
                     <Link onClick={handleUrlClick} target="_blank" rel="noopener noreferrer" to={board ? board.url : "#"}>
                         <div className="flex flex-1 flex-col px-6 py-4 justify-end rounded-xl bg-primaryWhite bg-gradient-to-r from-primaryBlue to-primaryWhite w-full xl:w-72 h-44">
                             <h1 className="font-bold word-wrap max-w-[210px]">{board?.title}</h1>
@@ -171,7 +171,7 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
                         <Link to={`/roadmap/${board?.id}`} className="text-primaryBlue font-bold text-sm hover:underline">View roadmap</Link>
                     </div>
                     <div className="container">
-                        <DisplayFeedbacksBasedOnConditions feedbacks={board?.feedbacks} sortType={sortType} tagType={tagType} displayEditPlan={board?.username === loggedInUser?.username} isSentimentBoard={false}/>
+                        <DisplayFeedbacksBasedOnConditions feedbacks={board?.feedbacks} sortType={sortType} tagType={tagType} sentimentType={undefined} displayEditPlan={board?.username === loggedInUser?.username} isSentimentBoard={false}/>
                     </div>
                 </div>
                 {modalOpen && <AddFeedbackModal closeModal={closeModal} boardId={board?.id} username={loggedInUser?.username} profileUrl={loggedInUser?.profileImageUrl} handleFeedbackAdd={handleFeedbackAdd} />}

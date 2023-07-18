@@ -108,7 +108,7 @@ const DisplayFeedback: React.FC<Props> = ({ feedback, displayEditPlan, isSentime
 
     const handlefeedbackClick = () => {
         if (isSentimentBoard) {
-            setDisplayCommentsSentiment(true);
+            setDisplayCommentsSentiment(!displayCommentsSentiment);
         } else {
             navigate(`/feedback/${feedback?.id}`)
         }
@@ -164,7 +164,7 @@ const DisplayFeedback: React.FC<Props> = ({ feedback, displayEditPlan, isSentime
                 <p className="text-black font-bold">{feedback?.comments?.length}</p>
             </div>
         </div>
-        {displayCommentsSentiment && <SentimentAnalysisBoard comments={feedback?.comments} feedbacks={undefined}/>}
+        {displayCommentsSentiment && <SentimentAnalysisBoard comments={feedback?.comments} feedbacks={undefined} isCommentsSentiment={true}/>}
         </div>
     )
 }

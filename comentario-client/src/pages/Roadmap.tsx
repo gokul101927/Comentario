@@ -9,7 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 interface ModalProps {
     isLoggedIn: boolean;
     handleLogout: () => void;
-    loggedInUser: UserState | null;
+    loggedInUser: UserState | undefined;
 }
 
 const Roadmap: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser }) => {

@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { Feedback, SentimentType } from '../interfaces/types'
+import { Feedback, SentimentType, Comment } from '../interfaces/types'
 import { Bar } from 'react-chartjs-2';
+import { Chart, CategoryScale, LinearScale, BarController, BarElement } from 'chart.js';
+
+Chart.register(CategoryScale, LinearScale, BarController, BarElement);
+
 
 interface Props {
     feedbacks: Feedback[] | undefined;
+    comments: Comment[] | undefined;
+    onBarClick: (sentiment: SentimentType) => void;
 }
 
-const SentimentAnalysisBarChart: React.FC<Props> = ({ feedbacks }) => {
+const SentimentAnalysisBarChart: React.FC<Props> = ({ feedbacks, onBarClick, comments }) => {
 
     const [veryPositivePercentage, setVeryPositivePercentage] = useState(0);
     const [positivePercentage, setPositivePercentage] = useState(0);
@@ -33,12 +39,30 @@ const SentimentAnalysisBarChart: React.FC<Props> = ({ feedbacks }) => {
         setVeryNegativePercentage((veryNegativeFeedbacks / feedbacks.length) * 100);
     }, [feedbacks])
 
+    useEffect(() => {
+        if (!comments) return;
+        const veryPositiveFeedbacks = comments.filter((comment) => comment.sentiment === SentimentType.VERY_POSITIVE).length;
+        setVeryPositivePercentage((veryPositiveFeedbacks / comments.length) * 100);
+
+        const positiveFeedbacks = comments.filter((comment) => comment.sentiment === SentimentType.POSITIVE).length;
+        setPositivePercentage((positiveFeedbacks / comments.length) * 100);
+
+        const neutralFeedbacks = comments.filter((comment) => comment.sentiment === SentimentType.NEUTRAL).length;
+        setNeutralPercentagePercentage((neutralFeedbacks / comments.length) * 100);
+
+        const negativeFeedbacks = comments.filter((comment) => comment.sentiment === SentimentType.NEGATIVE).length;
+        setNegativePercentage((negativeFeedbacks / comments.length) * 100);
+
+        const veryNegativeFeedbacks = comments.filter((comment) => comment.sentiment === SentimentType.VERY_NEGATIVE).length;
+        setVeryNegativePercentage((veryNegativeFeedbacks / comments.length) * 100);
+    }, [comments])
+
     const data = {
         labels: Object.values(SentimentType),
         datasets: [
             {
                 label: "Sentiment Analysis",
-                data: [veryPositivePercentage, positivePercentage, neutralPercentage, negativePercentage, positivePercentage, negativePercentage, veryNegativePercentage],
+                data: [veryPositivePercentage, positivePercentage, neutralPercentage, negativePercentage, veryNegativePercentage],
                 backgroundColor: ["#2e80ec"],
                 borderWith: 1
             }
@@ -50,7 +74,17 @@ const SentimentAnalysisBarChart: React.FC<Props> = ({ feedbacks }) => {
             y: {
                 beginAtZero: true,
             }
-        }
+        },
+        onClick: (_event: any, elements: any) => {
+            if (elements?.length) {
+              const index = elements[0].index;
+              if (index !== undefined && index >= 0 && index < Object.values(SentimentType).length) {
+                const selectedSentiment = Object.values(SentimentType)[index];
+                onBarClick(selectedSentiment);
+                console.log(selectedSentiment);
+              }
+            }
+          },
     }
 
     return (

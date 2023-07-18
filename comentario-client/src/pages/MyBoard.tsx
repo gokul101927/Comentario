@@ -90,7 +90,7 @@ const MyBoard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
 
                 </div>
                 <div>
-                    <SentimentAnalysisBoard feedbacks={board?.feedbacks} comments={undefined}/>
+                    <SentimentAnalysisBoard feedbacks={board?.feedbacks} comments={undefined} isCommentsSentiment={false}/>
                 </div>
             </div>
         </motion.div>

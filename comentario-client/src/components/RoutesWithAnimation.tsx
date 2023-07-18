@@ -18,7 +18,7 @@ interface ModalProps {
     closeModal: () => void;
     handleLogout: () => void;
     handleLogin: (token: string) => void;
-    loggedInUser: UserState | null;
+    loggedInUser: UserState | undefined;
 
 }
 

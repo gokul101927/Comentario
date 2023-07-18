@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Feedback, FeedbackSortTypes, Category } from "../interfaces/types"
+import { Feedback, FeedbackSortTypes, Category, SentimentType } from "../interfaces/types"
 import DisplayFeedback from "./DisplayFeedback"
 import NoFeedback from "./NoFeedback";
 
@@ -9,9 +9,10 @@ interface Props {
     tagType: Category | undefined;
     displayEditPlan: boolean;
     isSentimentBoard: boolean;
+    sentimentType: SentimentType | undefined;
 }
 
-const DisplayFeedbacksBasedOnConditions: React.FC<Props> = ({ feedbacks, sortType, tagType, displayEditPlan, isSentimentBoard }) => {
+const DisplayFeedbacksBasedOnConditions: React.FC<Props> = ({ feedbacks, sortType, tagType, displayEditPlan, isSentimentBoard, sentimentType }) => {
 
     const [feedbackList, setFeedbackList] = useState<Feedback[] | undefined>();
 
@@ -44,8 +45,22 @@ const DisplayFeedbacksBasedOnConditions: React.FC<Props> = ({ feedbacks, sortTyp
             filteredFeedbacks = sortedFeedbacks.filter((feedback) => feedback.category.includes(Category.Bug));
         }
 
-        setFeedbackList(filteredFeedbacks);
-    }, [feedbacks, sortType, tagType]);
+        let sentimentFeedack = filteredFeedbacks;
+
+        if (sentimentType === SentimentType.VERY_POSITIVE) {
+            sentimentFeedack = filteredFeedbacks.filter((feedback) => feedback.sentiment === SentimentType.VERY_POSITIVE);
+        } else if (sentimentType === SentimentType.POSITIVE) {
+            sentimentFeedack = filteredFeedbacks.filter((feedback) => feedback.sentiment === SentimentType.POSITIVE);
+        } else if (sentimentType === SentimentType.NEUTRAL) {
+            sentimentFeedack = filteredFeedbacks.filter((feedback) => feedback.sentiment === SentimentType.NEUTRAL);
+        } else if (sentimentType === SentimentType.NEGATIVE) {
+            sentimentFeedack = filteredFeedbacks.filter((feedback) => feedback.sentiment === SentimentType.NEGATIVE);
+        } else if (sentimentType === SentimentType.VERY_NEGATIVE) {
+            sentimentFeedack = filteredFeedbacks.filter((feedback) => feedback.sentiment === SentimentType.VERY_NEGATIVE);
+        }
+
+        setFeedbackList(sentimentFeedack);
+    }, [feedbacks, sortType, tagType, sentimentType]);
 
     return (
         <div className="flex flex-col gap-4">
