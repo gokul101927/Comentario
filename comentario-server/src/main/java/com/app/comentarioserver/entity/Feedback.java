@@ -75,26 +75,7 @@ public class Feedback {
         this.boardId = feedbackDto.boardId();
         this.username = feedbackDto.username();
         this.profileUrl = feedbackDto.profileUrl();
-        this.sentiment = calculateSentiment(title, description);
     }
 
-    public Sentiment calculateSentiment(String title, String description) {
 
-        int titleScore = AnalyzeSentiments.getSentiment(title);
-        int descriptionScore = AnalyzeSentiments.getSentiment(description);
-
-        int score = (titleScore + descriptionScore)/2;
-
-        if (score >= 3) {
-            return Sentiment.VERY_POSITIVE;
-        } else if (score > 0) {
-            return Sentiment.POSITIVE;
-        } else if (score == 0) {
-            return Sentiment.NEUTRAL;
-        } else if (score > -3) {
-            return Sentiment.NEGATIVE;
-        } else {
-            return Sentiment.VERY_NEGATIVE;
-        }
-    }
 }

@@ -69,6 +69,7 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
           .then(response => {
             console.log(response.data);
             setLoading(false);
+            window.location.reload();
           })
           .catch(error => {
             console.error(error);
@@ -96,6 +97,7 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
           .then(response => {
             console.log(response.data);
             setLoading(false);
+            window.location.reload();
           })
           .catch(error => {
             console.error(error);
@@ -118,6 +120,7 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
           .then(response => {
             console.log(response.data);
             setLoading(false);
+            window.location.reload();
           })
           .catch(error => {
             console.error(error);
@@ -140,6 +143,7 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
           .then(response => {
             console.log(response.data);
             setLoading(false);
+            window.location.reload();
           })
           .catch(error => {
             console.error(error);
@@ -151,7 +155,7 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
           });
       }
     }
-    window.location.reload();
+    
   };
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {

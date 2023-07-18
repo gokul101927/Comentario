@@ -241,12 +241,14 @@ public class UserService implements UserDetailsService {
 
     public User updateUsername(String username, String newUsername) {
         User user = loadByIdentifier(username);
+        username = user.getUsername();
         newUsername = newUsername.replace('"', ' ').trim();
         if (checkIfUsernameExists(newUsername)) {
             throw new UserAlreadyExistsException("User already exists with Username");
         }
-        user.setFullName(newUsername);
+        user.setUsername(newUsername);
         User updatedUser = userRepository.save(user);
+        log.info(username);
         updateBoardUsername(username, updatedUser.getUsername());
         updateFeedbackUsername(username, updatedUser.getUsername());
         return updatedUser;
@@ -269,9 +271,11 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateBoardUsername(String username, String newUsername) {
-        Board board = boardRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Board not exists with this user"));
-        board.setUsername(newUsername);
-        boardRepository.save(board);
+        boardRepository.findByUsername(username).ifPresent((board) -> {
+            board.setUsername(newUsername);
+            boardRepository.save(board);
+        });
+
     }
 
     public User updateProfileImage(String username, MultipartFile file) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
@@ -283,15 +287,16 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateFeedbackUsername(String username, String newUsername) {
-        Feedback feedback = feedbackRepository.findByUsername(username).orElseThrow();
-        feedback.setUsername(newUsername);
-        feedback.getComments().forEach(comment -> {
-            if (comment.getUsername().equals(username)) {
-                comment.setUsername(newUsername);
-            }
-        });
-
-        feedbackRepository.save(feedback);
+        feedbackRepository.findByUsername(username).ifPresent((feedback -> {
+            feedback.setUsername(newUsername);
+            feedback.getComments().forEach(comment -> {
+                if (comment.getUsername().equals(username)) {
+                    comment.setUsername(newUsername);
+                }
+            });
+            log.info(feedback.getUsername());
+            feedbackRepository.save(feedback);
+        }));
     }
 
     public void updateFeedbackUserProfile(String username, String profileUrl) {

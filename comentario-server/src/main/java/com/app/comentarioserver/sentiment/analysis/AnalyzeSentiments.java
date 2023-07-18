@@ -1,18 +1,46 @@
 package com.app.comentarioserver.sentiment.analysis;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import uk.ac.wlv.sentistrength.SentiStrength;
 
+import java.net.URL;
 import java.util.List;
 
+@Configuration
+@Slf4j
 public class AnalyzeSentiments {
 
-    private AnalyzeSentiments() {}
+    public String text;
 
-    public static int getSentiment(String text) {
-        String[] sentiStrengthLanguagePath = {"sentidata", "/Users/m_890974/Desktop/SentiStrength_Data/", "explain"};
-        SentiStrength sentiStrength = new SentiStrength();
+    public int sentimentScore;
+
+    private SentiStrength sentiStrength;
+
+    private static final String RESOURCE_FOLDER = "SentiStrength_Data/";
+
+    public String getSentiStrengthDataFolderPath() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        // Get the resource URL for the folder
+        URL folderUrl = classLoader.getResource(RESOURCE_FOLDER);
+        // Convert the URL to a path and return it as a string
+        return folderUrl.getPath();
+    }
+
+    public AnalyzeSentiments(String text) {
+        this();
+        this.sentimentScore = getSentimentScore(text);
+    }
+
+    public AnalyzeSentiments() {
+        log.info(getSentiStrengthDataFolderPath());
+        String[] sentiStrengthLanguagePath = {"sentidata",getSentiStrengthDataFolderPath(), "explain"};
+        this.sentiStrength = new SentiStrength();
         sentiStrength.initialise(sentiStrengthLanguagePath);
+    }
 
+    public int getSentimentScore(String text) {
         String sentiments = sentiStrength.computeSentimentScores(text);
 
         String[] scores =  sentiments.split(" ");
