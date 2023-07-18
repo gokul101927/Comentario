@@ -45,7 +45,7 @@ public class SecurityConfig {
                 .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/users/login", "/users/register", "/users/verify-email", "/users/reset-password", "/users/verify-register-token", "/users/all-users", "/users/delete-all").permitAll()
-                        .requestMatchers( "/boards/delete-all", "/boards/all-boards", "/boards/board/{boardId}").permitAll()
+                        .requestMatchers( "/boards/delete-all", "/boards/all-boards", "/boards/board/{boardId}", "/update/url-click/{boardId}").permitAll()
                         .requestMatchers( "/feedbacks/delete-all", "/feedbacks/all-feedbacks", "/feedbacks/feedback/{feedbackId}").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)

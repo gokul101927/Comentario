@@ -22,13 +22,7 @@ const DisplayBoard: React.FC<Props> = ({ board, isYourBoard, handleEditModal, is
 
     const handleUrlClick = () => {
         if (!isYourBoard && !isYourDashboard && loggedInUser?.username !== board.username) {
-            const token = localStorage.getItem('jwt');
-            const config = {
-                headers: {
-                    Authorization: token,
-                }
-            };
-            api.put(`/boards/update/url-click/${board.id}`, null, config)
+            api.put(`/boards/update/url-click/${board.id}`, null)
             .then((response) => console.log(response.data))
             .catch((error) => console.error(error))
         }

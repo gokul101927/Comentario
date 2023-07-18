@@ -58,6 +58,14 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
         setFeedbackAdded(true);
     }
 
+    const handleUrlClick = () => {
+        if (loggedInUser?.username !== board?.username) {
+            api.put(`/boards/update/url-click/${board?.id}`, null)
+            .then((response) => console.log(response.data))
+            .catch((error) => console.error(error))
+        }
+    }
+
     return (
         <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -67,7 +75,7 @@ const Feedback: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser
             <Header isLoggedIn={isLoggedIn} handleLogout={handleLogout} loggedInUser={loggedInUser} />
             <div className="container h-screen mx-auto p-2 pt-8 flex flex-col gap-4 xl:flex-row">
                 <div className="hidden md:grid md:grid-cols-3 xl:flex xl:flex-row justify-between xl:justify-start gap-4 xl:flex-col xl:w-auto">
-                    <Link target="_blank" rel="noopener noreferrer" to={board ? board.url : "#"}>
+                    <Link onClick={handleUrlClick} target="_blank" rel="noopener noreferrer" to={board ? board.url : "#"}>
                         <div className="flex flex-1 flex-col px-6 py-4 justify-end rounded-xl bg-primaryWhite bg-gradient-to-r from-primaryBlue to-primaryWhite w-full xl:w-72 h-44">
                             <h1 className="font-bold word-wrap max-w-[210px]">{board?.title}</h1>
                             <h4 className="drop-shadow-xl text-sm">@{board?.username}</h4>

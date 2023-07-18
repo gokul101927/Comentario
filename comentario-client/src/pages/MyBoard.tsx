@@ -84,7 +84,7 @@ const MyBoard: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
                     <div className='text-black font-bold bg-primaryWhite shadow p-4 rounded-md'>
                         <div>
                             <h1 className='text-gray-500 font-bold'>Your board received.</h1>
-                            <h1 className='text-[28px] leading-10 font-bold text-primaryBlue opacity-70  py-12 text-center'>{upvoteCount} upvotes and {commentCount} comments from 6 feedbacks.</h1>
+                            <h1 className='text-[28px] leading-10 font-bold text-primaryBlue opacity-70  py-12 text-center'>{upvoteCount} upvotes and {commentCount} comments from {board?.feedbacks.length} feedbacks.</h1>
                         </div>
                     </div>
 
