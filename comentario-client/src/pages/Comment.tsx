@@ -61,6 +61,21 @@ const Comment: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
 
     }
 
+    const deleteComment = (commentId: string) => {
+        console.log(commentId)
+        const token = localStorage.getItem('jwt');
+        const config = {
+            headers: {
+                Authorization: token,
+            }
+        };
+
+        api.delete(`/feedbacks/${feedbackId}/delete-comment/${commentId}`, config)
+            .then(response => console.log(response.data))
+            .catch(error => console.error(error));
+        
+    }
+
     return (
         <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -84,7 +99,7 @@ const Comment: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
                         <div className="flex flex-col gap-4">
 
                             {feedback?.comments && feedback.comments.map((comment, index) =>
-                                <DisplayComment key={index} comment={comment} />)}
+                                <DisplayComment loggedInUser={loggedInUser} key={index} comment={comment} deleteComment={deleteComment}/>)}
                         </div>
                     </div>
                     <PostComment handleComment={handleComment} isLoggedIn={isLoggedIn} />

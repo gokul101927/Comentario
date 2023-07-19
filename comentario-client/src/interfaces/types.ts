@@ -103,6 +103,7 @@ export enum SentimentType {
 }
 
 export interface Comment {
+  commentId: string;
   profileUrl: string;
   username: string;
   commentTitle: string;

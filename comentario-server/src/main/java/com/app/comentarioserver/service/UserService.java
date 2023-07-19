@@ -15,9 +15,7 @@ import com.app.comentarioserver.jwt.JwtTokenProvider;
 import com.app.comentarioserver.repository.BoardRepository;
 import com.app.comentarioserver.repository.FeedbackRepository;
 import com.app.comentarioserver.repository.UserRepository;
-import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.exceptions.*;
-import io.imagekit.sdk.models.FileCreateRequest;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -100,7 +98,7 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    private void sendEmail(String to, String subject, String htmlContent) {
+    public void sendEmail(String to, String subject, String htmlContent) {
         MimeMessage message = mailSender.createMimeMessage();
 
         MimeMessageHelper mimeMessageHelper;

@@ -19,6 +19,7 @@ public class FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
 
+    private final UserService userService;
     private final BoardService boardService;
 
     private final AnalyzeSentiments sentiments;
@@ -35,7 +36,26 @@ public class FeedbackService {
         feedback.setSentiment(calculateSentiment(feedback.getTitle(), feedback.getDescription()));
         Feedback newFeedback = feedbackRepository.save(feedback);
         boardService.addFeedbackToTheBoard(newFeedback.getBoardId(), newFeedback);
+        Board board = boardService.getBoard(newFeedback.getBoardId());
+        sendFeedbackMail(userService.getUserByUsername(board.getUsername()), board);
         return newFeedback;
+    }
+
+    private void sendFeedbackMail(User user, Board board) {
+        String to = user.getMailId();
+        String subject = "You've a new feedback for " + board.getTitle();
+        String htmlContent = """
+                <html>
+                <body>
+                """ +
+                "<h1>Hello again, " + user.getFullName() + "</h1> " +
+                "<p>You've got a new feedback. please check.</p>" +
+                "<a href=\"http://localhost:5173/board/" + board.getId() + "\">Click here</a>" +
+                """
+                </body>
+                </html>""";
+
+        userService.sendEmail(to, subject, htmlContent);
     }
 
     public Feedback postComment(String id, Comment comment) {
@@ -52,6 +72,12 @@ public class FeedbackService {
         Feedback feedback = feedbackRepository.findById(feedbackId).orElseThrow();
         feedback.setRoadmap(roadmap);
         return feedbackRepository.save(feedback);
+    }
+
+    public boolean deleteComment(String feedbackId, String commentId) {
+        return getFeedbackFormId(feedbackId).getComments().removeIf(comment -> {
+            return comment.getCommentId().equals(commentId);
+        });
     }
 
     public Sentiment calculateSentiment(String title, String description) {

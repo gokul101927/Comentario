@@ -36,7 +36,6 @@ public class BoardService {
         userService.addBoardToTheUser(newBoard, board.getUsername());
         return newBoard;
     }
-
     public Board updateBoard(BoardDto boardDto, String boardId, MultipartFile file) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
         Board board = getBoard(boardId);
         board.setTitle(boardDto.title());

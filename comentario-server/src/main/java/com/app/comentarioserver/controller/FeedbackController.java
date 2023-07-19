@@ -57,4 +57,10 @@ public class FeedbackController {
         Roadmap roadmap = Roadmap.valueOf(value.toUpperCase().replace("\"", ""));
         return new ResponseEntity<>(feedbackService.addFeedbackToRoadmap(id, roadmap), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{feedbackId}/delete-comment/{commentId}")
+    public boolean deleteComment(@PathVariable String feedbackId, @PathVariable String commentId) {
+        return feedbackService.deleteComment(feedbackId, commentId);
+    }
+
 }

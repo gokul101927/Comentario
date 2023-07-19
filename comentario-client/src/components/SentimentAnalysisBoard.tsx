@@ -31,7 +31,7 @@ const SentimentAnalysisBoard: React.FC<Props> = ({ feedbacks, comments, isCommen
                 {sentimentType && <div className="flex flex-col gap-4 mt-4">
 
                     {comments && comments.filter((comment) => comment.sentiment === sentimentType).map((comment, index) =>
-                        <DisplayComment key={index} comment={comment} />)}
+                        <DisplayComment loggedInUser={undefined} key={index} comment={comment} deleteComment={() => undefined}/>)}
                 </div>}
             </div> :
 
