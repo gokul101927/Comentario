@@ -10,7 +10,7 @@ interface Props {
   handleLogout: () => void;
 }
 
-const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
+const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal, handleLogout }) => {
   const [fullName, setFullName] = useState(loggedInUser?.fullName);
   const [username, setUsername] = useState(loggedInUser?.username);
   const [email, setEmail] = useState(loggedInUser?.mailId);
@@ -69,7 +69,7 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
           .then(response => {
             console.log(response.data);
             setLoading(false);
-            window.location.reload();
+            handleLogout();
           })
           .catch(error => {
             console.error(error);
@@ -97,7 +97,7 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
           .then(response => {
             console.log(response.data);
             setLoading(false);
-            window.location.reload();
+            handleLogout();
           })
           .catch(error => {
             console.error(error);
@@ -120,7 +120,7 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
           .then(response => {
             console.log(response.data);
             setLoading(false);
-            window.location.reload();
+            handleLogout();
           })
           .catch(error => {
             console.error(error);
@@ -143,7 +143,7 @@ const EditProfile: React.FC<Props> = ({ loggedInUser, closeModal }) => {
           .then(response => {
             console.log(response.data);
             setLoading(false);
-            window.location.reload();
+            handleLogout();
           })
           .catch(error => {
             console.error(error);

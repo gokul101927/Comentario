@@ -76,6 +76,11 @@ public class UserService implements UserDetailsService {
 
         User user = new User(userRequest.getFullName(), userRequest.getUsername(), userRequest.getMailId(), encoder.encode(userRequest.getPassword()), userRequest.getImageData());
         user.setRoles(List.of(new SimpleGrantedAuthority("User")));
+        sendVerificationMail(user);
+        return userRepository.save(user);
+    }
+
+    public void sendVerificationMail(User user) {
         user.setVerified(false);
         Token token = new Token();
         user.setVerificationToken(token);
@@ -94,8 +99,6 @@ public class UserService implements UserDetailsService {
                 </html>""";
 
         sendEmail(to, subject, htmlContent);
-
-        return userRepository.save(user);
     }
 
     public void sendEmail(String to, String subject, String htmlContent) {
@@ -261,6 +264,7 @@ public class UserService implements UserDetailsService {
             throw new UserAlreadyExistsException("User already exists with this Email");
         }
         user.setMailId(mailId);
+        sendVerificationMail(user);
         return userRepository.save(user);
     }
 
