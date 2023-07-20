@@ -22,7 +22,8 @@ const Comment: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
     const feedbackId = params.feedbackId;
 
     const [feedback, setFeedback] = useState<Feedback>();
-    const [comment, commentAdded] = useState(false);
+    const [comment, commentModified] = useState(false);
+
 
     useEffect(() => {
         api.get(`/feedbacks/feedback/${feedbackId}`)
@@ -53,7 +54,7 @@ const Comment: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
         api.put(`/feedbacks/comment/post?id=${feedbackId}`, requestBody, config)
             .then(response => {
                 console.log(response.data);
-                commentAdded(true);
+                commentModified(true);
             })
             .catch(error => {
                 console.error(error);
@@ -62,7 +63,6 @@ const Comment: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
     }
 
     const deleteComment = (commentId: string) => {
-        console.log(commentId)
         const token = localStorage.getItem('jwt');
         const config = {
             headers: {
@@ -71,7 +71,10 @@ const Comment: React.FC<ModalProps> = ({ handleLogout, isLoggedIn, loggedInUser 
         };
 
         api.delete(`/feedbacks/${feedbackId}/delete-comment/${commentId}`, config)
-            .then(response => console.log(response.data))
+            .then(response => {
+                console.log(response.data)
+                commentModified(true);
+            })
             .catch(error => console.error(error));
         
     }

@@ -75,9 +75,11 @@ public class FeedbackService {
     }
 
     public boolean deleteComment(String feedbackId, String commentId) {
-        return getFeedbackFormId(feedbackId).getComments().removeIf(comment -> {
-            return comment.getCommentId().equals(commentId);
-        });
+        Feedback feedback = getFeedbackFormId(feedbackId);
+        boolean status = feedback.getComments().removeIf(comment -> comment.getCommentId().equals(commentId));
+        feedbackRepository.save(feedback);
+
+        return status;
     }
 
     public Sentiment calculateSentiment(String title, String description) {
