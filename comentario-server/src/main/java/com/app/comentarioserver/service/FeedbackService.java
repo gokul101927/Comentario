@@ -71,14 +71,34 @@ public class FeedbackService {
     public Feedback addFeedbackToRoadmap(String feedbackId, Roadmap roadmap) {
         Feedback feedback = feedbackRepository.findById(feedbackId).orElseThrow();
         feedback.setRoadmap(roadmap);
+        sendRoadmapUpdatedMail(feedback);
         return feedbackRepository.save(feedback);
+    }
+
+    private void sendRoadmapUpdatedMail(Feedback feedback) {
+        User user = userService.getUserByUsername(feedback.getUsername());
+        Board board = boardService.getBoard(feedback.getBoardId());
+        String to = user.getMailId();
+        String subject = "Yay, your feedback is considered";
+        String htmlContent = """
+                <html>
+                <body>
+                """ +
+                "<h1>Hello again, " + user.getFullName() + "</h1> " +
+                "<p>Thanks for the feedback</p>" +
+                "<p>Your feedback is being considered for" + board.getTitle() + "</p>" +
+                "<a href=\"http://localhost:5173/roadmap/" + board.getId() + "\">Click here</a>" +
+                """
+                </body>
+                </html>""";
+
+        userService.sendEmail(to, subject, htmlContent);
     }
 
     public boolean deleteComment(String feedbackId, String commentId) {
         Feedback feedback = getFeedbackFormId(feedbackId);
         boolean status = feedback.getComments().removeIf(comment -> comment.getCommentId().equals(commentId));
         feedbackRepository.save(feedback);
-
         return status;
     }
 

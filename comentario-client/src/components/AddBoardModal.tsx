@@ -83,6 +83,10 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, username }) => {
             })
             .catch(error => {
                 console.error(error)
+                const errorMessage = error.response.data.message;
+                if (errorMessage.includes("URL")) {
+                    setUrlError(errorMessage);
+                }
                 setLoading(false);
             })
     };
@@ -119,6 +123,10 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, username }) => {
                     ></textarea>
                 </div>
                 <div className="flex flex-col">
+                    <div className="flex justify-between">
+
+                        <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end">{urlError}</small>
+                    </div>
                     <input
                         type="url"
                         name="url"

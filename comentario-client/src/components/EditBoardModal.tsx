@@ -13,7 +13,7 @@ interface ModalProps {
 
 const EditBoardModal: React.FC<ModalProps> = ({ closeModal, board }) => {
     const [title, setTitle] = useState(board?.title);
-    
+
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [description, setDescription] = useState(board?.description);
     const [url, setUrl] = useState(board?.url);
@@ -75,15 +75,15 @@ const EditBoardModal: React.FC<ModalProps> = ({ closeModal, board }) => {
             };
 
             api.put(`/boards/update/${board?.id}`, formData, config)
-            .then(response => {
-                console.log(response)
-                setLoading(false);
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error(error)
-                setLoading(false);
-            })
+                .then(response => {
+                    console.log(response)
+                    setLoading(false);
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error(error)
+                    setLoading(false);
+                })
         } else {
             const config = {
                 headers: {
@@ -91,15 +91,19 @@ const EditBoardModal: React.FC<ModalProps> = ({ closeModal, board }) => {
                 }
             };
             api.put(`/boards/update/data/${board?.id}`, requestBody, config)
-            .then(response => {
-                console.log(response)
-                setLoading(false);
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error(error)
-                setLoading(false);
-            })
+                .then(response => {
+                    console.log(response)
+                    setLoading(false);
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error(error)
+                    const errorMessage = error.response.data.message;
+                    if (errorMessage.includes("URL")) {
+                        setUrlError(errorMessage);
+                    }
+                    setLoading(false);
+                })
         }
     };
 
@@ -135,6 +139,10 @@ const EditBoardModal: React.FC<ModalProps> = ({ closeModal, board }) => {
                     ></textarea>
                 </div>
                 <div className="flex flex-col">
+                    <div className="flex justify-between">
+
+                        <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end">{urlError}</small>
+                    </div>
                     <input
                         type="url"
                         name="url"

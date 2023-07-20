@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -39,6 +40,18 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UserNotEnabledException.class)
     public ResponseEntity<ErrorResponse> handleUserNotEnabledException(UserNotEnabledException ex) {
         ErrorResponse errorResponse = new ErrorResponse("User not enabled", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+
+    @ExceptionHandler(URLAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleURLAlreadyExistsException(URLAlreadyExistsException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("URL already exists", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+
+    @ExceptionHandler(URLNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleURLNotValidException(URLNotValidException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("URL not valid", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
