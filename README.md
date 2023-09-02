@@ -23,7 +23,7 @@ Comentario is a feature-rich web application designed to streamline the process 
 
 ## Installation
 
-1. Clone the repository: `git clone <repository-url>`
+1. Clone the repository: `git clone https://github.com/iam-gokull/Comentario.git`
 2. Navigate to the project directory: `cd comentario`
 3. Install dependencies: `npm install` (for the front-end) and `mvn clean install` (for the back-end).
 4. Start the application: `npm run dev` (for the front-end) and `mvn spring-boot:run` (for the back-end).
