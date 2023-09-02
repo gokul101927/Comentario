@@ -19,6 +19,7 @@ Comentario is a feature-rich web application designed to streamline the process 
 - **Front-end**: React with TypeScript, styled with Tailwind CSS.
 - **Back-end**: Java with Spring Boot.
 - **Database**: MongoDB.
+- **Build tool**: Vite for front-end and Maven for backend.
 - **Sentiment Analysis**: SentiStrength library.
 
 ## Installation
