@@ -97,6 +97,9 @@ const AddBoardModal: React.FC<ModalProps> = ({ closeModal, username }) => {
             <form className="space-y-3" onSubmit={handleSubmit}>
                 <CoverImageUpload selectedFile={selectedFile} handleFile={handleFile} />
                 <div className="flex flex-col">
+                    <div className="flex justify-between">
+                        <small className="block mb-2 text-sm font-small text-gray-900 text-red-500 text-end">{urlError}</small>
+                    </div>
                     <input
                         type="title"
                         name="title"

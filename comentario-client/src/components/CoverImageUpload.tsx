@@ -32,7 +32,7 @@ const CoverImageUpload: React.FC<ModalProps> = ({selectedFile, handleFile}) => {
         <div className="flex flex-col items-center justify-center">
 
             <div className="rounded-md object-center object-cover p-6 bg-gray-100 w-full flex flex-col items-center justify-center">
-                <label className="text-black cursor-pointer text-sm border rounded-md border-solid border-black p-2" htmlFor="image-upload">
+                <label className="text-black cursor-pointer text-sm rounded-md border border-solid border-black p-2" htmlFor="image-upload">
                     {selectedFile ? <img className="rounded-md border border-black object-center object-cover h-44 w-full" src={preview} /> : <p>Upload your cover image here.</p>}
                 </label>
                 <input className="hidden" id="image-upload" type='file' onChange={onSelectFile} accept="image/png, image/gif, image/jpeg, image/jpg, image/svg" />

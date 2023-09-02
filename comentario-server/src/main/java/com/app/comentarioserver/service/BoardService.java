@@ -49,7 +49,9 @@ public class BoardService {
         if (checkURL(boardDto.url())) {
             board.setTitle(boardDto.title());
             board.setDescription(boardDto.description());
-            imageUpload.deleteImage(board.getImageData().getImageId());
+            if (board.getImageData().getImageUrl().contains("imagekit")) {
+                imageUpload.deleteImage(board.getImageData().getImageId());
+            }
             board.setImageData(imageUpload.uploadImage(file, "Board-cover/"));
             board.setSelf(boardDto.isSelf());
             board.setUrl(boardDto.url());

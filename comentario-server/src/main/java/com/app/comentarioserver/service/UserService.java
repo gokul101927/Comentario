@@ -45,6 +45,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
     private final BoardRepository boardRepository;
+
     private final FeedbackRepository feedbackRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -284,7 +285,9 @@ public class UserService implements UserDetailsService {
 
     public User updateProfileImage(String username, MultipartFile file) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
         User user = loadByIdentifier(username);
-        imageUpload.deleteImage(user.getImageData().getImageId());
+        if (user.getImageData().getImageUrl().contains("imagekit")) {
+            imageUpload.deleteImage(user.getImageData().getImageId());
+        }
         ImageData imageData = imageUpload.uploadImage(file, "User-profile/");
         user.setImageData(imageData);
         updateFeedbackUserProfile(username, imageData.getImageUrl());
@@ -305,15 +308,15 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateFeedbackUserProfile(String username, String profileUrl) {
-        Feedback feedback = feedbackRepository.findByUsername(username).orElseThrow();
-        feedback.setProfileUrl(profileUrl);
-        feedback.getComments().forEach(comment -> {
-            if (comment.getUsername().equals(username)) {
-                comment.setProfileUrl(profileUrl);
-            }
+        feedbackRepository.findByUsername(username).ifPresent(feedback -> {
+            feedback.setProfileUrl(profileUrl);
+            feedback.getComments().forEach(comment -> {
+                if (comment.getUsername().equals(username)) {
+                    comment.setProfileUrl(profileUrl);
+                }
+            });
+            feedbackRepository.save(feedback);
         });
-
-        feedbackRepository.save(feedback);
     }
 
     public User getByMailId(String mailId) {
