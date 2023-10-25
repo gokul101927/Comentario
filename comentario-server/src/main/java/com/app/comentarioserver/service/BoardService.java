@@ -43,7 +43,7 @@ public class BoardService {
         return board;
     }
     public Board updateBoard(BoardDto boardDto, String boardId, MultipartFile file) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
-        Board board = getBoard(boardId);
+        Board board = getBoardById(boardId);
         board.setUrl("");
         boardRepository.save(board);
         if (checkURL(boardDto.url())) {
@@ -63,7 +63,7 @@ public class BoardService {
     }
 
     public Board updateBoard(BoardDto boardDto, String boardId) {
-        Board board = getBoard(boardId);
+        Board board = getBoardById(boardId);
         board.setUrl("");
         boardRepository.save(board);
         if (checkURL(boardDto.url())) {
@@ -107,12 +107,12 @@ public class BoardService {
     }
 
     public Board updateClickCount(String boardId) {
-        Board board = getBoard(boardId);
+        Board board = getBoardById(boardId);
         board.setUrlClick();
         return boardRepository.save(board);
     }
 
-    public Board getBoard(String boardId) {
+    public Board getBoardById(String boardId) {
         return boardRepository.findById(boardId).orElseThrow();
     }
 

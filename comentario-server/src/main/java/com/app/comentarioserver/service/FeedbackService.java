@@ -1,6 +1,7 @@
 package com.app.comentarioserver.service;
 
 import com.app.comentarioserver.entity.*;
+import com.app.comentarioserver.exception.FeedbackNotFoundException;
 import com.app.comentarioserver.pojo.Comment;
 import com.app.comentarioserver.repository.FeedbackRepository;
 import com.app.comentarioserver.sentiment_analysis.AnalyzeSentiments;
@@ -29,19 +30,20 @@ public class FeedbackService {
     }
 
     public Feedback getFeedbackFormId(String id) {
-        return feedbackRepository.findById(id). orElseThrow();
+        return feedbackRepository.findById(id).orElseThrow(() -> new FeedbackNotFoundException("Unable to find feedback with id: " + id));
     }
 
     public Feedback addFeedback(Feedback feedback) {
         feedback.setSentiment(calculateSentiment(feedback.getTitle(), feedback.getDescription()));
         Feedback newFeedback = feedbackRepository.save(feedback);
         boardService.addFeedbackToTheBoard(newFeedback.getBoardId(), newFeedback);
-        Board board = boardService.getBoard(newFeedback.getBoardId());
-        sendFeedbackMail(userService.getUserByUsername(board.getUsername()), board);
+        sendFeedbackMail(newFeedback);
         return newFeedback;
     }
 
-    private void sendFeedbackMail(User user, Board board) {
+    private void sendFeedbackMail(Feedback feedback) {
+        Board board = boardService.getBoardById(feedback.getBoardId());
+        User user = userService.getUserByUsername(board.getUsername());
         String to = user.getMailId();
         String subject = "You've a new feedback for " + board.getTitle();
         String htmlContent = """
@@ -77,7 +79,7 @@ public class FeedbackService {
 
     private void sendRoadmapUpdatedMail(Feedback feedback) {
         User user = userService.getUserByUsername(feedback.getUsername());
-        Board board = boardService.getBoard(feedback.getBoardId());
+        Board board = boardService.getBoardById(feedback.getBoardId());
         String to = user.getMailId();
         String subject = "Yay, your feedback is considered";
         String htmlContent = """

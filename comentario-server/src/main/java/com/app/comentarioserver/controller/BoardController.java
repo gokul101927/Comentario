@@ -59,7 +59,7 @@ public class BoardController {
 
     @GetMapping("/board/{boardId}")
     public ResponseEntity<Board> getBoard(@PathVariable String boardId) {
-        return new ResponseEntity<>(boardService.getBoard(boardId), HttpStatus.OK);
+        return new ResponseEntity<>(boardService.getBoardById(boardId), HttpStatus.OK);
     }
 
     @PutMapping(value = "/update/url-click/{boardId}")
