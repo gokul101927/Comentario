@@ -2,10 +2,13 @@ package com.app.comentarioserver.service;
 
 import com.app.comentarioserver.entity.Board;
 import com.app.comentarioserver.entity.Feedback;
-import com.app.comentarioserver.entity.User;
+import com.app.comentarioserver.exception.BoardNotFoundException;
 import com.app.comentarioserver.exception.FeedbackNotFoundException;
+import com.app.comentarioserver.exception.UnableToAddFeedbackException;
 import com.app.comentarioserver.repository.FeedbackRepository;
 import com.app.comentarioserver.sentiment_analysis.AnalyzeSentiments;
+import com.app.comentarioserver.types.Roadmap;
+import com.app.comentarioserver.types.Sentiment;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -15,7 +18,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -31,8 +33,9 @@ class FeedbackServiceTest {
     @Mock
     private FeedbackRepository feedbackRepository;
 
+
     @Mock
-    private UserService userService;
+    private EmailService emailService;
 
     @Mock
     private BoardService boardService;
@@ -40,28 +43,6 @@ class FeedbackServiceTest {
     @Mock
     private AnalyzeSentiments sentiments;
 
-    @Test
-    void test_get_all_feedbacks() {
-        Feedback feedback1 = new Feedback();
-        feedback1.setId("1");
-        feedback1.setTitle("Feedback 1");
-        feedback1.setUsername("User 1");
-
-        Feedback feedback2 = new Feedback();
-        feedback2.setId("2");
-        feedback2.setTitle("Feedback 2");
-        feedback2.setUsername("User 2");
-
-        List<Feedback> allFeedbacks = List.of(feedback1, feedback2);
-
-        Mockito.when(feedbackRepository.findAll()).thenReturn(allFeedbacks);
-
-        List<Feedback> result = feedbackService.getAllFeedbacks();
-
-        assertThat(result).hasSameSizeAs(allFeedbacks);
-        assertThat(result.get(0).getTitle()).isEqualTo(feedback1.getTitle());
-        assertThat(result.get(1).getId()).isEqualTo(feedback2.getId());
-    }
 
     @Test
     void test_get_feedback_from_id() {
@@ -95,36 +76,48 @@ class FeedbackServiceTest {
     }
 
     @Test
-    void addFeedback() {
+    void test_add_feedback() {
         Feedback feedback = new Feedback();
         feedback.setId("1");
         feedback.setTitle("Test feedback");
         feedback.setBoardId("1");
         feedback.setUsername("User");
 
+        Board board = new Board();
+        board.setId("id");
+        board.setTitle("Title");
+        board.setFeedbacks(feedback);
+
+        Mockito.when(feedbackRepository.save(Mockito.any(Feedback.class))).thenReturn(feedback);
+        Mockito.when(boardService.addFeedbackToTheBoard(Mockito.anyString(), Mockito.any(Feedback.class))).thenReturn(true);
+        Mockito.doNothing().when(emailService).sendFeedbackMail(Mockito.any(Feedback.class));
+        Feedback result = feedbackService.addFeedback(feedback);
+
+        assertThat(result.getTitle()).isEqualTo("Test feedback");
+    }
+
+    @Test
+    void test_add_feedback_to_roadmap() {
+        Feedback feedback = new Feedback();
+        feedback.setId("1");
+        feedback.setTitle("Test feedback");
+
+        Mockito.when(feedbackRepository.findById(Mockito.anyString())).thenReturn(Optional.of(feedback));
+        Mockito.doNothing().when(emailService).sendRoadmapUpdatedMail(Mockito.any(Feedback.class));
         Mockito.when(feedbackRepository.save(Mockito.any(Feedback.class))).thenReturn(feedback);
 
-        
+        Feedback result = feedbackService.addFeedbackToRoadmap("1", Roadmap.INPROGRESS);
 
+        assertThat(result.getRoadmap()).isEqualTo(Roadmap.INPROGRESS);
     }
 
-    @Test
-    void postComment() {
-    }
 
     @Test
-    void deleteAll() {
-    }
+    void test_calculate_sentiment() {
+        Mockito.when(sentiments.getSentimentScore(Mockito.anyString())).thenReturn(3);
 
-    @Test
-    void addFeedbackToRoadmap() {
-    }
+        Sentiment result = feedbackService.calculateSentiment("title", "description");
 
-    @Test
-    void deleteComment() {
-    }
-
-    @Test
-    void calculateSentiment() {
+        assertThat(result).isEqualTo(Sentiment.VERY_POSITIVE);
     }
 }

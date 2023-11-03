@@ -3,10 +3,13 @@ package com.app.comentarioserver.service;
 import com.app.comentarioserver.dto.BoardDto;
 import com.app.comentarioserver.entity.Board;
 import com.app.comentarioserver.entity.Feedback;
+import com.app.comentarioserver.exception.BoardNotFoundException;
 import com.app.comentarioserver.exception.URLAlreadyExistsException;
 import com.app.comentarioserver.exception.URLNotValidException;
+import com.app.comentarioserver.exception.UnableToAddFeedbackException;
 import com.app.comentarioserver.imagekit_upload.ImageUpload;
 import com.app.comentarioserver.repository.BoardRepository;
+import com.app.comentarioserver.repository.FeedbackRepository;
 import io.imagekit.sdk.exceptions.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +28,12 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
+    private final FeedbackRepository feedbackRepository;
+
     private final ImageUpload imageUpload;
     private final UserService userService;
 
-    public List<Board> allBoards() {
+    public List<Board> getAllBoards() {
         return boardRepository.findAll();
     }
 
@@ -59,7 +64,6 @@ public class BoardService {
         }
 
         return board;
-
     }
 
     public Board updateBoard(BoardDto boardDto, String boardId) {
@@ -73,9 +77,7 @@ public class BoardService {
             board.setUrl(boardDto.url());
             return boardRepository.save(board);
         }
-
         return board;
-
     }
 
     public boolean checkURL(String url) {
@@ -84,7 +86,6 @@ public class BoardService {
         } else {
             throw new URLAlreadyExistsException("This URL already exists");
         }
-
     }
 
     public boolean validateURL(String verifyUrl) {
@@ -92,7 +93,7 @@ public class BoardService {
             URL url = new URL(verifyUrl);
             String protocol = url.getProtocol();
 
-            if (!protocol.equalsIgnoreCase("http") && !protocol.equalsIgnoreCase("https")) {
+            if (!protocol.equalsIgnoreCase("https")) {
                 return false;
             }
 
@@ -113,18 +114,21 @@ public class BoardService {
     }
 
     public Board getBoardById(String boardId) {
-        return boardRepository.findById(boardId).orElseThrow();
+        return boardRepository.findById(boardId).orElseThrow(() -> new BoardNotFoundException("Unable to find board with id " + boardId));
     }
 
-    public void deleteAll() {
-        boardRepository.deleteAll();
-    }
-
-
-    public void addFeedbackToTheBoard(String id, Feedback feedback) {
-        Board board = boardRepository.findById(id).orElseThrow();
+    public boolean addFeedbackToTheBoard(String id, Feedback feedback) {
+        Board board = getBoardById(id);
         board.setFeedbacks(feedback);
-        boardRepository.save(board);
+
+        Board updatedBoard = boardRepository.save(board);
+        if (!updatedBoard.getFeedbacks().contains(feedback)) {
+            feedbackRepository.deleteById(feedback.getId());
+            throw new UnableToAddFeedbackException("Unable to add feedback");
+        } else {
+            return true;
+        }
+
     }
 
 }
