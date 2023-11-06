@@ -31,7 +31,6 @@ public class FeedbackController {
 
     @PostMapping(value = "/add", consumes = "application/json")
     public ResponseEntity<Feedback> addFeedback(@RequestBody FeedbackDto feedbackDto) {
-
         Feedback feedback = new Feedback(feedbackDto);
         return new ResponseEntity<>(feedbackService.addFeedback(feedback), HttpStatus.OK);
     }
