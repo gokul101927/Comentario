@@ -2,11 +2,10 @@ package com.app.comentarioserver.sentiment_analysis;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import uk.ac.wlv.sentistrength.SentiStrength;
 
 import java.net.URL;
-import java.util.List;
+
 
 @Configuration
 @Slf4j

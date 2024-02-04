@@ -36,19 +36,6 @@ public class UserController {
 
     private final AuthenticationManager authenticationManager;
 
-    @GetMapping("/all-users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/delete-all")
-    public void deleteAllUsers() {
-        userService.deleteAllUsers();
-    }
-
-    // Delete everything from above
-
-
     @PostMapping(value = "/register", consumes = "application/json")
     public ResponseEntity<User> registerUser(@RequestBody UserRequest userRequest) {
         return new ResponseEntity<>(userService.addUser(userRequest), HttpStatus.OK);
